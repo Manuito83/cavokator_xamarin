@@ -35,7 +35,7 @@ namespace Cavokator
 
 
         /// <summary>
-        /// List of actual (as written by the user) ICAO airports that we are going to request
+        /// List of actual ICAO (as written by the user) airports that we are going to request
         /// </summary>
         private List<string> _icaoIdList = new List<string>();
 
