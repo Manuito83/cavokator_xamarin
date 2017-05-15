@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ApplicationName">Cavokator</string>
+    <string name="Send_button">SEND</string>
+    <string name="Clear_button">CLEAR</string>
+    <string name="Airport_ID_TextView">CHOOSE AIRPORT ID</string>
+    <string name="Icao_Or_Iata">ICAO or IATA</string>
+    <string name="Requesting_METAR_Information">Requesting METAR information</string>
+    <string name="Connection_Error">CONNECTION ERROR!</string>
+    <string name="Internet_Error">CHECK INTERNET CONNECTION!</string>
+    <string name="Error_fetching_airport">- No data available!</string>
+    <string name="Server_Timeout">SERVER TIMEOUT!</string>
+    <string name="Option_ConfigurationText">CONFIGURATION</string>
+    <string name="Option_ChooseMetarOrTaforText">Type of weather</string>
+    <string name="Option_MetarHoursText">Metar delay</string>
+    <string name="Option_JustGetLast">Last</string>
+    <string name="Option_Hour">Hour</string>
+    <string name="Option_Hours">Hours</string>
+    <string name="Option_SaveDataText">Save data</string>
+    <string name="Metar_Issued">METAR @</string>
+    <string name="Tafor_Issued">TAFOR @</string>
+    <string name="Ago">ago</string>
+    <string name="Days">days</string>
+    <string name="Hours">hours</string>
+    <string name="Minutes">minutes</string>
+    <string name="Day">day</string>
+    <string name="Hour">hour</string>
+    <string name="Minute">minute</string>
+    <string name="Fetching">Fetching...</string>
+  
+
+  <string-array name="wx_option">
+    <item>METAR + TAFOR</item>
+    <item>METAR</item>
+    <item>TAFOR</item>
+  </string-array>
+
+</resources>

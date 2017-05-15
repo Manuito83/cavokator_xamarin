@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:id="@+id/wx_options_mainRelativeLayout"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:id="@+id/wx_options_configuration_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONFIGURATION"
+            android:textColor="@android:color/holo_purple"
+            android:textSize="18dp" />
+        <TextView
+            android:id="@+id/wx_options_metarORtafor_text"
+            android:text="Type of weather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentLeft="true"
+            android:textSize="13dp" />
+        <Spinner
+            android:id="@+id/wx_options_metarORtafor_spinner"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/wx_options_metarORtafor_text"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/wx_options_metarORtafor_text" />
+        <TextView
+            android:text="METAR delay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_options_metarORtafor_text"
+            android:id="@+id/wx_options_metarHours"
+            android:layout_marginTop="25dp"
+            android:layout_alignParentLeft="true"
+            android:textSize="13dp" />
+        <SeekBar
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/wx_options_metarHours_seekbar"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/wx_options_metarORtafor_text"
+            android:layout_marginTop="25dp" />
+        <TextView
+            android:text="Last"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_options_metarHours_seekbar"
+            android:id="@+id/wx_option_metarHours_seekbarText"
+            android:layout_marginRight="30dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:textColor="@android:color/white" />
+        <TextView
+            android:text="Save data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_option_metarHours_seekbarText"
+            android:id="@+id/wx_options_saveDataText"
+            android:layout_marginTop="25.0dp"
+            android:layout_alignParentLeft="true" />
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_option_metarHours_seekbarText"
+            android:id="@+id/wx_options_saveDataSwitch"
+            android:layout_marginTop="25.0dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="55.0dp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/wx_options_closeRelativeLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:text="Close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wx_option_closeButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp" />
+    </RelativeLayout>
+</LinearLayout>
