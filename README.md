@@ -10,13 +10,13 @@ Cavocator is a new android app for pilots, with the following main objectives:
   * Expand TAFORS for better readability
   * Use a "favourites list"
   * Select ETD and ETA in order to highlight affected weather
-&nbsp;
+<br></br>
  - Include other options in the future such us:
    * SNOWTAM decoding
    * FUEL UPLIFT calculations
    * Enroute weather information (base on a radius)
 
-&nbsp;
+<br></br>
 Example Main Activity:
 
 ![Imgur](http://i.imgur.com/TcvrcW2l.png)
