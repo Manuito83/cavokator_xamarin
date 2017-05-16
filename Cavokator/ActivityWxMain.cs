@@ -17,10 +17,11 @@ using System.Threading.Tasks;
 
 namespace Cavokator
 {
-    [Activity(Label = "Cavokator", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.Material", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(Label = "Cavokator", MainLauncher = true, Icon = "@drawable/ic_appicon",
+         Theme = "@android:style/Theme.Material", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class ActivityWxMain : Activity
     {
-        
+
         // Main fields
         private LinearLayout _linearlayoutWxBottom;
         private EditText _airportEntryEditText;
@@ -43,6 +44,10 @@ namespace Cavokator
         /// List of airports with a mix of ICAO and IATA, that we show to the user as it was requested
         /// </summary>
         private List<string> _myAirportsList = new List<string>();
+
+
+        // Object to store List downloaded at OnCreate from a CAV file with IATA, ICAO and Airport Names
+        private List<AirportCsvDefinition> _myAirportDefinitions = new List<AirportCsvDefinition>();
 
 
         // Instantiate WXInfo object
@@ -70,7 +75,7 @@ namespace Cavokator
 
             // Get ISharedPreferences
             GetPreferences();
-            
+
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.wx_main);
 
@@ -81,7 +86,7 @@ namespace Cavokator
             _wxRequestButton = FindViewById<Button>(Resource.Id.wx_request_button);
             _wxClearButton = FindViewById<Button>(Resource.Id.wx_clear_button);
             _wxOptionsButton = FindViewById<ImageButton>(Resource.Id.wx_options_button);
-            
+
             _wxRequestButton.Text = Resources.GetString(Resource.String.Send_button);
             _wxClearButton.Text = Resources.GetString(Resource.String.Clear_button);
             _chooseIDtextview.Text = Resources.GetString(Resource.String.Airport_ID_TextView);
@@ -91,6 +96,20 @@ namespace Cavokator
             // Subscribe events
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
+            _wxRequestButton.Click += OnRequestButtonClicked;
+
+
+
+
+            // Get a list of ICAO/IATA/Airport's name from CSV at first execution
+            // We get the whole list of 5000+ because it is faster to iterate compared to consulting CSV 
+            // This operation might be time consuming and we do it at OnCreate in order to have
+            // a better overall response from the app later on
+            if (_myAirportDefinitions.Count == 0)
+            {
+                AirportConverter iataConverter = new AirportConverter();
+                _myAirportDefinitions = iataConverter.GetCodeList();
+            }
 
 
 
@@ -98,10 +117,14 @@ namespace Cavokator
             // and then call ShowWeather again, so that the information is re-generated
             if (_saveData)
             {
-                ISharedPreferences wxprefs = Application.Context.GetSharedPreferences("WX_OnPause", FileCreationMode.Private);
+                ISharedPreferences wxprefs = Application.Context.GetSharedPreferences("WX_OnPause",
+                    FileCreationMode.Private);
 
                 // Airport Text
                 var storedAirportIdText = wxprefs.GetString("_airportEntryEditText.Text", String.Empty);
+
+                // We will only get saved data if it exists at all, otherwise we could trigger
+                // the event "aftertextchanged" for _airportEntryEditText and we would like to avoid that
                 if (storedAirportIdText != string.Empty)
                 {
                     _airportEntryEditText.Text = storedAirportIdText;
@@ -111,31 +134,42 @@ namespace Cavokator
                 try
                 {
                     // Airport IDs
-                    var deserializeIds = JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("airportIDs", string.Empty));
+                    var deserializeIds =
+                        JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("airportIDs", string.Empty));
                     _wxInfo.AirportIDs = deserializeIds;
 
                     // My Airports
-                    var myAirportsIDs = JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("myAirportIDs", string.Empty));
+                    var myAirportsIDs =
+                        JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("myAirportIDs", string.Empty));
                     _myAirportsList = myAirportsIDs;
 
                     // Airport Errors
-                    var deserializeErrors = JsonConvert.DeserializeObject<List<bool>>(wxprefs.GetString("airportErrors", string.Empty));
+                    var deserializeErrors =
+                        JsonConvert.DeserializeObject<List<bool>>(wxprefs.GetString("airportErrors", string.Empty));
                     _wxInfo.AirportErrors = deserializeErrors;
-                    
+
                     // Airport Metars UTC
-                    var deserializeMetarsUtc = JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportMetarsUTC", string.Empty));
+                    var deserializeMetarsUtc =
+                        JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportMetarsUTC",
+                            string.Empty));
                     _wxInfo.AirportMetarsUtc = deserializeMetarsUtc;
 
                     // Airport Metars
-                    var deserializeMetars = JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportMetars", string.Empty));
+                    var deserializeMetars =
+                        JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportMetars",
+                            string.Empty));
                     _wxInfo.AirportMetars = deserializeMetars;
 
                     // Airport Tafors UTC
-                    var deserializeTaforsUtc = JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportTaforsUTC", string.Empty));
+                    var deserializeTaforsUtc =
+                        JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportTaforsUTC",
+                            string.Empty));
                     _wxInfo.AirportTaforsUtc = deserializeTaforsUtc;
 
                     // Airport Tafors
-                    var deserializeTafors = JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportTafors", string.Empty));
+                    var deserializeTafors =
+                        JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportTafors",
+                            string.Empty));
                     _wxInfo.AirportTafors = deserializeTafors;
 
                     ShowWeather();
@@ -144,10 +178,11 @@ namespace Cavokator
                 {
                     // Just do nothing, as values are possibly null (first initialization)
                 }
-                
+
             }
 
-
+            
+            
             // Sets up timer to update METAR UTC
             UtcTimerTick();
 
@@ -155,51 +190,9 @@ namespace Cavokator
             // Close keyboard when click outside airport_entry EditText
             _linearlayoutWxBottom.Touch += delegate
             {
-                var imm = (InputMethodManager)Application.Context.GetSystemService(InputMethodService);
+                var imm = (InputMethodManager) Application.Context.GetSystemService(InputMethodService);
                 imm.HideSoftInputFromWindow(_airportEntryEditText.WindowToken, 0);
 
-            };
-
-            
-            // Action when wx request button is clicked
-            _wxRequestButton.Click += delegate 
-            {
-                _metarUtcFieldsIds.Clear();
-                _taforUtcFieldsIds.Clear();
-
-                _wxInfo.AirportIDs = null;
-                _myAirportsList = null;
-                _wxInfo.AirportErrors = null;
-                _wxInfo.AirportMetarsUtc = null;
-                _wxInfo.AirportMetars = null;
-                _wxInfo.AirportTaforsUtc = null;
-                _wxInfo.AirportTafors = null;
-
-                // Clear focus of airport_entry
-                var airportEntry = FindViewById<EditText>(Resource.Id.airport_entry);
-                airportEntry.ClearFocus();
-
-               
-                // Sanitizes _icaoIdList before ReqeuestWeather() makes use of it!
-                SanitizeAirportIds();
-
-
-                // We won't start fetching weather unless we have a valid entry
-                if (_myAirportsList.Count > 0)
-                {
-                    
-                    // Show our ProgressDialog
-                    _wxProgressDialog = new ProgressDialog(this);
-                    _wxProgressDialog.SetMessage(Resources.GetString(Resource.String.Fetching));
-                    _wxProgressDialog.SetCancelable(true);
-                    _wxProgressDialog.SetProgressStyle(ProgressDialogStyle.Horizontal);
-                    _wxProgressDialog.Progress = 0;
-                    _wxProgressDialog.Max = 100;
-                    _wxProgressDialog.Show();
-
-                    // Launch weather request
-                    RequestWeather();
-                }
             };
 
 
@@ -218,7 +211,7 @@ namespace Cavokator
                 _wxInfo.AirportTafors = null;
 
                 var linearlayoutWXmetarsTafors = FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
-                
+
                 // Remove all previous views from the linear layout
                 linearlayoutWXmetarsTafors.RemoveAllViews();
 
@@ -229,7 +222,7 @@ namespace Cavokator
 
             };
 
-            
+
             // OPTIONS DIALOG
             _wxOptionsButton.Click += delegate
             {
@@ -244,7 +237,52 @@ namespace Cavokator
             };
         }
 
-        
+
+        // Action when wx request button is clicked
+        private async void OnRequestButtonClicked(object sender, EventArgs e)
+        {
+            _metarUtcFieldsIds.Clear();
+            _taforUtcFieldsIds.Clear();
+
+            _wxInfo.AirportIDs = null;
+            _myAirportsList = null;
+            _wxInfo.AirportErrors = null;
+            _wxInfo.AirportMetarsUtc = null;
+            _wxInfo.AirportMetars = null;
+            _wxInfo.AirportTaforsUtc = null;
+            _wxInfo.AirportTafors = null;
+
+            // Clear focus of airport_entry
+            var airportEntry = FindViewById<EditText>(Resource.Id.airport_entry);
+            airportEntry.ClearFocus();
+
+
+
+            // Show our ProgressDialog
+            _wxProgressDialog = new ProgressDialog(this);
+            _wxProgressDialog.SetMessage(Resources.GetString(Resource.String.Fetching));
+            _wxProgressDialog.SetCancelable(true);
+            _wxProgressDialog.SetProgressStyle(ProgressDialogStyle.Horizontal);
+            _wxProgressDialog.Progress = 0;
+            _wxProgressDialog.Max = 100;
+            _wxProgressDialog.Show();
+
+            // Sanitizes _icaoIdList before RequestWeather() makes use of it!
+            await Task.Factory.StartNew(SanitizeAirportIds);
+
+
+            // We won't start fetching weather unless we have a valid entry
+            if (_myAirportsList != null && _myAirportsList.Count > 0)
+            {
+                // Launch weather request
+                RequestWeather();
+            }
+            else
+            {
+                _wxProgressDialog.Dismiss();
+            }
+        }
+
         private void SanitizeAirportIds()
         {
             var airportEntry = FindViewById<EditText>(Resource.Id.airport_entry);
@@ -256,7 +294,7 @@ namespace Cavokator
             _myAirportsList = airportEntry.Text.Split(' ', '\n', ',').ToList();
 
             // Check and delete any entries with less than 3 chars
-            for (var i = _icaoIdList.Count - 1 ; i >= 0; i--)
+            for (var i = _icaoIdList.Count - 1; i >= 0; i--)
             {
                 if (_icaoIdList[i].Length < 3)
                 {
@@ -264,7 +302,7 @@ namespace Cavokator
                     _myAirportsList.RemoveAt(i);
                 }
             }
-            
+
 
             // If airport code length is 3, it might be an IATA airport
             // so we try to get its ICAO in order to get the WX information
@@ -272,18 +310,30 @@ namespace Cavokator
             {
                 if (_icaoIdList[i].Length == 3)
                 {
-                    AirportConverter iataConverter = new AirportConverter(null, _icaoIdList[i]);
 
-                    if (iataConverter.Icao != null)
+
+
+                    // Try to find the IATA in the list
+                    try
                     {
-                        _icaoIdList[i] = iataConverter.Icao;
+                        for (int j = 0; j < _myAirportDefinitions.Count; j++)
+                        {
+                            if (_myAirportDefinitions[j].iata == _icaoIdList[i].ToUpper())
+                            {
+                                _icaoIdList[i] = _myAirportDefinitions[j].icao;
+                                break;
+                            }
+                            
+                        }
                     }
-                    else
+                    catch 
                     {
                         _icaoIdList[i] = null;
                     }
+
                 }
             }
+            
         }
 
 
@@ -480,20 +530,26 @@ namespace Cavokator
                 {
 
                     // AIRPORT NAME LINES
-
                     var airportName = new TextView(this);
-                    
-                    // If possible, show airport description (location)
-                    AirportConverter myAirport = new AirportConverter(_wxInfo.AirportIDs[i], null);
-                    if (myAirport.Description != null)
+
+                    // Try to get the airport's name from existing _myAirportDefinition List
+                    try
                     {
-                        airportName.Text = _myAirportsList[i] + " - " + myAirport.Description;
+                        for (int j = 0; j < _myAirportDefinitions.Count; j++)
+                        {
+                            if (_myAirportDefinitions[j].icao == _wxInfo.AirportIDs[i].ToUpper())
+                            {
+                                airportName.Text = _myAirportsList[i] + " - " + _myAirportDefinitions[j].icao;
+                                break;
+                            }
+
+                        }
                     }
-                    // Otherwise, just show the airport code
-                    else
+                    catch
                     {
                         airportName.Text = _myAirportsList[i];
                     }
+
 
                     airportName = ApplyAirportIDLineStyle(airportName);
 

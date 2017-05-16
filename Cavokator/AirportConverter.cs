@@ -1,11 +1,11 @@
 ﻿using System.IO;
+using System.Linq;
 using Android.App;
 using CsvHelper;
+using System.Collections.Generic;
 
 namespace Cavokator
 {
-
-    
     public class AirportCsvDefinition
     {
         // CAUTION: Field names match those in the CSV
@@ -18,80 +18,96 @@ namespace Cavokator
     
     /// <summary>
     /// Returns ICAO code and/or airport description. 
-    /// Takes IATA and/or ICAO code.
-    /// If IATA is given, converts to ICAO as well.
     /// </summary>
     public class AirportConverter
     {
-        private string Iata { get; }
-        public string Icao { get; private set; }
-        public string Description { get; private set; }
 
 
         /// <summary>
-        /// Fill properties with ICAO code and Description.
+        /// Returns list with all codes present in CSV
         /// </summary>
-        /// <param name="icao">ICAO code in order to get airport description.</param>
-        /// <param name="iata">IATA code to get ICAO + airport description.</param>
-        public AirportConverter(string icao, string iata)
+        public List<AirportCsvDefinition> GetCodeList()
         {
+            var records = new List<AirportCsvDefinition>();
 
-            if (icao != null)
-            {
-                Icao = icao.ToUpper();
-                GetDescription(Icao);
-            }
-
-            if (iata != null)
-            {
-                Iata = iata.ToUpper();
-                GetIcao(Iata);
-                GetDescription(Icao);
-            }
-
-
-        }
-
-
-        private void GetIcao(string requestedIata)
-        {
             var assets = Application.Context.Assets;
             var sr = new StreamReader(assets.Open("airport_codes.csv"));
             var csv = new CsvReader(sr);
             csv.Configuration.Delimiter = ";";
 
-            while (csv.Read())
-            {
-                var record = csv.GetRecord<AirportCsvDefinition>();
+            records = csv.GetRecords<AirportCsvDefinition>().ToList();
 
-                if (record.iata == requestedIata)
-                {
-                    Icao = record.icao;
-                    break;
-                }
-                Icao = null;
-            }
+            //while (csv.Read())
+            //{
+            //    records = csv.GetRecords<AirportCsvDefinition>().ToList();
+            //}
+
+            return records;
         }
 
 
-        private void GetDescription(string requestedIcao)
+
+
+        /// <summary>
+        /// Returns ICAO code when provided with a valid IATA code
+        /// </summary>
+        /// <param name="requestedIata">The IATA code you want to transform to ICAO</param>
+        /// <returns></returns>
+        public string GetIcao(string requestedIata)
         {
-            var assets = Application.Context.Assets;
-            var sr = new StreamReader(assets.Open("airport_codes.csv"));
-            var csv = new CsvReader(sr);
-            csv.Configuration.Delimiter = ";";
-
-            while (csv.Read())
+            if (requestedIata != null)
             {
-                var record = csv.GetRecord<AirportCsvDefinition>();
+                requestedIata = requestedIata.ToUpper();
 
-                if (record.icao == requestedIcao)
+                var assets = Application.Context.Assets;
+                var sr = new StreamReader(assets.Open("airport_codes.csv"));
+                var csv = new CsvReader(sr);
+                csv.Configuration.Delimiter = ";";
+
+                while (csv.Read())
                 {
-                    Description = record.description;
-                    break;
+                    var record = csv.GetRecord<AirportCsvDefinition>();
+
+                    if (record.iata == requestedIata)
+                    {
+                        return record.icao;
+
+                    }
                 }
-                Description = null;
             }
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// Returns airport name when provided with a valid ICAO code
+        /// </summary>
+        /// <param name="requestedIcao">The ICAO airport you want to get the name from</param>
+        /// <returns></returns>
+        public string GetDescription(string requestedIcao)
+        {
+            if (requestedIcao != null)
+            {
+                requestedIcao = requestedIcao.ToUpper();
+
+                var assets = Application.Context.Assets;
+                var sr = new StreamReader(assets.Open("airport_codes.csv"));
+                var csv = new CsvReader(sr);
+                csv.Configuration.Delimiter = ";";
+
+                while (csv.Read())
+                {
+                    var record = csv.GetRecord<AirportCsvDefinition>();
+
+                    if (record.icao == requestedIcao)
+                    {
+                        return record.description;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
