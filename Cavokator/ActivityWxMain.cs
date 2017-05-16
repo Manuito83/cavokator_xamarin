@@ -19,6 +19,7 @@ namespace Cavokator
 {
     [Activity(Label = "Cavokator", MainLauncher = true, Icon = "@drawable/ic_appicon",
          Theme = "@android:style/Theme.Material", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+
     public class ActivityWxMain : Activity
     {
 
