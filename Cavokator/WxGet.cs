@@ -461,7 +461,8 @@ namespace Cavokator
                             + "&format=xml"
                             + "&stationString=" + icaoId
                             + "&hoursBeforeNow=" + TaforHours
-                            + "&mostRecent=" + TaforLast;
+                            + "&mostRecent=" + TaforLast
+                            + "&timeType=issue";
 
             return url;
         }

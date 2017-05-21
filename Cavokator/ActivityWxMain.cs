@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Text;
+using Android.Text.Style;
 using Android.Util;
 using Android.Views;
 using Android.Views.InputMethods;
@@ -242,6 +243,9 @@ namespace Cavokator
         // Action when wx request button is clicked
         private async void OnRequestButtonClicked(object sender, EventArgs e)
         {
+            // TODO: remove, only testing
+            var lala = new WxColorCoder();
+
             _metarUtcFieldsIds.Clear();
             _taforUtcFieldsIds.Clear();
 
@@ -590,10 +594,16 @@ namespace Cavokator
                     {
                         // If we don't request METARS, we don't want to add an empty line
                         if (m == null) continue;
-                        var metarLines = new TextView(this)
-                        {
-                            Text = m
-                        };
+
+
+                        // TODO: ON TEST
+                        var colorCoder = new WxColorCoder();
+                        var coloredMetar = colorCoder.ColorCodeMetar(m);
+                        ////////////////
+
+                        var metarLines = new TextView(this);
+                        metarLines.TextFormatted = coloredMetar;
+
 
                         // Apply common style
                         metarLines = ApplyMetarLineStyle(metarLines);
@@ -603,7 +613,7 @@ namespace Cavokator
                             linearlayoutWXmetarsTafors.AddView(metarLines);
                         });
                     }
-
+                    
 
 
                     // TAFOR DATETIME LINE
