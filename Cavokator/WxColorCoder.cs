@@ -25,7 +25,7 @@ namespace Cavokator
 
         private List<string> BadWeather { get; } = new List<string>
         {
-            "TSRA", "SHRA"
+            "TSRA", @"\+SHRA"
         };
 
 
