@@ -67,6 +67,10 @@ namespace Cavokator
         private bool _mostRecent;
         private bool _saveData;
 
+        // TODO: implementar
+        private bool _doColorWeather = true;
+
+
         // Keep count of string length in EditText field, so that we know if it has decreased (deletion)
         private int _editTextIdLength;
 
@@ -243,8 +247,6 @@ namespace Cavokator
         // Action when wx request button is clicked
         private async void OnRequestButtonClicked(object sender, EventArgs e)
         {
-            // TODO: remove, only testing
-            var lala = new WxColorCoder();
 
             _metarUtcFieldsIds.Clear();
             _taforUtcFieldsIds.Clear();
@@ -595,14 +597,21 @@ namespace Cavokator
                         // If we don't request METARS, we don't want to add an empty line
                         if (m == null) continue;
 
+                        var metarLines = new TextView(this);
 
                         // TODO: ON TEST
-                        var colorCoder = new WxColorCoder();
-                        var coloredMetar = colorCoder.ColorCodeMetar(m);
+                        if (_doColorWeather)
+                        {
+                            var colorCoder = new WxColorCoder();
+                            var coloredMetar = colorCoder.ColorCodeMetar(m);
+                            metarLines.TextFormatted = coloredMetar;
+                        }
+                        else
+                        {
+                            metarLines.Text = m;
+                        }
                         ////////////////
 
-                        var metarLines = new TextView(this);
-                        metarLines.TextFormatted = coloredMetar;
 
 
                         // Apply common style
