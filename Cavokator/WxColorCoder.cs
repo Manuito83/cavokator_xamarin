@@ -10,22 +10,30 @@ namespace Cavokator
 {
     class WxColorCoder
     {
+        
+        private int _regularWindIntensity = 20;
+        private int _badWindIntensity = 30;
+        
+        // TODO: add all types of wx
         private List<string> GoodWeather { get; } = new List<string>
         {
-            "CAVOK", "NOSIG"
+            "CAVOK", "NOSIG", "NSC"
         };
 
 
         private List<string> RegularWeather { get; } = new List<string>
         {
-            "-RA", "-SHRA", 
-            "TS", "TSRA", "VCTS", "SHRA", "BR"
+            @"[-]RA", @"[-]SHRA",
+            @"\sTS(([A-Z]+)|(\z))",             // TS, TS(whatever), including last word in string
+            @"\sSH([^A-Z]|\z)",                 // SH, SH(whatever), including last word in string
+            "BR", "RERA", "VCSH", "VCTS"
         };
 
 
         private List<string> BadWeather { get; } = new List<string>
         {
-            "TSRA", @"\+SHRA"
+            @"[+]TS(([A-Z]+)|(\z))",            // +TS, +TS(whatever), including last word in string
+            @"[+]SH(([A-Z]+)|(\z))"             // +SH, +SH(whatever), including last word in string
         };
 
 
@@ -56,6 +64,32 @@ namespace Cavokator
             {
                 coloredMetar = SpanBadMetar(coloredMetar, match.Index, match.Length);
             }
+
+
+            // TODO: implement
+            // WIND
+            var windRegex = new Regex(@"\s[0-9]+KT");
+            var windMatches = windRegex.Matches(rawMetar);
+            foreach (var match in windMatches.Cast<Match>())
+            {
+                var windIntensity = rawMetar.Substring(match.Index + 4, 2);
+
+                try
+                {
+                    if (Int32.Parse(windIntensity) > _regularWindIntensity && Int32.Parse(windIntensity) < _badWindIntensity)
+                    {
+                        SpanRegularMetar(coloredMetar, match.Index, 8);
+                    }
+                    else if (Int32.Parse(windIntensity) >= _badWindIntensity)
+                    {
+                        SpanBadMetar(coloredMetar, match.Index, 8);
+                    }
+                }
+                catch { }
+
+                
+            }
+
 
             return coloredMetar;
         }
