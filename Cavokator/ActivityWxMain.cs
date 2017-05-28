@@ -318,8 +318,6 @@ namespace Cavokator
                 if (_icaoIdList[i].Length == 3)
                 {
 
-
-
                     // Try to find the IATA in the list
                     try
                     {
@@ -546,7 +544,7 @@ namespace Cavokator
                         {
                             if (_myAirportDefinitions[j].icao == _wxInfo.AirportIDs[i].ToUpper())
                             {
-                                airportName.Text = _myAirportsList[i] + " - " + _myAirportDefinitions[j].icao;
+                                airportName.Text = _myAirportsList[i] + " - " + _myAirportDefinitions[j].description;
                                 break;
                             }
 
