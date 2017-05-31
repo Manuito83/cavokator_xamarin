@@ -19,15 +19,25 @@ namespace Cavokator
         private int _regularGustIntensity = 30;
         private int _badGustIntensity = 40;
 
+        // Wind Meters Per Second Intensity
+        private int _regularMpsWindIntensity = 10;
+        private int _badMpsWindIntensity = 15;
+
+        // Wind Meters Per Second Gust
+        private int _regularMpsGustIntensity = 15;
+        private int _badMpsGustIntensity = 20;
+
+
+
         // Visibility
-        private int _regularVisibility = 5000;
+        private int _regularVisibility = 6000;
         private int _badVisibility = 1000;
 
         
-        // TODO: add all types of wx
+        
         private List<string> GoodWeather { get; } = new List<string>
         {
-            "CAVOK", "NOSIG", "NSC"
+            "CAVOK", "NOSIG", "NSC", "00000KT"
         };
 
 
@@ -88,7 +98,11 @@ namespace Cavokator
         {
 
             // TODO: DELETE WHEN TESTING IS OVER!!
-            rawMetar = "LBBG 041600Z 12012MPS 0500 1000 2000 5000 5005 SHSN SHRA 12015G20KT 12015G30KT 12015G40KT 12025G30KT 12025G40KT 12035G40KT 20015KT 20025KT 20035KT 090V150 1400 R04/P1500N R22/P1500U +SN BKN022 OVC050 M04/M07 Q1020 NOSIG 8849//91= +SN";
+            rawMetar = "LBBG 041600Z 12008MPS 12012MPS 12018MPS 12008G18MPS 12012G07MPS 12016G16MPS 12018G20MPS" +
+                " 0500 1000 2000 5000 5005" +
+                " SHSN SHRA " +
+                "12015G20KT 12015G30KT 12015G40KT 12025G30KT 12025G40KT 12035G40KT 20015KT 20025KT 20035KT" +
+                " 090V150 1400 R04/P1500N R22/P1500U +SN BKN022 OVC050 M04/M07 Q1020 NOSIG 8849//91= +SN";
             // TEST**TEST**TEST**
 
             var coloredMetar = new SpannableString(rawMetar);
@@ -119,7 +133,7 @@ namespace Cavokator
 
 
             
-            // WIND TYPE 1 - e.g.: 25015KT
+            // WIND KNOTS - e.g.: 25015KT
             var windRegex = new Regex(@"\s[0-9]+KT");
             var windMatches = windRegex.Matches(rawMetar);
             foreach (var match in windMatches.Cast<Match>())
@@ -145,7 +159,7 @@ namespace Cavokator
 
 
 
-            // WIND TYPE 2 - e.g.: 25015G30KT
+            // WIND KNOTS 2 - e.g.: 25015G30KT
             var wind2Regex = new Regex(@"\s[0-9]+G[0-9]+KT");
             var wind2Matches = wind2Regex.Matches(rawMetar);
             foreach (var match in wind2Matches.Cast<Match>())
@@ -193,14 +207,80 @@ namespace Cavokator
 
 
 
-            // TODO: Implement
-            // WIND TYPE 2 - e.g.: 13030MPS
+            // WIND MPS - e.g.: 13030MPS
+            var windMpsRegex = new Regex(@"\s[0-9]+MPS");
+            var windMpsMatches = windMpsRegex.Matches(rawMetar);
+            foreach (var match in windMpsMatches.Cast<Match>())
+            {
+                var windIntensity = rawMetar.Substring(match.Index + 4, 2);
+
+                try
+                {
+                    if (Int32.Parse(windIntensity) >= _regularMpsWindIntensity && Int32.Parse(windIntensity) < _badMpsWindIntensity)
+                    {
+                        coloredMetar = SpanRegularMetar(coloredMetar, match.Index, 9);
+                    }
+                    else if (Int32.Parse(windIntensity) >= _badMpsWindIntensity)
+                    {
+                        coloredMetar = SpanBadMetar(coloredMetar, match.Index, 9);
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
 
 
 
+            // WIND MPS 2 - e.g.: 13030G20MPS
+            var windMps2Regex = new Regex(@"\s[0-9]+G[0-9]+MPS");
+            var windMps2Matches = windMps2Regex.Matches(rawMetar);
+            foreach (var match in windMps2Matches.Cast<Match>())
+            {
+                // INTENSITY
+                var windIntensity = rawMetar.Substring(match.Index + 4, 2);
+                try
+                {
+                    if (Int32.Parse(windIntensity) >= _regularMpsWindIntensity && Int32.Parse(windIntensity) < _badMpsWindIntensity)
+                    {
+                        coloredMetar = SpanRegularMetar(coloredMetar, match.Index, 6);
+                        coloredMetar = SpanRegularMetar(coloredMetar, match.Index + 9, 3);
+                    }
+                    else if (Int32.Parse(windIntensity) >= _badMpsWindIntensity)
+                    {
+                        coloredMetar = SpanBadMetar(coloredMetar, match.Index, 6);
+                        coloredMetar = SpanRegularMetar(coloredMetar, match.Index + 9, 3);
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
 
 
-            // WIND TYPE 1 - e.g.: 25015KT
+                // GUST
+                var windGust = rawMetar.Substring(match.Index + 7, 2);
+                try
+                {
+                    if (Int32.Parse(windGust) >= _regularMpsGustIntensity && Int32.Parse(windGust) < _badMpsGustIntensity)
+                    {
+                        coloredMetar = SpanRegularMetar(coloredMetar, match.Index + 6, 6);
+                    }
+                    else if (Int32.Parse(windGust) >= _badMpsGustIntensity)
+                    {
+                        coloredMetar = SpanBadMetar(coloredMetar, match.Index + 6, 6);
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+
+
+            // VISIBILITY
             var visibilityRegex = new Regex(@"(?<=\s)([0-9]+)(?=\s)");
             var visibiltyMatches = visibilityRegex.Matches(rawMetar);
             foreach (var match in visibiltyMatches.Cast<Match>())
@@ -225,6 +305,10 @@ namespace Cavokator
                 }
             }
 
+
+
+            // TODO: RVR
+            var rvrRegex = new Regex(@"R[0-9]+.\057[P|M][0-9]+[U|D|N]");
 
 
 
