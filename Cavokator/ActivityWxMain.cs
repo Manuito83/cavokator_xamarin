@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Android.Media;
 
 namespace Cavokator
 {
@@ -644,6 +645,9 @@ namespace Cavokator
                         // Save dictionary of TextViews so that we can update the time difference later on
                         _taforUtcFieldsIds.Add(taforUtcLine.Id.ToString(), _wxInfo.AirportTaforsUtc[i][0]);
                     }
+                    
+                    // ELSE
+                    // TODO: ADD ERROR LINE FOR CASE NOT FOUND (DATETIME LINE), EG: "LEZ"
 
 
 
@@ -678,11 +682,11 @@ namespace Cavokator
 
             if (type == "metar")
             {
-                readableUtcStart = Resources.GetString(Resource.String.Metar_Issued);
+                readableUtcStart = "* " + Resources.GetString(Resource.String.Metar_Issued);
             }
             else if (type == "tafor")
             {
-                readableUtcStart = Resources.GetString(Resource.String.Tafor_Issued);
+                readableUtcStart = "* " + Resources.GetString(Resource.String.Tafor_Issued);
             }
 
             var readableUtcEnd = Resources.GetString(Resource.String.Ago);
@@ -808,7 +812,7 @@ namespace Cavokator
 
             utcLine.SetTextSize(ComplexUnitType.Dip, 14);
             var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            wxTextViewParams.SetMargins(15, 20, 0, 0);
+            wxTextViewParams.SetMargins(5, 20, 0, 0);
             utcLine.LayoutParameters = wxTextViewParams;
             utcLine.Id = View.GenerateViewId();
 

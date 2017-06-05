@@ -295,9 +295,19 @@ namespace Cavokator
                                               where n.Element("station_id").Value == airport[i].Key
                                               select n.Element("observation_time")).ToList();
 
-                        for (var j = 0; j < metarUtcGroup.Count(); j++)
+
+
+                        if (metarUtcGroup.Count() == 0)
                         {
-                            metarUtcList.Add(Convert.ToDateTime(metarUtcGroup[j].Value));
+                            metarUtcList.Add(DateTime.MinValue);
+                        }
+                        else
+                        {
+                            for (var j = 0; j < metarUtcGroup.Count(); j++)
+                            {
+                                metarUtcList.Add(Convert.ToDateTime(metarUtcGroup[j].Value).ToUniversalTime());
+                            }
+
                         }
                         _wxinfo.AirportMetarsUtc.Insert(airportNumber, metarUtcList);
 
@@ -349,10 +359,20 @@ namespace Cavokator
                                               where n.Element("station_id").Value == airport[i].Key
                                               select n.Element("issue_time")).ToList();
 
-                        for (var j = 0; j < taforUtcGroup.Count(); j++)
+
+                        if (taforUtcGroup.Count() == 0)
                         {
-                            taforUtcList.Add(Convert.ToDateTime(taforUtcGroup[j].Value).ToUniversalTime());
+                            taforUtcList.Add(DateTime.MinValue);
                         }
+                        else
+                        {
+                            for (var j = 0; j < taforUtcGroup.Count(); j++)
+                            {
+                                taforUtcList.Add(Convert.ToDateTime(taforUtcGroup[j].Value).ToUniversalTime());
+                            }
+
+                        }
+
                         _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUtcList);
 
 
@@ -401,9 +421,17 @@ namespace Cavokator
                                               where n.Element("station_id").Value == airport[i].Key
                                               select n.Element("observation_time")).ToList();
 
-                        for (var j = 0; j < metarUtcGroup.Count(); j++)
+                        if (metarUtcGroup.Count() == 0)
                         {
-                            metarUtcList.Add(Convert.ToDateTime(metarUtcGroup[j].Value).ToUniversalTime());
+                            metarUtcList.Add(DateTime.MinValue);
+                        }
+                        else
+                        {
+                            for (var j = 0; j < metarUtcGroup.Count(); j++)
+                            {
+                                metarUtcList.Add(Convert.ToDateTime(metarUtcGroup[j].Value).ToUniversalTime());
+                            }
+
                         }
                         _wxinfo.AirportMetarsUtc.Insert(airportNumber, metarUtcList);
 
@@ -415,12 +443,21 @@ namespace Cavokator
                                               where n.Element("station_id").Value == airport[i].Key
                                               select n.Element("issue_time")).ToList();
 
-                        for (var j = 0; j < taforUtcGroup.Count(); j++)
-                        {
-                            taforUtcList.Add(Convert.ToDateTime(taforUtcGroup[j].Value).ToUniversalTime());
-                        }
-                        _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUtcList);
 
+                        if (taforUtcGroup.Count() == 0)
+                        {
+                            taforUtcList.Add(DateTime.MinValue);
+                        }
+                        else
+                        {
+                            for (var j = 0; j < taforUtcGroup.Count(); j++)
+                            {
+                                taforUtcList.Add(Convert.ToDateTime(taforUtcGroup[j].Value).ToUniversalTime());
+                            }
+
+                        }
+
+                        _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUtcList);
                     }
                 }
             }

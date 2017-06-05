@@ -3,6 +3,7 @@ using System.Linq;
 using Android.App;
 using CsvHelper;
 using System.Collections.Generic;
+using Android.Media;
 
 namespace Cavokator
 {
@@ -36,11 +37,6 @@ namespace Cavokator
             csv.Configuration.Delimiter = ";";
 
             records = csv.GetRecords<AirportCsvDefinition>().ToList();
-
-            //while (csv.Read())
-            //{
-            //    records = csv.GetRecords<AirportCsvDefinition>().ToList();
-            //}
 
             return records;
         }

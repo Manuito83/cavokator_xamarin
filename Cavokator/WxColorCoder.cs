@@ -27,14 +27,16 @@ namespace Cavokator
         private int _regularMpsGustIntensity = 15;
         private int _badMpsGustIntensity = 20;
 
-
-
         // Visibility
         private int _regularVisibility = 6000;
         private int _badVisibility = 1000;
 
-        
-        
+        // RVR
+        private int _regularRvr = 1000;
+        private int _badRvr = 600;
+
+
+
         private List<string> GoodWeather { get; } = new List<string>
         {
             "CAVOK", "NOSIG", "NSC", "00000KT"
@@ -64,7 +66,7 @@ namespace Cavokator
             "VCFG", "MIFG", "PRFG", "BCFG",
             "DRDU", "BLDU", "DRSA", "BLSA", "BLPY",
 
-            "RERA", "VCSH", "VCTS", "SHRA"          // Some others
+            "RERA", "VCSH", "VCTS", "SHRA", "TS"    // Some others
         };
 
 
@@ -97,12 +99,8 @@ namespace Cavokator
         public SpannableString ColorCodeMetar(string rawMetar)
         {
 
-            // TODO: DELETE WHEN TESTING IS OVER!!
-            rawMetar = "LBBG 041600Z 12008MPS 12012MPS 12018MPS 12008G18MPS 12012G07MPS 12016G16MPS 12018G20MPS" +
-                " 0500 1000 2000 5000 5005" +
-                " SHSN SHRA " +
-                "12015G20KT 12015G30KT 12015G40KT 12025G30KT 12025G40KT 12035G40KT 20015KT 20025KT 20035KT" +
-                " 090V150 1400 R04/P1500N R22/P1500U +SN BKN022 OVC050 M04/M07 Q1020 NOSIG 8849//91= +SN";
+            // ** CAUTION: USE ONLY FOR TESTING **
+            // rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 12015G20KT R04/P1500N R22/P0800U R22L/P0500U 8849//91= ";
             // TEST**TEST**TEST**
 
             var coloredMetar = new SpannableString(rawMetar);
@@ -303,13 +301,84 @@ namespace Cavokator
                 {
                     // ignored
                 }
+
             }
 
 
 
-            // TODO: RVR
+            // RVR
             var rvrRegex = new Regex(@"R[0-9]+.\057[P|M][0-9]+[U|D|N]");
+            var rvrMatches = rvrRegex.Matches(rawMetar);
+            foreach (var match in rvrMatches.Cast<Match>())
+            {
 
+                var rvrValue = rawMetar.Substring(match.Index + match.Length - 5, 4);
+
+                try
+                {
+                    if (Int32.Parse(rvrValue) <= _regularRvr && Int32.Parse(rvrValue) > _badRvr)
+                    {
+                        coloredMetar = SpanRegularMetar(coloredMetar, match.Index + match.Length - 6, 5);
+                    }
+                    else if (Int32.Parse(rvrValue) <= _badRvr)
+                    {
+                        coloredMetar = SpanBadMetar(coloredMetar, match.Index + match.Length - 6, 5);
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+
+
+
+                var rvrTrend = rawMetar.Substring(match.Index + match.Length - 1, 1);
+
+                try
+                {
+                    switch (rvrTrend)
+                    {
+                        case "U":
+                            coloredMetar = SpanGoodMetar(coloredMetar, match.Index + match.Length - 1, 1);
+                            break;
+                        case "N":
+                            coloredMetar = SpanRegularMetar(coloredMetar, match.Index + match.Length - 1, 1);
+                            break;
+                        case "D":
+                            coloredMetar = SpanBadMetar(coloredMetar, match.Index + match.Length - 1, 1);
+                            break;
+                    }
+
+                }
+                catch
+                {
+                    // ignored
+                }
+
+
+                try
+                {
+
+                    Console.WriteLine("AAAAA: " + rawMetar.Substring(match.Index + 4, 1));
+
+                    if (rawMetar.Substring(match.Index + 3, 1) == "/")
+                    {
+                        coloredMetar = SpanInfoColor(coloredMetar, match.Index, 4);
+                    }
+                    else
+                    {
+                        coloredMetar = SpanInfoColor(coloredMetar, match.Index, 5);
+                    }
+
+
+                }
+                catch
+                {
+                    // ignored
+                }
+
+
+            }
 
 
 
@@ -336,6 +405,14 @@ namespace Cavokator
         {
             regularColoredMetar.SetSpan(new ForegroundColorSpan(Color.Red), index, index + length, 0);
             return regularColoredMetar;
+        }
+
+
+        // Apply information color
+        private SpannableString SpanInfoColor(SpannableString entryColoredMetar, int index, int length)
+        {
+            entryColoredMetar.SetSpan(new ForegroundColorSpan(Color.Cyan), index, index + length, 0);
+            return entryColoredMetar;
         }
 
     }

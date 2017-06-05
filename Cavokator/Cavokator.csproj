@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\appicon.psd" />
+    <AndroidAsset Include="Assets\airport_codes.csv" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
@@ -121,9 +122,6 @@
     <AndroidResource Include="Resources\layout\wx_options_spinner.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\airport_codes.csv" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\ic_appicon.png" />
