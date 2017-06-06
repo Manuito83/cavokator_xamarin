@@ -621,7 +621,30 @@ namespace Cavokator
                             linearlayoutWXmetarsTafors.AddView(metarLines);
                         });
                     }
-                    
+
+
+
+
+
+                    // TODO: ADD ERROR LINE FOR CASE NOT FOUND (DATETIME LINE), EG: "LEZ"
+                    // REVISAR, NO FUNCIONA!!!!
+                    if ((_metarOrTafor == "metar_and_tafor" || _metarOrTafor == "only_tafor")
+                        && (_wxInfo.AirportTafors[i] == null))
+                    {
+                        var taforUtcLine = new TextView(this);
+
+                        // Convert to readable time comparison
+                        taforUtcLine.Text = "NOT AVAILABLE";
+
+                        RunOnUiThread(() =>
+                        {
+                            linearlayoutWXmetarsTafors.AddView(taforUtcLine);
+                        });
+                    }
+
+
+
+
 
 
                     // TAFOR DATETIME LINE
@@ -646,10 +669,7 @@ namespace Cavokator
                         _taforUtcFieldsIds.Add(taforUtcLine.Id.ToString(), _wxInfo.AirportTaforsUtc[i][0]);
                     }
                     
-                    // ELSE
-                    // TODO: ADD ERROR LINE FOR CASE NOT FOUND (DATETIME LINE), EG: "LEZ"
-
-
+                    
 
                     // TAFOR LINES
                     foreach (string f in _wxInfo.AirportTafors[i])

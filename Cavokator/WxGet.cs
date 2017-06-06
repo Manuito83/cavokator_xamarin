@@ -15,7 +15,7 @@ namespace Cavokator
         private readonly TimeSpan _connectionTimeOutSeconds = TimeSpan.FromSeconds(15);
 
         // ** TAFOR CONFIGURATON (ONLY IMPLEMENTED FOR LATEST VERSION) **
-        private const int TaforHours = 6;
+        private const int TaforHours = 24;
         private const bool TaforLast = true;
 
 
