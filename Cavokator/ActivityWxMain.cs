@@ -624,17 +624,22 @@ namespace Cavokator
 
 
 
-
-
-                    // TODO: ADD ERROR LINE FOR CASE NOT FOUND (DATETIME LINE), EG: "LEZ"
-                    // REVISAR, NO FUNCIONA!!!!
-                    if ((_metarOrTafor == "metar_and_tafor" || _metarOrTafor == "only_tafor")
-                        && (_wxInfo.AirportTafors[i] == null))
+                    
+                    // Certain airports, such as "LEZ" (IATA) do not publish a TAFOR. 
+                    // With the following code we show a "TAFOR not available" text in such cases
+                    // instead of no showing the TAFOR at all
+                    if (_metarOrTafor == "metar_and_tafor" && _wxInfo.AirportTafors[i].Count == 0)
                     {
                         var taforUtcLine = new TextView(this);
 
                         // Convert to readable time comparison
-                        taforUtcLine.Text = "NOT AVAILABLE";
+                        taforUtcLine.Text = "* " + Resources.GetString(Resource.String.TaforNotAvailable);
+                        taforUtcLine.SetTextColor(Color.Yellow);
+                        taforUtcLine.SetTextSize(ComplexUnitType.Dip, 14);
+                        var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                        wxTextViewParams.SetMargins(5, 20, 0, 0);
+                        taforUtcLine.LayoutParameters = wxTextViewParams;
+                        taforUtcLine.Id = View.GenerateViewId();
 
                         RunOnUiThread(() =>
                         {
@@ -643,9 +648,7 @@ namespace Cavokator
                     }
 
 
-
-
-
+                    
 
                     // TAFOR DATETIME LINE
                     if (_wxInfo.AirportTaforsUtc[i][0] != DateTime.MinValue)
@@ -788,7 +791,7 @@ namespace Cavokator
             airportName.SetTextColor(Color.Magenta);
             airportName.SetTextSize(ComplexUnitType.Dip, 16);
             LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            airportTextViewParams.SetMargins(0, 50, 0, 0);
+            airportTextViewParams.SetMargins(0, 70, 0, 0);
             airportName.LayoutParameters = airportTextViewParams;
             return airportName;
         }
@@ -896,13 +899,19 @@ namespace Cavokator
         // Eventhandler to show Toast
         private void OnConnectionTimeOut(object source, EventArgs e)
         {
-            Toast.MakeText(this, Resource.String.Server_Timeout, ToastLength.Short).Show();
+            RunOnUiThread(() =>
+            {
+                Toast.MakeText(this, Resource.String.Server_Timeout, ToastLength.Short).Show();
+            });
         }
 
         // Eventhandler to show Toast
         private void OnConnectionError(object source, EventArgs e)
         {
-            Toast.MakeText(this, Resource.String.Connection_Error, ToastLength.Short).Show();
+            RunOnUiThread(() =>
+            {
+                Toast.MakeText(this, Resource.String.Connection_Error, ToastLength.Short).Show();
+            });
         }
 
 

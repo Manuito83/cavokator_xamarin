@@ -12,7 +12,8 @@ namespace Cavokator
     {
 
         // Configuration
-        private readonly TimeSpan _connectionTimeOutSeconds = TimeSpan.FromSeconds(15);
+        // TODO: FIXING CANCELLATION TOKEN - DELETE THIS AFTERWARDS
+        private readonly TimeSpan _connectionTimeOutSeconds = TimeSpan.FromSeconds(2);
 
         // ** TAFOR CONFIGURATON (ONLY IMPLEMENTED FOR LATEST VERSION) **
         private const int TaforHours = 24;
@@ -473,13 +474,16 @@ namespace Cavokator
         /// <returns></returns>
         private static string GetMetarUrl(string icaoId, int hoursBefore, bool mostRecent)
         {
-            var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
-                            + "dataSource=metars"
-                            + "&requestType=retrieve"
-                            + "&format=xml"
-                            + "&stationString=" + icaoId
-                            + "&hoursBeforeNow=" + hoursBefore
-                            + "&mostRecent=" + mostRecent;
+            // TODO: corregir
+            var url = "192.255.255.0";
+            
+            //var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+            //                + "dataSource=metars"
+            //                + "&requestType=retrieve"
+            //                + "&format=xml"
+            //                + "&stationString=" + icaoId
+            //                + "&hoursBeforeNow=" + hoursBefore
+            //                + "&mostRecent=" + mostRecent;
 
             return url;
         }

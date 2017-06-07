@@ -271,6 +271,9 @@ namespace Cavokator
 			// aapt resource value: 0x7f050009
 			public const int Server_Timeout = 2131034121;
 			
+			// aapt resource value: 0x7f05001b
+			public const int TaforNotAvailable = 2131034139;
+			
 			// aapt resource value: 0x7f050012
 			public const int Tafor_Issued = 2131034130;
 			

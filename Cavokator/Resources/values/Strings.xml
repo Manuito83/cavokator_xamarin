@@ -27,6 +27,7 @@
     <string name="Hour">hour</string>
     <string name="Minute">minute</string>
     <string name="Fetching">Fetching...</string>
+    <string name="TaforNotAvailable">TAFOR not available</string>
   
 
   <string-array name="wx_option">
