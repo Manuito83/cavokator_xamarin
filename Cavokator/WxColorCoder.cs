@@ -56,7 +56,12 @@ namespace Cavokator
             @"[-]GR", @"\sGR",                      // Hail
             @"[-]GS", @"\sGS",                      // Small Hail
 
+            @"[-]RA(([A-Z]+)|(\z))",                // -RA, -RA(whatever), including last word in string
+            @"\sRA(([A-Z]+)|(\z))",                 // RA, RA(whatever), including last word in string
+
+            @"\sSH(([A-Z]+)|(\z))",                 // SH, SH(whatever), including last word in string
             @"[-]SH(([A-Z]+)|(\z))",                // -SH, -SH(whatever), including last word in string
+
             @"[-]TS(([A-Z]+)|(\z))",                // -TS, -TS(whatever), including last word in string
             @"\sTS(([A-Z]+)|(\z))",                 // TS, TS(whatever), including last word in string
                

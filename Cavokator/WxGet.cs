@@ -12,8 +12,7 @@ namespace Cavokator
     {
 
         // Configuration
-        // TODO: FIXING CANCELLATION TOKEN - DELETE THIS AFTERWARDS
-        private readonly TimeSpan _connectionTimeOutSeconds = TimeSpan.FromSeconds(2);
+        private readonly int _connectionTimeOutSeconds = 10;
 
         // ** TAFOR CONFIGURATON (ONLY IMPLEMENTED FOR LATEST VERSION) **
         private const int TaforHours = 24;
@@ -28,6 +27,7 @@ namespace Cavokator
 
         /// <summary>
         /// Returns event args Airport (string) and PercentageCompleted (int)
+        /// Returns 999 if error exists
         /// </summary>
         public event EventHandler<WxGetEventArgs> PercentageCompleted;
 
@@ -111,11 +111,19 @@ namespace Cavokator
                         }
                     }
                 }
-                
+
                 // Call event raiser with airport name and percentage completed
                 // so that we can follow the progress
-                int percentageCompleted = (i+1) * 100 / icaoIDlist.Count();
-                OnPercentageCompleted(icaoIDlist[i], percentageCompleted);
+                if (!_connectionErrorException)
+                {
+                    int percentageCompleted = (i + 1) * 100 / icaoIDlist.Count();
+                    OnPercentageCompleted(icaoIDlist[i], percentageCompleted);
+                }
+                else
+                {
+                    OnPercentageCompleted(icaoIDlist[i], 999);
+                    break;
+                }
             }
 
             // Call event raiser
@@ -139,18 +147,19 @@ namespace Cavokator
         {
             // Form METAR URL
             var metarUrl = GetMetarUrl(icaoId, hoursBefore, mostRecent);
-
+            
             // Cancellation Token to set timeout of async task (http request, mainly)
-            CancellationTokenSource cts = new CancellationTokenSource(_connectionTimeOutSeconds);
+            var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(_connectionTimeOutSeconds));
+            var token = tokenSource.Token;
 
             // Get async data and pass cancellation token
-            var metarRawData = Task.Run(async () => await GetRawData(metarUrl, cts.Token));
+            var metarRawData = Task.Run(async () => await GetRawData(metarUrl, token), token);
 
             try
             {
-                metarRawData.Wait(cts.Token);
+                metarRawData.Wait(token);
             }
-            catch (OperationCanceledException)
+            catch
             {
                 // Call event raiser
                 OnConnectionTimeOut();
@@ -160,9 +169,9 @@ namespace Cavokator
                 return null;
             }
                 
-            var metarXmLraw = metarRawData.Result;
+            var metarXmlRaw = metarRawData.Result;
 
-            if (metarXmLraw == string.Empty)
+            if (metarXmlRaw == string.Empty)
             {
                 // Connection error var in order to stop the work
                 _connectionErrorException = true;
@@ -171,8 +180,18 @@ namespace Cavokator
             else
             {
                 // Parse xml string
-                var parsedMetarXml = XDocument.Parse(metarXmLraw);
-                return parsedMetarXml;
+                try
+                {
+                    var parsedMetarXml = XDocument.Parse(metarXmlRaw);
+                    return parsedMetarXml;
+                }
+                catch
+                {
+                    _connectionErrorException = true;
+                    OnConnectionError();
+                    return null;
+                }
+
             }
 
         }
@@ -191,14 +210,15 @@ namespace Cavokator
             string taforUrl = GetTaforUrl(icaoId);
 
             // Cancellation Token to set timeout of async task (http request, mainly)
-            CancellationTokenSource cts = new CancellationTokenSource(_connectionTimeOutSeconds);
+            var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(_connectionTimeOutSeconds));
+            var token = tokenSource.Token;
 
             // Get async data and pass cancellation token
-            Task<string> taforRawData = Task.Run(async () => await GetRawData(taforUrl, cts.Token));
+            Task<string> taforRawData = Task.Run(async () => await GetRawData(taforUrl, token), token);
 
             try
             {
-                taforRawData.Wait(cts.Token);
+                taforRawData.Wait(token);
             }
             catch (OperationCanceledException)
             {
@@ -211,11 +231,30 @@ namespace Cavokator
             }
             
             var taforXmlRaw = taforRawData.Result;
+            
+            if (taforXmlRaw == string.Empty)
+            {
+                // Connection error var in order to stop the work
+                _connectionErrorException = true;
+                return null;
+            }
+            else
+            {
+                // Parse xml string
+                try
+                {
+                    var parsedTaforXml = XDocument.Parse(taforXmlRaw);
+                    return parsedTaforXml;
+                }
+                catch
+                {
+                    _connectionErrorException = true;
+                    OnConnectionError();
+                    return null;
+                }
 
-            // Parse xml string
-            XDocument parsedTaforXml = XDocument.Parse(taforXmlRaw);
+            }
 
-            return parsedTaforXml;
         }
 
 
@@ -474,16 +513,14 @@ namespace Cavokator
         /// <returns></returns>
         private static string GetMetarUrl(string icaoId, int hoursBefore, bool mostRecent)
         {
-            // TODO: corregir
-            var url = "192.255.255.0";
-            
-            //var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
-            //                + "dataSource=metars"
-            //                + "&requestType=retrieve"
-            //                + "&format=xml"
-            //                + "&stationString=" + icaoId
-            //                + "&hoursBeforeNow=" + hoursBefore
-            //                + "&mostRecent=" + mostRecent;
+
+            var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+                            + "dataSource=metars"
+                            + "&requestType=retrieve"
+                            + "&format=xml"
+                            + "&stationString=" + icaoId
+                            + "&hoursBeforeNow=" + hoursBefore
+                            + "&mostRecent=" + mostRecent;
 
             return url;
         }
@@ -520,8 +557,9 @@ namespace Cavokator
 
             string content;
             
-            // HttpClient + Timeout property
+            // HttpClient
             var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(10);
 
             try
             {
@@ -529,7 +567,7 @@ namespace Cavokator
                 content = await response.Content.ReadAsStringAsync();
                 return content;
             }
-            catch (HttpRequestException)
+            catch
             {
                 // Call event raiser
                 OnConnectionError();
@@ -550,7 +588,7 @@ namespace Cavokator
         // Event raiser
         protected virtual void OnWorkFinished()
         {
-            WorkRunning?.Invoke(this, new WxGetEventArgs(_connectionErrorException) { Running = false });
+            WorkRunning?.Invoke(this, new WxGetEventArgs() { Running = false });
         }
 
         // Event raiser
@@ -582,16 +620,6 @@ namespace Cavokator
 
         public string Airport { get; set; }
         public int PercentageCompleted { get; set; }
-
-        public WxGetEventArgs()
-        {
-
-        }
-
-        public WxGetEventArgs(bool error)
-        {
-            Error = error;
-        }
 
     }
 

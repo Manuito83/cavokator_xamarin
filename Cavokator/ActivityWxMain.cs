@@ -490,8 +490,7 @@ namespace Cavokator
 
             if (CrossConnectivity.Current.IsConnected)
             {
-                Toast.MakeText(this, Resource.String.Requesting_METAR_Information, ToastLength.Long).Show();
-                    
+                  
                 // Start thread outside UI
                 Task.Factory.StartNew(() =>
                 {
@@ -598,7 +597,7 @@ namespace Cavokator
 
                         var metarLines = new TextView(this);
 
-                        // TODO: ON TEST
+                        // Color coding
                         if (_doColorWeather)
                         {
                             var colorCoder = new WxColorCoder();
@@ -609,7 +608,6 @@ namespace Cavokator
                         {
                             metarLines.Text = m;
                         }
-                        ////////////////
 
 
 
@@ -679,10 +677,21 @@ namespace Cavokator
                     {
                         // If we don't request TAFORS, we don't want to add an empty line
                         if (f == null) continue;
-                        var taforLines = new TextView(this)
+
+                        var taforLines = new TextView(this);
+
+                        // Color coding
+                        if (_doColorWeather)
                         {
-                            Text = f
-                        };
+                            var colorCoder = new WxColorCoder();
+                            var coloredTafor = colorCoder.ColorCodeMetar(f);
+                            taforLines.TextFormatted = coloredTafor;
+                        }
+                        else
+                        {
+                            taforLines.Text = f;
+                        }
+
 
                         // Apply common style
                         taforLines = ApplyTaforLineStyle(taforLines);
@@ -880,19 +889,11 @@ namespace Cavokator
             }
             else
             {
-
                 RunOnUiThread(() =>
                 {
                     _wxRequestButton.Enabled = true;
-
-                    if (e.Error)
-                    {
-                        Toast.MakeText(this, Resource.String.Server_Timeout, ToastLength.Short).Show();
-                    }
-
                 });
             }
-
         }
 
 
@@ -958,12 +959,21 @@ namespace Cavokator
         // Eventhandler to update ProgressDialog
         private async void OnPercentageCompleted(object source, WxGetEventArgs e)
         {
-            RunOnUiThread(() =>
+            if (e.PercentageCompleted <= 100)
             {
-                // Show the airport and percentage
-                _wxProgressDialog.SetMessage(e.Airport);
-                _wxProgressDialog.Progress = e.PercentageCompleted;
-            });
+                RunOnUiThread(() =>
+                {
+                    // Show the airport and percentage
+                    _wxProgressDialog.SetMessage(e.Airport.ToUpper());
+                    _wxProgressDialog.Progress = e.PercentageCompleted;
+                });
+            }
+            // Error case
+            else if (e.PercentageCompleted == 999)
+            {
+                await Task.Delay(500);
+                _wxProgressDialog.Dismiss();
+            }
 
             // If we reached a 100%, we will wait a bit to that users can see the whole bar
             if (e.PercentageCompleted == 100)
@@ -971,7 +981,7 @@ namespace Cavokator
                 await Task.Delay(250);
                 _wxProgressDialog.Dismiss();
             }
-            
+
         }
 
         
