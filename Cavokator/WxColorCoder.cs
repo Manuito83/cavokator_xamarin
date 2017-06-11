@@ -376,7 +376,7 @@ namespace Cavokator
 
 
             // TEMPORARY
-            var tempoRegex = new Regex(@"(PROB[0-9]{2} TEMPO)|(TEMPO)|(FM)[0-9]{6}");
+            var tempoRegex = new Regex(@"(PROB[0-9]{2} TEMPO)|(BECMG)|(TEMPO)|(FM)[0-9]{6}");
             var tempoMatches = tempoRegex.Matches(rawMetar);
             foreach (var match in tempoMatches.Cast<Match>())
             {
