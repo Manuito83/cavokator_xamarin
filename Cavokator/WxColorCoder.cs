@@ -71,7 +71,7 @@ namespace Cavokator
             "VCFG", "MIFG", "PRFG", "BCFG",
             "DRDU", "BLDU", "DRSA", "BLSA", "BLPY",
 
-            "RERA", "VCSH", "VCTS", "SHRA", "TS"    // Some others
+            "RERA", "VCSH", "VCTS", "SHRA"          // Some others
         };
 
 
@@ -284,7 +284,7 @@ namespace Cavokator
 
 
             // VISIBILITY
-            var visibilityRegex = new Regex(@"(?<=\s)([0-9]+)(?=\s)");
+            var visibilityRegex = new Regex(@"(?<=\s)([0-9]{4})(?=\s)");
             var visibiltyMatches = visibilityRegex.Matches(rawMetar);
             foreach (var match in visibiltyMatches.Cast<Match>())
             {
@@ -335,8 +335,6 @@ namespace Cavokator
                     // ignored
                 }
 
-
-
                 var rvrTrend = rawMetar.Substring(match.Index + match.Length - 1, 1);
 
                 try
@@ -353,19 +351,13 @@ namespace Cavokator
                             coloredMetar = SpanBadMetar(coloredMetar, match.Index + match.Length - 1, 1);
                             break;
                     }
-
                 }
                 catch
                 {
                     // ignored
                 }
-
-
                 try
                 {
-
-                    Console.WriteLine("AAAAA: " + rawMetar.Substring(match.Index + 4, 1));
-
                     if (rawMetar.Substring(match.Index + 3, 1) == "/")
                     {
                         coloredMetar = SpanInfoColor(coloredMetar, match.Index, 4);
@@ -374,17 +366,30 @@ namespace Cavokator
                     {
                         coloredMetar = SpanInfoColor(coloredMetar, match.Index, 5);
                     }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
 
 
+
+            // TEMPORARY
+            var tempoRegex = new Regex(@"(PROB[0-9]{2} TEMPO)|(TEMPO)|(FM)[0-9]{6}");
+            var tempoMatches = tempoRegex.Matches(rawMetar);
+            foreach (var match in tempoMatches.Cast<Match>())
+            {
+                try
+                {
+                    coloredMetar = SpanInfoColor(coloredMetar, match.Index, match.Length);
                 }
                 catch
                 {
                     // ignored
                 }
 
-
             }
-
 
 
 

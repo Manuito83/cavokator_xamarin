@@ -82,6 +82,7 @@
     <Compile Include="ActivityWxMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WxOptionsDialog.cs" />
+    <Compile Include="WxTaforDivider.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\appicon.psd" />

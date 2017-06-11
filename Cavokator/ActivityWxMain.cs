@@ -3,7 +3,6 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Text;
-using Android.Text.Style;
 using Android.Util;
 using Android.Views;
 using Android.Views.InputMethods;
@@ -15,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Media;
 
 namespace Cavokator
 {
@@ -70,6 +68,7 @@ namespace Cavokator
 
         // TODO: implementar
         private bool _doColorWeather = true;
+        private bool _doDivideTafor = true;
 
 
         // Keep count of string length in EditText field, so that we know if it has decreased (deletion)
@@ -628,10 +627,12 @@ namespace Cavokator
                     // instead of no showing the TAFOR at all
                     if (_metarOrTafor == "metar_and_tafor" && _wxInfo.AirportTafors[i].Count == 0)
                     {
-                        var taforUtcLine = new TextView(this);
+                        var taforUtcLine = new TextView(this)
+                        {
+                            Text = "* " + Resources.GetString(Resource.String.TaforNotAvailable)
+                        };
 
                         // Convert to readable time comparison
-                        taforUtcLine.Text = "* " + Resources.GetString(Resource.String.TaforNotAvailable);
                         taforUtcLine.SetTextColor(Color.Yellow);
                         taforUtcLine.SetTextSize(ComplexUnitType.Dip, 14);
                         var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
@@ -645,13 +646,14 @@ namespace Cavokator
                         });
                     }
 
-
+                    
                     
 
                     // TAFOR DATETIME LINE
                     if (_wxInfo.AirportTaforsUtc[i][0] != DateTime.MinValue)
                     {
                         var taforUtcLine = new TextView(this);
+                        
 
                         var timeComparison = DateTime.UtcNow - _wxInfo.AirportTaforsUtc[i][0];
 
@@ -677,29 +679,81 @@ namespace Cavokator
                     {
                         // If we don't request TAFORS, we don't want to add an empty line
                         if (f == null) continue;
-
-                        var taforLines = new TextView(this);
-
-                        // Color coding
-                        if (_doColorWeather)
+                        
+                        
+                        
+                        // Tafor divider
+                        var taforList = new List<string>();
+                        if (_doDivideTafor)
                         {
-                            var colorCoder = new WxColorCoder();
-                            var coloredTafor = colorCoder.ColorCodeMetar(f);
-                            taforLines.TextFormatted = coloredTafor;
+                            var taforDivider = new WxTaforDivider();
+                            var dividedTafor = taforDivider.DivideTafor(f);
+                            var splittedTafor = dividedTafor.Split('\n');
+                            foreach (var line in splittedTafor)
+                            {
+                                taforList.Add(line);
+                            }
                         }
                         else
                         {
-                            taforLines.Text = f;
+                            taforList.Add(f);
                         }
 
 
-                        // Apply common style
-                        taforLines = ApplyTaforLineStyle(taforLines);
-
-                        RunOnUiThread(() =>
+                        // Color coding
+                        var spanTaforList = new List<SpannableString>();
+                        if (_doColorWeather)
                         {
-                            linearlayoutWXmetarsTafors.AddView(taforLines);
-                        });
+                            var colorCoder = new WxColorCoder();
+
+                            foreach (var line in taforList)
+                            {
+                                var coloredTafor = colorCoder.ColorCodeMetar(line);
+                                spanTaforList.Add(coloredTafor);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var line in taforList)
+                            {
+                                spanTaforList.Add(new SpannableString(line));
+                            }
+                        }
+
+
+
+                        // If we divided, we split here to apply own style
+                        for (int j = 0; j < spanTaforList.Count(); j++)
+                        {
+                            var taforLinearLayout = new LinearLayout(this);
+                            var myTextView = new TextView(this);
+                            var markerTextView = new TextView(this);
+
+                            if (j == 0)
+                            {
+                                myTextView = ApplyTaforLineStyle(myTextView);
+
+                                myTextView.TextFormatted = spanTaforList[j];
+                            }
+                            else
+                            {
+                                markerTextView = ApplyMarkerLineStyle(markerTextView);
+                                markerTextView.Append(new SpannableString("\u226b"));
+
+                                myTextView = ApplyTaforSplittedLineStyle(myTextView);
+                                myTextView.Append(spanTaforList[j]);
+                            }
+
+                            
+
+                            RunOnUiThread(() =>
+                            {
+                                linearlayoutWXmetarsTafors.AddView(taforLinearLayout);
+                                taforLinearLayout.AddView(markerTextView);
+                                taforLinearLayout.AddView(myTextView);
+                            });
+                        }
+
                     }
                 }
             }
@@ -871,6 +925,29 @@ namespace Cavokator
             taforLines.SetTextSize(ComplexUnitType.Dip, 14);
             LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(25, 5, 0, 0);
+            taforLines.LayoutParameters = wxTextViewParams;
+            return taforLines;
+        }
+
+        // Configuration for spplited lines
+        private TextView ApplyTaforSplittedLineStyle(TextView taforLines)
+        {
+            taforLines.SetTextColor(Color.WhiteSmoke);
+            taforLines.SetTextSize(ComplexUnitType.Dip, 14);
+            LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            wxTextViewParams.SetMargins(10, 5, 0, 0);
+            taforLines.LayoutParameters = wxTextViewParams;
+            return taforLines;
+        }
+
+
+        // Configuration for spplited lines
+        private TextView ApplyMarkerLineStyle(TextView taforLines)
+        {
+            taforLines.SetTextColor(Color.Cyan);
+            taforLines.SetTextSize(ComplexUnitType.Dip, 14);
+            LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            wxTextViewParams.SetMargins(35, 5, 0, 0);
             taforLines.LayoutParameters = wxTextViewParams;
             return taforLines;
         }

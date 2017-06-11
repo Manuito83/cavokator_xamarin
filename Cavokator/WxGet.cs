@@ -558,8 +558,7 @@ namespace Cavokator
             string content;
             
             // HttpClient
-            var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromSeconds(10);
+            var httpClient = new HttpClient {Timeout = TimeSpan.FromSeconds(10)};
 
             try
             {
