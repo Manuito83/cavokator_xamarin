@@ -101,6 +101,11 @@ namespace Cavokator
         };
 
 
+        /// <summary>
+        /// Provide a string with metar or tafor for color coding.
+        /// </summary>
+        /// <param name="rawMetar"></param>
+        /// <returns></returns>
         public SpannableString ColorCodeMetar(string rawMetar)
         {
 
