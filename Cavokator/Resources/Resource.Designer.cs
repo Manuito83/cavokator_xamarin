@@ -113,14 +113,14 @@ namespace Cavokator
 			// aapt resource value: 0x7f080007
 			public const int linearlayout_wx_metarstafors = 2131230727;
 			
-			// aapt resource value: 0x7f080013
-			public const int spinnerTarget = 2131230739;
+			// aapt resource value: 0x7f080017
+			public const int spinnerTarget = 2131230743;
 			
 			// aapt resource value: 0x7f080005
 			public const int wx_clear_button = 2131230725;
 			
-			// aapt resource value: 0x7f080012
-			public const int wx_option_closeButton = 2131230738;
+			// aapt resource value: 0x7f080016
+			public const int wx_option_closeButton = 2131230742;
 			
 			// aapt resource value: 0x7f08000e
 			public const int wx_option_metarHours_seekbarText = 2131230734;
@@ -128,11 +128,23 @@ namespace Cavokator
 			// aapt resource value: 0x7f080006
 			public const int wx_options_button = 2131230726;
 			
+			// aapt resource value: 0x7f080015
+			public const int wx_options_closeRelativeLayout = 2131230741;
+			
+			// aapt resource value: 0x7f080012
+			public const int wx_options_colorWeatherSwitch = 2131230738;
+			
 			// aapt resource value: 0x7f080011
-			public const int wx_options_closeRelativeLayout = 2131230737;
+			public const int wx_options_colorWeatherText = 2131230737;
 			
 			// aapt resource value: 0x7f080009
 			public const int wx_options_configuration_text = 2131230729;
+			
+			// aapt resource value: 0x7f080014
+			public const int wx_options_divideTaforSwitch = 2131230740;
+			
+			// aapt resource value: 0x7f080013
+			public const int wx_options_divideTaforText = 2131230739;
 			
 			// aapt resource value: 0x7f080008
 			public const int wx_options_mainRelativeLayout = 2131230728;
@@ -193,8 +205,8 @@ namespace Cavokator
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f050013
-			public const int Ago = 2131034131;
+			// aapt resource value: 0x7f050015
+			public const int Ago = 2131034133;
 			
 			// aapt resource value: 0x7f050003
 			public const int Airport_ID_TextView = 2131034115;
@@ -208,23 +220,23 @@ namespace Cavokator
 			// aapt resource value: 0x7f050006
 			public const int Connection_Error = 2131034118;
 			
-			// aapt resource value: 0x7f050017
-			public const int Day = 2131034135;
+			// aapt resource value: 0x7f050019
+			public const int Day = 2131034137;
 			
-			// aapt resource value: 0x7f050014
-			public const int Days = 2131034132;
+			// aapt resource value: 0x7f050016
+			public const int Days = 2131034134;
 			
 			// aapt resource value: 0x7f050008
 			public const int Error_fetching_airport = 2131034120;
 			
+			// aapt resource value: 0x7f05001c
+			public const int Fetching = 2131034140;
+			
 			// aapt resource value: 0x7f05001a
-			public const int Fetching = 2131034138;
+			public const int Hour = 2131034138;
 			
-			// aapt resource value: 0x7f050018
-			public const int Hour = 2131034136;
-			
-			// aapt resource value: 0x7f050015
-			public const int Hours = 2131034133;
+			// aapt resource value: 0x7f050017
+			public const int Hours = 2131034135;
 			
 			// aapt resource value: 0x7f050004
 			public const int Icao_Or_Iata = 2131034116;
@@ -232,20 +244,26 @@ namespace Cavokator
 			// aapt resource value: 0x7f050007
 			public const int Internet_Error = 2131034119;
 			
-			// aapt resource value: 0x7f050011
-			public const int Metar_Issued = 2131034129;
+			// aapt resource value: 0x7f050013
+			public const int Metar_Issued = 2131034131;
 			
-			// aapt resource value: 0x7f050019
-			public const int Minute = 2131034137;
+			// aapt resource value: 0x7f05001b
+			public const int Minute = 2131034139;
 			
-			// aapt resource value: 0x7f050016
-			public const int Minutes = 2131034134;
+			// aapt resource value: 0x7f050018
+			public const int Minutes = 2131034136;
 			
 			// aapt resource value: 0x7f05000b
 			public const int Option_ChooseMetarOrTaforText = 2131034123;
 			
+			// aapt resource value: 0x7f050011
+			public const int Option_ColorWeatherText = 2131034129;
+			
 			// aapt resource value: 0x7f05000a
 			public const int Option_ConfigurationText = 2131034122;
+			
+			// aapt resource value: 0x7f050012
+			public const int Option_DivideTaforText = 2131034130;
 			
 			// aapt resource value: 0x7f05000e
 			public const int Option_Hour = 2131034126;
@@ -271,11 +289,11 @@ namespace Cavokator
 			// aapt resource value: 0x7f050009
 			public const int Server_Timeout = 2131034121;
 			
-			// aapt resource value: 0x7f05001b
-			public const int TaforNotAvailable = 2131034139;
+			// aapt resource value: 0x7f05001d
+			public const int TaforNotAvailable = 2131034141;
 			
-			// aapt resource value: 0x7f050012
-			public const int Tafor_Issued = 2131034130;
+			// aapt resource value: 0x7f050014
+			public const int Tafor_Issued = 2131034132;
 			
 			static String()
 			{

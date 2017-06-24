@@ -65,10 +65,8 @@ namespace Cavokator
         private int _hoursBefore;
         private bool _mostRecent;
         private bool _saveData;
-
-        // TODO: implementar
-        private bool _doColorWeather = true;
-        private bool _doDivideTafor = true;
+        private bool _doColorWeather;
+        private bool _doDivideTafor;
 
 
         // Keep count of string length in EditText field, so that we know if it has decreased (deletion)
@@ -234,12 +232,14 @@ namespace Cavokator
             {
                 // Pull up dialog
                 var transaction = FragmentManager.BeginTransaction();
-                var wxOptionsDialog = new WxOptionsDialog(_metarOrTafor, _hoursBefore, _mostRecent, _saveData);
+                var wxOptionsDialog = new WxOptionsDialog(_metarOrTafor, _hoursBefore, _mostRecent, _saveData, _doColorWeather, _doDivideTafor);
                 wxOptionsDialog.Show(transaction, "options_dialog");
 
                 wxOptionsDialog.SpinnerChanged += OnMetarOrTaforChanged;
                 wxOptionsDialog.SeekbarChanged += OnHoursBeforeChanged;
                 wxOptionsDialog.SwitchChanged += OnSaveDataChanged;
+                wxOptionsDialog.ColorWeatherChanged += OnColorWeatherChanged;
+                wxOptionsDialog.DivideTaforChanged += OnDivideTaforChanged;
             };
         }
 
@@ -1025,6 +1025,21 @@ namespace Cavokator
         }
 
 
+        // Eventhandler to update _doColorWeather value from Dialog
+        private void OnColorWeatherChanged(object source, WXOptionsDialogEventArgs e)
+        {
+            _doColorWeather = e.ColorWeather;
+        }
+
+
+        // Eventhandler to update _doDivideTafor value from Dialog
+        private void OnDivideTaforChanged(object source, WXOptionsDialogEventArgs e)
+        {
+            _doDivideTafor = e.DivideTafor;
+        }
+
+
+
         // Eventhandler to update UTC Times every minute
         private void OnTimedUtcEvent(object state)
         {
@@ -1133,7 +1148,7 @@ namespace Cavokator
         }
 
 
-        // Recovers or sets configuration from Shared Preferences
+        // Recovers or sets configuration from Shared 
         private void GetPreferences()
         {
             ISharedPreferences wxprefs = 
@@ -1199,6 +1214,50 @@ namespace Cavokator
                 }
                 
             }
+
+
+            // First initialization _doColorWeather
+            if (wxprefs.GetString("colorWeatherPREF", String.Empty) == String.Empty)
+            {
+                _doColorWeather = true;
+            }
+            else
+            {
+                string config = wxprefs.GetString("colorWeatherPREF", String.Empty);
+                switch (config)
+                {
+                    case "true":
+                        _doColorWeather = true;
+                        break;
+                    case "false":
+                        _doColorWeather = false;
+                        break;
+                }
+
+            }
+
+
+            // First initialization _doDivideTafor
+            if (wxprefs.GetString("divideTaforPREF", String.Empty) == String.Empty)
+            {
+                _doDivideTafor = true;
+            }
+            else
+            {
+                string config = wxprefs.GetString("divideTaforPREF", String.Empty);
+                switch (config)
+                {
+                    case "true":
+                        _doDivideTafor = true;
+                        break;
+                    case "false":
+                        _doDivideTafor = false;
+                        break;
+                }
+
+            }
+
+
         }
 
     }

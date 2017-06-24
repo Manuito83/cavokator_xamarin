@@ -45,17 +45,6 @@ namespace Cavokator
 
         private List<string> RegularWeather { get; } = new List<string>
         {
-            @"[-]RA", @"\sRA",                      // Rain
-            @"[-]DZ", @"\sDZ",                      // Drizzle
-            @"[-]SG", @"\sSG",                      // Snow Grains
-            @"\sIC",                                // Ice Crystals
-            @"[-]PE", @"\sPE",                      // Ice Pellets
-
-            @"[-]SN", "DRSN", "DRSN",               // Snow
-
-            @"[-]GR", @"\sGR",                      // Hail
-            @"[-]GS", @"\sGS",                      // Small Hail
-
             @"[-]RA(([A-Z]+)|(\z))",                // -RA, -RA(whatever), including last word in string
             @"\sRA(([A-Z]+)|(\z))",                 // RA, RA(whatever), including last word in string
 
@@ -66,6 +55,17 @@ namespace Cavokator
             @"\sTS(([A-Z]+)|(\z))",                 // TS, TS(whatever), including last word in string
                
             @"[-]FZ(([A-Z]+)|(\z))",                // -FZ, -FZ(whatever), including last word in string
+
+            @"[-]RA", @"\sRA",                      // Rain
+            @"[-]DZ", @"\sDZ",                      // Drizzle
+            @"[-]SG", @"\sSG",                      // Snow Grains
+            @"\sIC",                                // Ice Crystals
+            @"[-]PE", @"\sPE",                      // Ice Pellets
+
+            @"[-]SN", "DRSN", "DRSN",               // Snow
+
+            @"[-]GR", @"\sGR",                      // Hail
+            @"[-]GS", @"\sGS",                      // Small Hail
 
             "BR", "FU", "DU", "SA", "HZ", "PY",     // Visibility
             "VCFG", "MIFG", "PRFG", "BCFG",
@@ -78,6 +78,10 @@ namespace Cavokator
         private List<string> BadWeather { get; } = new List<string>
         {
             @"\s[+](([A-Z]+)|(\z))",                // ANYTHING WITH A "+" 
+            @"[+]TS(([A-Z]+)|(\z))",                // +TS, +TS(whatever), including last word in string
+            @"[+]SH(([A-Z]+)|(\z))",                // +SH, +SH(whatever), including last word in string
+            @"[+]FZ(([A-Z]+)|(\z))",                // +FZ, +FZ(whatever), including last word in string
+            @"\sFZ(([A-Z]+)|(\z))",                 // FZ, FZ(whatever), including last word in string
 
             @"[+]RA",                               // Rain
             @"[+]DZ",                               // Drizzle
@@ -88,11 +92,6 @@ namespace Cavokator
             "SHSN", "SHPE", "SHGR", "SHGS",         // Red Showers
 
             @"\sFG", "VA",                          // Visibility
-
-            @"[+]TS(([A-Z]+)|(\z))",                // +TS, +TS(whatever), including last word in string
-            @"[+]SH(([A-Z]+)|(\z))",                // +SH, +SH(whatever), including last word in string
-            @"[+]FZ(([A-Z]+)|(\z))",                // +FZ, +FZ(whatever), including last word in string
-            @"\sFZ(([A-Z]+)|(\z))",                 // FZ, FZ(whatever), including last word in string
 
             @"\sPO", @"\sSQ", @"\sFC", @"\sSS", @"\sDS",    // Sand/Dust Whirls, Squalls, Funnel Cloud, Sandstorm, Duststorm
             @"[+]FC",@"[+]SS",@"[+]DS",
