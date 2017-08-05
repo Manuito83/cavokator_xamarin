@@ -14,6 +14,8 @@ namespace Cavokator
         public event EventHandler<WXOptionsDialogEventArgs> SpinnerChanged;
         public event EventHandler<WXOptionsDialogEventArgs> SeekbarChanged;
         public event EventHandler<WXOptionsDialogEventArgs> SwitchChanged;
+        public event EventHandler<WXOptionsDialogEventArgs> ColorWeatherChanged;
+        public event EventHandler<WXOptionsDialogEventArgs> DivideTaforChanged;
 
 
         // Configuration header
@@ -32,7 +34,15 @@ namespace Cavokator
         private TextView _saveDataText;
         private Switch _saveDataSwitch;
 
-        
+        // Color Weather
+        private TextView _colorWeatherText;
+        private Switch _colorWeatherSwitch;
+
+        // Divide tafor group
+        private TextView _divideTaforText;
+        private Switch _divideTaforSwitch;
+
+
         // Dismiss button
         private Button _dismissBialogButton;
         
@@ -43,9 +53,12 @@ namespace Cavokator
         private int _hoursBefore;
         private bool _mostRecent;
         private bool _saveData;
+        private bool _doColorWeather;
+        private bool _doDivideTafor;
 
         // Convert strings to order in spinner
-        public WxOptionsDialog(string metar_or_tafor, int hoursBefore, bool mostRecent, bool saveData)
+        public WxOptionsDialog(string metar_or_tafor, int hoursBefore, bool mostRecent, bool saveData,
+                                bool colorWeather, bool divideTafor)
         {
             switch (metar_or_tafor)
             {
@@ -65,6 +78,10 @@ namespace Cavokator
             this._mostRecent = mostRecent;
 
             this._saveData = saveData;
+
+            this._doColorWeather = colorWeather;
+
+            this._doDivideTafor = divideTafor;
         }
 
 
@@ -85,6 +102,10 @@ namespace Cavokator
             _dismissBialogButton = view.FindViewById<Button>(Resource.Id.wx_option_closeButton);
             _saveDataText = view.FindViewById<TextView>(Resource.Id.wx_options_saveDataText);
             _saveDataSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_saveDataSwitch);
+            _colorWeatherText = view.FindViewById<TextView>(Resource.Id.wx_options_colorWeatherText);
+            _colorWeatherSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_colorWeatherSwitch);
+            _divideTaforText = view.FindViewById<TextView>(Resource.Id.wx_options_divideTaforText);
+            _divideTaforSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_divideTaforSwitch);
 
 
             // Assign text fields
@@ -92,7 +113,8 @@ namespace Cavokator
             _metarOrTaforText.Text = Resources.GetString(Resource.String.Option_ChooseMetarOrTaforText);
             _metarHoursText.Text = Resources.GetString(Resource.String.Option_MetarHoursText);
             _saveDataText.Text = Resources.GetString(Resource.String.Option_SaveDataText);
-
+            _colorWeatherText.Text = Resources.GetString(Resource.String.Option_ColorWeatherText);
+            _divideTaforText.Text = Resources.GetString(Resource.String.Option_DivideTaforText);
 
 
             // SPINNER ADAPTER CONFIG
@@ -207,6 +229,69 @@ namespace Cavokator
             };
 
 
+
+            // COLOR WEATHER CONFIG
+
+            if (_doColorWeather)
+            {
+                _colorWeatherSwitch.Checked = true;
+            }
+            else
+            {
+                _colorWeatherSwitch.Checked = false;
+            }
+
+            _colorWeatherSwitch.CheckedChange += delegate
+            {
+                // Call event raiser with parameters
+                if (_colorWeatherSwitch.Checked)
+                {
+                    OnColorWeatherChanged(true);
+
+                    SetColorWeatherPreferences(true);
+                }
+                else
+                {
+                    OnColorWeatherChanged(false);
+
+                    SetColorWeatherPreferences(false);
+                }
+            };
+
+
+
+            // DIVIDE TAFOR CONFIG
+
+            if (_doDivideTafor)
+            {
+                _divideTaforSwitch.Checked = true;
+            }
+            else
+            {
+                _divideTaforSwitch.Checked = false;
+            }
+
+            _divideTaforSwitch.CheckedChange += delegate
+            {
+                // Call event raiser with parameters
+                if (_divideTaforSwitch.Checked)
+                {
+                    OnDivideTaforChanged(true);
+
+                    SetDivideTaforPreferences(true);
+                }
+                else
+                {
+                    OnDivideTaforChanged(false);
+
+                    SetDivideTaforPreferences(false);
+                }
+            };
+
+
+
+
+
             // CLOSE BUTTON (dismiss dialog)
             _dismissBialogButton.Click += delegate
             {
@@ -265,6 +350,38 @@ namespace Cavokator
         }
 
 
+        private void SetColorWeatherPreferences(bool colorWeather)
+        {
+            ISharedPreferences wxprefs = Application.Context.GetSharedPreferences("WX_Preferences", FileCreationMode.Private);
+
+            if (colorWeather)
+            {
+                wxprefs.Edit().PutString("colorWeatherPREF", "true").Apply();
+            }
+            else
+            {
+                wxprefs.Edit().PutString("colorWeatherPREF", "false").Apply();
+            }
+
+        }
+
+
+        private void SetDivideTaforPreferences(bool divideTafor)
+        {
+            ISharedPreferences wxprefs = Application.Context.GetSharedPreferences("WX_Preferences", FileCreationMode.Private);
+
+            if (divideTafor)
+            {
+                wxprefs.Edit().PutString("divideTaforPREF", "true").Apply();
+            }
+            else
+            {
+                wxprefs.Edit().PutString("divideTaforPREF", "false").Apply();
+            }
+
+        }
+
+
         public override void OnActivityCreated(Bundle savedInstanceState)
         {
             // Sets the title bar to invisible
@@ -298,6 +415,20 @@ namespace Cavokator
             SwitchChanged?.Invoke(this, new WXOptionsDialogEventArgs() { SaveData = toggled });
         }
 
+
+        // Event raiser
+        protected virtual void OnColorWeatherChanged(bool toggled)
+        {
+            ColorWeatherChanged?.Invoke(this, new WXOptionsDialogEventArgs() { ColorWeather = toggled });
+        }
+
+
+        // Event raiser
+        protected virtual void OnDivideTaforChanged(bool toggled)
+        {
+            DivideTaforChanged?.Invoke(this, new WXOptionsDialogEventArgs() { DivideTafor = toggled });
+        }
+
     }
 
 
@@ -307,6 +438,8 @@ namespace Cavokator
         public string MetarOrTafor { get; private set; }
         public int HoursBefore { get; set; }
         public bool SaveData { get; set; }
+        public bool ColorWeather { get; set; }
+        public bool DivideTafor { get; set; }
 
         public WXOptionsDialogEventArgs() { }
 

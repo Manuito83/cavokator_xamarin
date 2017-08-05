@@ -50,6 +50,9 @@
       <HintPath>..\packages\CsvHelper.2.16.3.0\lib\netstandard1.3\CsvHelper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\portable-net45+netcore45+wp8+MonoAndroid+MonoTouch\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
@@ -75,15 +78,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirportConverter.cs" />
+    <Compile Include="WxColorCoder.cs" />
+    <Compile Include="WxGetOLD.cs" />
     <Compile Include="WxInfo.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="WxGet.cs" />
     <Compile Include="ActivityWxMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WxOptionsDialog.cs" />
+    <Compile Include="WxTaforDivider.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\appicon.psd" />
+    <AndroidAsset Include="Assets\airport_codes.csv" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
@@ -120,9 +127,6 @@
     <AndroidResource Include="Resources\layout\wx_options_spinner.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\airport_codes.csv" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\ic_appicon.png" />

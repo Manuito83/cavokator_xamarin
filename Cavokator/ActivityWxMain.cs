@@ -65,6 +65,9 @@ namespace Cavokator
         private int _hoursBefore;
         private bool _mostRecent;
         private bool _saveData;
+        private bool _doColorWeather;
+        private bool _doDivideTafor;
+
 
         // Keep count of string length in EditText field, so that we know if it has decreased (deletion)
         private int _editTextIdLength;
@@ -229,12 +232,14 @@ namespace Cavokator
             {
                 // Pull up dialog
                 var transaction = FragmentManager.BeginTransaction();
-                var wxOptionsDialog = new WxOptionsDialog(_metarOrTafor, _hoursBefore, _mostRecent, _saveData);
+                var wxOptionsDialog = new WxOptionsDialog(_metarOrTafor, _hoursBefore, _mostRecent, _saveData, _doColorWeather, _doDivideTafor);
                 wxOptionsDialog.Show(transaction, "options_dialog");
 
                 wxOptionsDialog.SpinnerChanged += OnMetarOrTaforChanged;
                 wxOptionsDialog.SeekbarChanged += OnHoursBeforeChanged;
                 wxOptionsDialog.SwitchChanged += OnSaveDataChanged;
+                wxOptionsDialog.ColorWeatherChanged += OnColorWeatherChanged;
+                wxOptionsDialog.DivideTaforChanged += OnDivideTaforChanged;
             };
         }
 
@@ -242,6 +247,7 @@ namespace Cavokator
         // Action when wx request button is clicked
         private async void OnRequestButtonClicked(object sender, EventArgs e)
         {
+
             _metarUtcFieldsIds.Clear();
             _taforUtcFieldsIds.Clear();
 
@@ -311,8 +317,6 @@ namespace Cavokator
             {
                 if (_icaoIdList[i].Length == 3)
                 {
-
-
 
                     // Try to find the IATA in the list
                     try
@@ -485,8 +489,7 @@ namespace Cavokator
 
             if (CrossConnectivity.Current.IsConnected)
             {
-                Toast.MakeText(this, Resource.String.Requesting_METAR_Information, ToastLength.Long).Show();
-                    
+                  
                 // Start thread outside UI
                 Task.Factory.StartNew(() =>
                 {
@@ -540,7 +543,7 @@ namespace Cavokator
                         {
                             if (_myAirportDefinitions[j].icao == _wxInfo.AirportIDs[i].ToUpper())
                             {
-                                airportName.Text = _myAirportsList[i] + " - " + _myAirportDefinitions[j].icao;
+                                airportName.Text = _myAirportsList[i] + " - " + _myAirportDefinitions[j].description;
                                 break;
                             }
 
@@ -590,10 +593,22 @@ namespace Cavokator
                     {
                         // If we don't request METARS, we don't want to add an empty line
                         if (m == null) continue;
-                        var metarLines = new TextView(this)
+
+                        var metarLines = new TextView(this);
+
+                        // Color coding
+                        if (_doColorWeather)
                         {
-                            Text = m
-                        };
+                            var colorCoder = new WxColorCoder();
+                            var coloredMetar = colorCoder.ColorCodeMetar(m);
+                            metarLines.TextFormatted = coloredMetar;
+                        }
+                        else
+                        {
+                            metarLines.Text = m;
+                        }
+
+
 
                         // Apply common style
                         metarLines = ApplyMetarLineStyle(metarLines);
@@ -606,10 +621,39 @@ namespace Cavokator
 
 
 
+                    
+                    // Certain airports, such as "LEZ" (IATA) do not publish a TAFOR. 
+                    // With the following code we show a "TAFOR not available" text in such cases
+                    // instead of no showing the TAFOR at all
+                    if (_metarOrTafor == "metar_and_tafor" && _wxInfo.AirportTafors[i].Count == 0)
+                    {
+                        var taforUtcLine = new TextView(this)
+                        {
+                            Text = "* " + Resources.GetString(Resource.String.TaforNotAvailable)
+                        };
+
+                        // Convert to readable time comparison
+                        taforUtcLine.SetTextColor(Color.Yellow);
+                        taforUtcLine.SetTextSize(ComplexUnitType.Dip, 14);
+                        var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                        wxTextViewParams.SetMargins(5, 20, 0, 0);
+                        taforUtcLine.LayoutParameters = wxTextViewParams;
+                        taforUtcLine.Id = View.GenerateViewId();
+
+                        RunOnUiThread(() =>
+                        {
+                            linearlayoutWXmetarsTafors.AddView(taforUtcLine);
+                        });
+                    }
+
+                    
+                    
+
                     // TAFOR DATETIME LINE
                     if (_wxInfo.AirportTaforsUtc[i][0] != DateTime.MinValue)
                     {
                         var taforUtcLine = new TextView(this);
+                        
 
                         var timeComparison = DateTime.UtcNow - _wxInfo.AirportTaforsUtc[i][0];
 
@@ -627,26 +671,89 @@ namespace Cavokator
                         // Save dictionary of TextViews so that we can update the time difference later on
                         _taforUtcFieldsIds.Add(taforUtcLine.Id.ToString(), _wxInfo.AirportTaforsUtc[i][0]);
                     }
-
-
+                    
+                    
 
                     // TAFOR LINES
                     foreach (string f in _wxInfo.AirportTafors[i])
                     {
                         // If we don't request TAFORS, we don't want to add an empty line
                         if (f == null) continue;
-                        var taforLines = new TextView(this)
+                        
+                        
+                        
+                        // Tafor divider
+                        var taforList = new List<string>();
+                        if (_doDivideTafor)
                         {
-                            Text = f
-                        };
-
-                        // Apply common style
-                        taforLines = ApplyTaforLineStyle(taforLines);
-
-                        RunOnUiThread(() =>
+                            var taforDivider = new WxTaforDivider();
+                            var dividedTafor = taforDivider.DivideTafor(f);
+                            var splittedTafor = dividedTafor.Split('\n');
+                            foreach (var line in splittedTafor)
+                            {
+                                taforList.Add(line);
+                            }
+                        }
+                        else
                         {
-                            linearlayoutWXmetarsTafors.AddView(taforLines);
-                        });
+                            taforList.Add(f);
+                        }
+
+
+                        // Color coding
+                        var spanTaforList = new List<SpannableString>();
+                        if (_doColorWeather)
+                        {
+                            var colorCoder = new WxColorCoder();
+
+                            foreach (var line in taforList)
+                            {
+                                var coloredTafor = colorCoder.ColorCodeMetar(line);
+                                spanTaforList.Add(coloredTafor);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var line in taforList)
+                            {
+                                spanTaforList.Add(new SpannableString(line));
+                            }
+                        }
+
+
+
+                        // If we divided, we split here to apply own style
+                        for (int j = 0; j < spanTaforList.Count(); j++)
+                        {
+                            var taforLinearLayout = new LinearLayout(this);
+                            var myTextView = new TextView(this);
+                            var markerTextView = new TextView(this);
+
+                            if (j == 0)
+                            {
+                                myTextView = ApplyTaforLineStyle(myTextView);
+
+                                myTextView.TextFormatted = spanTaforList[j];
+                            }
+                            else
+                            {
+                                markerTextView = ApplyMarkerLineStyle(markerTextView);
+                                markerTextView.Append(new SpannableString("\u226b"));
+
+                                myTextView = ApplyTaforSplittedLineStyle(myTextView);
+                                myTextView.Append(spanTaforList[j]);
+                            }
+
+                            
+
+                            RunOnUiThread(() =>
+                            {
+                                linearlayoutWXmetarsTafors.AddView(taforLinearLayout);
+                                taforLinearLayout.AddView(markerTextView);
+                                taforLinearLayout.AddView(myTextView);
+                            });
+                        }
+
                     }
                 }
             }
@@ -661,11 +768,11 @@ namespace Cavokator
 
             if (type == "metar")
             {
-                readableUtcStart = Resources.GetString(Resource.String.Metar_Issued);
+                readableUtcStart = "* " + Resources.GetString(Resource.String.Metar_Issued);
             }
             else if (type == "tafor")
             {
-                readableUtcStart = Resources.GetString(Resource.String.Tafor_Issued);
+                readableUtcStart = "* " + Resources.GetString(Resource.String.Tafor_Issued);
             }
 
             var readableUtcEnd = Resources.GetString(Resource.String.Ago);
@@ -747,7 +854,7 @@ namespace Cavokator
             airportName.SetTextColor(Color.Magenta);
             airportName.SetTextSize(ComplexUnitType.Dip, 16);
             LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            airportTextViewParams.SetMargins(0, 50, 0, 0);
+            airportTextViewParams.SetMargins(0, 70, 0, 0);
             airportName.LayoutParameters = airportTextViewParams;
             return airportName;
         }
@@ -791,7 +898,7 @@ namespace Cavokator
 
             utcLine.SetTextSize(ComplexUnitType.Dip, 14);
             var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            wxTextViewParams.SetMargins(15, 20, 0, 0);
+            wxTextViewParams.SetMargins(5, 20, 0, 0);
             utcLine.LayoutParameters = wxTextViewParams;
             utcLine.Id = View.GenerateViewId();
 
@@ -822,6 +929,29 @@ namespace Cavokator
             return taforLines;
         }
 
+        // Configuration for spplited lines
+        private TextView ApplyTaforSplittedLineStyle(TextView taforLines)
+        {
+            taforLines.SetTextColor(Color.WhiteSmoke);
+            taforLines.SetTextSize(ComplexUnitType.Dip, 14);
+            LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            wxTextViewParams.SetMargins(10, 5, 0, 0);
+            taforLines.LayoutParameters = wxTextViewParams;
+            return taforLines;
+        }
+
+
+        // Configuration for spplited lines
+        private TextView ApplyMarkerLineStyle(TextView taforLines)
+        {
+            taforLines.SetTextColor(Color.Cyan);
+            taforLines.SetTextSize(ComplexUnitType.Dip, 14);
+            LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            wxTextViewParams.SetMargins(35, 5, 0, 0);
+            taforLines.LayoutParameters = wxTextViewParams;
+            return taforLines;
+        }
+
 
         // Eventhandler to activate and deactivate the button while information is being fetched
         // The event triggers twice with different arguments 
@@ -836,32 +966,30 @@ namespace Cavokator
             }
             else
             {
-
                 RunOnUiThread(() =>
                 {
                     _wxRequestButton.Enabled = true;
-
-                    if (e.Error)
-                    {
-                        Toast.MakeText(this, Resource.String.Server_Timeout, ToastLength.Short).Show();
-                    }
-
                 });
             }
-
         }
 
 
         // Eventhandler to show Toast
         private void OnConnectionTimeOut(object source, EventArgs e)
         {
-            Toast.MakeText(this, Resource.String.Server_Timeout, ToastLength.Short).Show();
+            RunOnUiThread(() =>
+            {
+                Toast.MakeText(this, Resource.String.Server_Timeout, ToastLength.Short).Show();
+            });
         }
 
         // Eventhandler to show Toast
         private void OnConnectionError(object source, EventArgs e)
         {
-            Toast.MakeText(this, Resource.String.Connection_Error, ToastLength.Short).Show();
+            RunOnUiThread(() =>
+            {
+                Toast.MakeText(this, Resource.String.Connection_Error, ToastLength.Short).Show();
+            });
         }
 
 
@@ -897,6 +1025,21 @@ namespace Cavokator
         }
 
 
+        // Eventhandler to update _doColorWeather value from Dialog
+        private void OnColorWeatherChanged(object source, WXOptionsDialogEventArgs e)
+        {
+            _doColorWeather = e.ColorWeather;
+        }
+
+
+        // Eventhandler to update _doDivideTafor value from Dialog
+        private void OnDivideTaforChanged(object source, WXOptionsDialogEventArgs e)
+        {
+            _doDivideTafor = e.DivideTafor;
+        }
+
+
+
         // Eventhandler to update UTC Times every minute
         private void OnTimedUtcEvent(object state)
         {
@@ -908,12 +1051,21 @@ namespace Cavokator
         // Eventhandler to update ProgressDialog
         private async void OnPercentageCompleted(object source, WxGetEventArgs e)
         {
-            RunOnUiThread(() =>
+            if (e.PercentageCompleted <= 100)
             {
-                // Show the airport and percentage
-                _wxProgressDialog.SetMessage(e.Airport);
-                _wxProgressDialog.Progress = e.PercentageCompleted;
-            });
+                RunOnUiThread(() =>
+                {
+                    // Show the airport and percentage
+                    _wxProgressDialog.SetMessage(e.Airport.ToUpper());
+                    _wxProgressDialog.Progress = e.PercentageCompleted;
+                });
+            }
+            // Error case
+            else if (e.PercentageCompleted == 999)
+            {
+                await Task.Delay(500);
+                _wxProgressDialog.Dismiss();
+            }
 
             // If we reached a 100%, we will wait a bit to that users can see the whole bar
             if (e.PercentageCompleted == 100)
@@ -921,7 +1073,7 @@ namespace Cavokator
                 await Task.Delay(250);
                 _wxProgressDialog.Dismiss();
             }
-            
+
         }
 
         
@@ -996,7 +1148,7 @@ namespace Cavokator
         }
 
 
-        // Recovers or sets configuration from Shared Preferences
+        // Recovers or sets configuration from Shared 
         private void GetPreferences()
         {
             ISharedPreferences wxprefs = 
@@ -1062,6 +1214,50 @@ namespace Cavokator
                 }
                 
             }
+
+
+            // First initialization _doColorWeather
+            if (wxprefs.GetString("colorWeatherPREF", String.Empty) == String.Empty)
+            {
+                _doColorWeather = true;
+            }
+            else
+            {
+                string config = wxprefs.GetString("colorWeatherPREF", String.Empty);
+                switch (config)
+                {
+                    case "true":
+                        _doColorWeather = true;
+                        break;
+                    case "false":
+                        _doColorWeather = false;
+                        break;
+                }
+
+            }
+
+
+            // First initialization _doDivideTafor
+            if (wxprefs.GetString("divideTaforPREF", String.Empty) == String.Empty)
+            {
+                _doDivideTafor = true;
+            }
+            else
+            {
+                string config = wxprefs.GetString("divideTaforPREF", String.Empty);
+                switch (config)
+                {
+                    case "true":
+                        _doDivideTafor = true;
+                        break;
+                    case "false":
+                        _doDivideTafor = false;
+                        break;
+                }
+
+            }
+
+
         }
 
     }
