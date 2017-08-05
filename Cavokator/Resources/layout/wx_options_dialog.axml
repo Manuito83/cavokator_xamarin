@@ -77,6 +77,38 @@
             android:layout_marginTop="25.0dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="55.0dp" />
+        <TextView
+            android:text="Color weather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_options_saveDataText"
+            android:id="@+id/wx_options_colorWeatherText"
+            android:layout_marginTop="25.0dp"
+            android:layout_alignParentLeft="true" />
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_options_saveDataText"
+            android:id="@+id/wx_options_colorWeatherSwitch"
+            android:layout_marginTop="25.0dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="55.0dp" />
+        <TextView
+            android:text="Divide Tafor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_options_colorWeatherText"
+            android:id="@+id/wx_options_divideTaforText"
+            android:layout_marginTop="25.0dp"
+            android:layout_alignParentLeft="true" />
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_options_colorWeatherText"
+            android:id="@+id/wx_options_divideTaforSwitch"
+            android:layout_marginTop="25.0dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="55.0dp" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/wx_options_closeRelativeLayout"

@@ -17,6 +17,8 @@
     <string name="Option_Hour">Hour</string>
     <string name="Option_Hours">Hours</string>
     <string name="Option_SaveDataText">Save data</string>
+    <string name="Option_ColorWeatherText">Color weather</string>
+    <string name="Option_DivideTaforText">Divide Tafor</string>
     <string name="Metar_Issued">METAR @</string>
     <string name="Tafor_Issued">TAFOR @</string>
     <string name="Ago">ago</string>
@@ -27,6 +29,7 @@
     <string name="Hour">hour</string>
     <string name="Minute">minute</string>
     <string name="Fetching">Fetching...</string>
+    <string name="TaforNotAvailable">TAFOR not available</string>
   
 
   <string-array name="wx_option">
