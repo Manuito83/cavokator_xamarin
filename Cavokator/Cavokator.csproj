@@ -79,10 +79,9 @@
   <ItemGroup>
     <Compile Include="AirportConverter.cs" />
     <Compile Include="WxColorCoder.cs" />
-    <Compile Include="WxGetOLD.cs" />
+    <Compile Include="WxGet.cs" />
     <Compile Include="WxInfo.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
-    <Compile Include="WxGet.cs" />
     <Compile Include="ActivityWxMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WxOptionsDialog.cs" />

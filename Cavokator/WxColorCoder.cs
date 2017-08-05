@@ -93,7 +93,8 @@ namespace Cavokator
 
             @"\sFG", "VA",                          // Visibility
 
-            @"\sPO", @"\sSQ", @"\sFC", @"\sSS", @"\sDS",    // Sand/Dust Whirls, Squalls, Funnel Cloud, Sandstorm, Duststorm
+            @"\sPO", @"\sSQ", @"\sFC", @"\sSS",     // Sand/Dust Whirls, Squalls, Funnel Cloud, Sandstorm
+            @"\sDS+(\s|\z)",                        // Trying to avoid american "distant" (DSNT)
             @"[+]FC",@"[+]SS",@"[+]DS",
             @"\sVCPO", @"\sVCSS", @"\sVCDS"
 

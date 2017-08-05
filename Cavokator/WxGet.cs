@@ -5,10 +5,12 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using HtmlAgilityPack;
+
+
 
 namespace Cavokator
 {
+
     public class WxGet
     {
 
@@ -88,7 +90,7 @@ namespace Cavokator
                         if (!_connectionErrorException)
                         {
                             // Pass ShowWX the airport number (requested), available XML and airport ID
-                            //ProcessWx(airportNumber, null, taforDecodedXml, icaoIDlist[i]);
+                            ProcessWx(airportNumber, null, taforDecodedXml, icaoIDlist[i]);
                         }
                         else
                         {
@@ -104,7 +106,7 @@ namespace Cavokator
 
                         if (!_connectionErrorException)
                         {
-                            //ProcessWx(airportNumber, metarDecodedXml, taforDecodedXml, icaoIDlist[i]);
+                            ProcessWx(airportNumber, metarDecodedXml, taforDecodedXml, icaoIDlist[i]);
                         }
                         else
                         {
@@ -205,10 +207,8 @@ namespace Cavokator
         /// </summary>
         /// <param name="icaoId"></param>
         /// <returns></returns>
-        private List<string> ParseTafor(string icaoId)
+        private XDocument ParseTafor(string icaoId)
         {
-            List<string> taforInformationList = new List<string>();
-            
             // Form TAFOR URL
             string taforUrl = GetTaforUrl(icaoId);
 
@@ -233,9 +233,9 @@ namespace Cavokator
                 return null;
             }
             
-            var taforSourceCode = taforRawData.Result;
+            var taforXmlRaw = taforRawData.Result;
             
-            if (taforSourceCode == string.Empty)
+            if (taforXmlRaw == string.Empty)
             {
                 // Connection error var in order to stop the work
                 _connectionErrorException = true;
@@ -246,38 +246,8 @@ namespace Cavokator
                 // Parse xml string
                 try
                 {
-                    // TODO: FINISH AND COMMENT
-
-                    HtmlDocument taforHtml = new HtmlDocument();
-                    taforHtml.LoadHtml(taforSourceCode);
-
-                    List<HtmlNode> sectionFinder = taforHtml.DocumentNode.Descendants().Where
-                        (x => (x.Name == "div" && x.Attributes["id"] != null &&
-                        x.Attributes["id"].Value.Contains("awc_main_content_wrap"))).ToList();
-
-                    var codeFinder = sectionFinder[0].Descendants("code").ToList();
-                    var taforRawString = codeFinder[0].InnerText;
-
-                    taforRawString = taforRawString.Replace("&nbsp;", "");
-
-                    // If we found a valid TAFOR
-                    if (taforRawString != string.Empty)
-                    {
-                        // Airport ID
-                        taforInformationList.Insert(0, icaoId);
-
-                        
-                        
-
-                        // Tafor weather line
-                        taforInformationList.Insert(2, taforRawString);
-                        return taforInformationList;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                    
+                    var parsedTaforXml = XDocument.Parse(taforXmlRaw);
+                    return parsedTaforXml;
                 }
                 catch
                 {
@@ -566,9 +536,14 @@ namespace Cavokator
         /// <returns></returns>
         private string GetTaforUrl(string icaoId)
         {
-            var url = "http://aviationweather.gov/taf/data?ids="
-                      + icaoId
-                      + "&format=raw&metars=off&layout=off";
+            var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+                            + "dataSource=tafs"
+                            + "&requestType=retrieve"
+                            + "&format=xml"
+                            + "&stationString=" + icaoId
+                            + "&hoursBeforeNow=" + TaforHours
+                            + "&mostRecent=" + TaforLast
+                            + "&timeType=issue";
 
             return url;
         }
@@ -640,6 +615,8 @@ namespace Cavokator
     }
 
 
+
+
     public class WxGetEventArgs : EventArgs
     {
         public bool Running { get; set; }
@@ -649,6 +626,7 @@ namespace Cavokator
         public int PercentageCompleted { get; set; }
 
     }
+
 
 
 }
