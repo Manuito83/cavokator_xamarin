@@ -102,7 +102,7 @@ namespace Cavokator
 
 
         /// <summary>
-        /// Provide a string with metar or tafor for color coding.
+        /// Provide a string with METAR or TAFOR for color coding.
         /// </summary>
         /// <param name="rawMetar"></param>
         /// <returns></returns>
