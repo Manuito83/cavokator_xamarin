@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Android.Graphics;
 using Android.Text;
 using Android.Text.Style;
+using Android.Views;
 
 namespace Cavokator
 {
@@ -67,7 +68,9 @@ namespace Cavokator
             @"[-]GR", @"\sGR",                      // Hail
             @"[-]GS", @"\sGS",                      // Small Hail
 
-            "BR", "FU", "DU", "SA", "HZ", "PY",     // Visibility
+            @"\sBR+(\s|\b)", @"\sFU+(\s|\b)",       // Visibility
+            @"\sDU+(\s|\b)", @"\sSA+(\s|\b)",       // Visibility
+            @"\sHZ+(\s|\b)", @"\sPY+(\s|\b)",       // Visibility
             "VCFG", "MIFG", "PRFG", "BCFG",
             "DRDU", "BLDU", "DRSA", "BLSA", "BLPY",
 
@@ -91,7 +94,7 @@ namespace Cavokator
 
             "SHSN", "SHPE", "SHGR", "SHGS",         // Red Showers
 
-            @"\sFG", "VA",                          // Visibility
+            @"\sFG", @"\sVA+(\s|\b)",               // Visibility
 
             @"\sPO", @"\sSQ", @"\sFC", @"\sSS",     // Sand/Dust Whirls, Squalls, Funnel Cloud, Sandstorm
             @"\sDS+(\s|\z)",                        // Trying to avoid american "distant" (DSNT)
@@ -398,6 +401,29 @@ namespace Cavokator
 
 
 
+
+            //TODO: **EXAMPLE FOR UNDERLINE**
+            // RUNWAY CONDITION
+            var conditionRegex = new Regex(@"LEBL");
+            var conditionMatches = conditionRegex.Matches(rawMetar);
+            foreach (var match in conditionMatches.Cast<Match>())
+            {
+                try
+                {
+                    coloredMetar = SpanConditionColor(coloredMetar, match.Index, match.Length);
+                }
+                catch
+                {
+                    // ignored
+                }
+
+            }
+            //*******************************
+
+
+
+
+
             return coloredMetar;
         }
 
@@ -430,5 +456,35 @@ namespace Cavokator
             return entryColoredMetar;
         }
 
+
+
+        //TODO: **EXAMPLE FOR UNDERLINE**
+        // Apply condition color
+        private SpannableString SpanConditionColor(SpannableString entryColoredMetar, int index, int length)
+        {
+            entryColoredMetar.SetSpan(new UnderlineSpan(), index, index + length, 0);
+            entryColoredMetar.SetSpan(new BackgroundColorSpan(Color.Yellow), index, index + length, 0);
+            entryColoredMetar.SetSpan(new ForegroundColorSpan(Color.Black), index, index + length, 0);
+
+            entryColoredMetar.SetSpan(new ClickableCondition(), index, index + length, 0);
+
+            return entryColoredMetar;
+        }
+        //*******************************
+
+
     }
+
+
+    //TODO: **EXAMPLE FOR UNDERLINE**
+    // https://forums.xamarin.com/discussion/15310/how-to-use-clickable-span
+    class ClickableCondition : ClickableSpan
+    {
+        public override void OnClick(View widget)
+        {
+            Console.WriteLine("CLICK");
+        }
+    }
+    //********************************
+
 }
