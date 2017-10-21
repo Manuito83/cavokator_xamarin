@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Text;
+using Android.Text.Method;
 using Android.Util;
 using Android.Views;
 using Android.Views.InputMethods;
@@ -600,8 +601,15 @@ namespace Cavokator
                         if (_doColorWeather)
                         {
                             var colorCoder = new WxColorCoder();
+                            colorCoder.ClickedRunwayCondition += OnClickRunwayCondition;
+
                             var coloredMetar = colorCoder.ColorCodeMetar(m);
+
                             metarLines.TextFormatted = coloredMetar;
+
+                            //TODO: **EXAMPLE FOR UNDERLINE**
+                            // Needed to make clickablespan clickable
+                            metarLines.MovementMethod = new LinkMovementMethod();
                         }
                         else
                         {
@@ -705,6 +713,7 @@ namespace Cavokator
                         if (_doColorWeather)
                         {
                             var colorCoder = new WxColorCoder();
+                            colorCoder.ClickedRunwayCondition += OnClickRunwayCondition;
 
                             foreach (var line in taforList)
                             {
@@ -728,6 +737,10 @@ namespace Cavokator
                             var taforLinearLayout = new LinearLayout(this);
                             var myTextView = new TextView(this);
                             var markerTextView = new TextView(this);
+
+                            //TODO: **EXAMPLE FOR UNDERLINE**
+                            // Needed to make clickablespan clickable
+                            myTextView.MovementMethod = new LinkMovementMethod();
 
                             if (j == 0)
                             {
@@ -972,6 +985,22 @@ namespace Cavokator
                 });
             }
         }
+
+
+
+        //TODO: **EXAMPLE FOR UNDERLINE**
+
+        // Eventhandler to show Toast
+        private void OnClickRunwayCondition(object source, WxColorCoderArgs condition)
+        {
+            RunOnUiThread(() =>
+            {
+                Console.WriteLine(condition.RunwayCondition);
+            });
+        }
+        //*******************************
+
+
 
 
         // Eventhandler to show Toast

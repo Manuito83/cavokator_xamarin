@@ -36,6 +36,10 @@ namespace Cavokator
         private int _regularRvr = 1000;
         private int _badRvr = 600;
 
+        //Runway condition
+        private SpannableString _runwayConditionText;
+
+
 
 
         private List<string> GoodWeather { get; } = new List<string>
@@ -460,30 +464,48 @@ namespace Cavokator
 
         //TODO: **EXAMPLE FOR UNDERLINE**
         // Apply condition color
+        public event EventHandler<WxColorCoderArgs> ClickedRunwayCondition;
         private SpannableString SpanConditionColor(SpannableString entryColoredMetar, int index, int length)
         {
+            var clickableRunwayCondition = new MyClickableSpan();
+            clickableRunwayCondition.ClickedMyClickableSpan += OnClickedRunwayCondition;
+            _runwayConditionText = entryColoredMetar.SubSequenceFormatted(index, index + length);
+
+            entryColoredMetar.SetSpan(clickableRunwayCondition, index, index + length, 0);
             entryColoredMetar.SetSpan(new UnderlineSpan(), index, index + length, 0);
             entryColoredMetar.SetSpan(new BackgroundColorSpan(Color.Yellow), index, index + length, 0);
             entryColoredMetar.SetSpan(new ForegroundColorSpan(Color.Black), index, index + length, 0);
-
-            entryColoredMetar.SetSpan(new ClickableCondition(), index, index + length, 0);
 
             return entryColoredMetar;
         }
         //*******************************
 
+        private void OnClickedRunwayCondition(object sender, EventArgs e)
+        {
+            ClickedRunwayCondition?.Invoke(this, new WxColorCoderArgs() { RunwayCondition = _runwayConditionText });
+        }
 
     }
 
 
+    public class WxColorCoderArgs : EventArgs
+    {
+        public SpannableString RunwayCondition { get; set; }
+    }
+
+    
+
     //TODO: **EXAMPLE FOR UNDERLINE**
     // https://forums.xamarin.com/discussion/15310/how-to-use-clickable-span
-    class ClickableCondition : ClickableSpan
+    public class MyClickableSpan : ClickableSpan
     {
+        public event EventHandler ClickedMyClickableSpan;
+
         public override void OnClick(View widget)
         {
-            Console.WriteLine("CLICK");
+            ClickedMyClickableSpan?.Invoke(this, EventArgs.Empty);
         }
+
     }
     //********************************
 
