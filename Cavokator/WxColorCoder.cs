@@ -36,9 +36,6 @@ namespace Cavokator
         private int _regularRvr = 1000;
         private int _badRvr = 600;
 
-        //Runway condition
-        private SpannableString _runwayConditionText;
-
 
 
 
@@ -465,11 +462,14 @@ namespace Cavokator
         //TODO: **EXAMPLE FOR UNDERLINE**
         // Apply condition color
         public event EventHandler<WxColorCoderArgs> ClickedRunwayCondition;
+        private SpannableString lalala;
         private SpannableString SpanConditionColor(SpannableString entryColoredMetar, int index, int length)
         {
-            var clickableRunwayCondition = new MyClickableSpan();
+            lalala = entryColoredMetar;
+            lalala.SetSpan(entryColoredMetar, index, index + length, 0);
+            var clickableRunwayCondition = new MyClickableSpan(lalala);
+            
             clickableRunwayCondition.ClickedMyClickableSpan += OnClickedRunwayCondition;
-            _runwayConditionText = entryColoredMetar.SubSequenceFormatted(index, index + length);
 
             entryColoredMetar.SetSpan(clickableRunwayCondition, index, index + length, 0);
             entryColoredMetar.SetSpan(new UnderlineSpan(), index, index + length, 0);
@@ -482,7 +482,7 @@ namespace Cavokator
 
         private void OnClickedRunwayCondition(object sender, EventArgs e)
         {
-            ClickedRunwayCondition?.Invoke(this, new WxColorCoderArgs() { RunwayCondition = _runwayConditionText });
+            ClickedRunwayCondition?.Invoke(this, new WxColorCoderArgs() { RunwayCondition = lalala });
         }
 
     }
@@ -499,14 +499,27 @@ namespace Cavokator
     // https://forums.xamarin.com/discussion/15310/how-to-use-clickable-span
     public class MyClickableSpan : ClickableSpan
     {
-        public event EventHandler ClickedMyClickableSpan;
+        public event EventHandler<MyClickableSpanArgs> ClickedMyClickableSpan;
 
+        private SpannableString _text_value { get; set; }
+
+        public MyClickableSpan(SpannableString input_value)
+        {
+            _text_value = input_value;
+        }
+        
         public override void OnClick(View widget)
         {
-            ClickedMyClickableSpan?.Invoke(this, EventArgs.Empty);
+            ClickedMyClickableSpan?.Invoke(this, new MyClickableSpanArgs () { Clicklable_Text = _text_value });
         }
 
     }
+
+    public class MyClickableSpanArgs : EventArgs
+    {
+        public SpannableString Clicklable_Text { get; set; }
+    }
+
     //********************************
 
 }
