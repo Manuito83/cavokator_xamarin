@@ -995,13 +995,11 @@ namespace Cavokator
         {
             RunOnUiThread(() =>
             {
-                //Console.WriteLine(condition.RunwayCondition);
-
                 // Pull up dialog
                 var transaction = FragmentManager.BeginTransaction();
-                var wxRwyCondDialog = new WxRwyCondDialog();
+                var wxRwyCondDialog = new WxRwyCondDialog(condition.RunwayCondition);
+                wxRwyCondDialog.SetStyle(DialogFragmentStyle.NoTitle, 0);
                 wxRwyCondDialog.Show(transaction, "rwycond_dialog");
-
             });
         }
         //*******************************

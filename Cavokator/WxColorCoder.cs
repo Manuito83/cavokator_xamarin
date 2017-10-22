@@ -474,7 +474,7 @@ namespace Cavokator
             // Update text directly from the match
             matched_clickkable_condition = matched_text;
 
-            // Create instance of ClickableSpan and assign property
+            // Create instance of ClickableSpan and assign field for actual text that was clicked
             var clickableRunwayCondition = new MyClickableSpan(matched_clickkable_condition);
             
             // Subscribe to the actual click for each instance
