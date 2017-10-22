@@ -405,13 +405,13 @@ namespace Cavokator
 
             //TODO: **EXAMPLE FOR UNDERLINE**
             // RUNWAY CONDITION
-            var conditionRegex = new Regex(@"LEBL");
+            var conditionRegex = new Regex(@"LEBL|KT");
             var conditionMatches = conditionRegex.Matches(rawMetar);
             foreach (var match in conditionMatches.Cast<Match>())
             {
                 try
                 {
-                    coloredMetar = SpanConditionColor(coloredMetar, match.Index, match.Length);
+                    coloredMetar = SpanConditionColor(coloredMetar, match.Index, match.Length, match.ToString());
                 }
                 catch
                 {
@@ -459,16 +459,25 @@ namespace Cavokator
 
 
 
-        //TODO: **EXAMPLE FOR UNDERLINE**
-        // Apply condition color
+        // BEGIN CONDITION COLOR 
+        
+        // First, declare an event to pass the clicked condition to main activity
         public event EventHandler<WxColorCoderArgs> ClickedRunwayCondition;
-        private SpannableString lalala;
-        private SpannableString SpanConditionColor(SpannableString entryColoredMetar, int index, int length)
+
+        // Save the actual text that is being highlighted, so that we can pass it as a parameter
+        // to the WxColorCoderArgs for each object created
+        private string matched_clickkable_condition;
+        
+        // Apply condition color
+        private SpannableString SpanConditionColor(SpannableString entryColoredMetar, int index, int length, string matched_text)
         {
-            lalala = entryColoredMetar;
-            lalala.SetSpan(entryColoredMetar, index, index + length, 0);
-            var clickableRunwayCondition = new MyClickableSpan(lalala);
+            // Update text directly from the match
+            matched_clickkable_condition = matched_text;
+
+            // Create instance of ClickableSpan and assign property
+            var clickableRunwayCondition = new MyClickableSpan(matched_clickkable_condition);
             
+            // Subscribe to the actual click for each instance
             clickableRunwayCondition.ClickedMyClickableSpan += OnClickedRunwayCondition;
 
             entryColoredMetar.SetSpan(clickableRunwayCondition, index, index + length, 0);
@@ -478,11 +487,10 @@ namespace Cavokator
 
             return entryColoredMetar;
         }
-        //*******************************
 
-        private void OnClickedRunwayCondition(object sender, EventArgs e)
+        private void OnClickedRunwayCondition(object source, MyClickableSpanArgs e)
         {
-            ClickedRunwayCondition?.Invoke(this, new WxColorCoderArgs() { RunwayCondition = lalala });
+            ClickedRunwayCondition?.Invoke(this, new WxColorCoderArgs() { RunwayCondition = e.Clicklable_Text });
         }
 
     }
@@ -490,36 +498,8 @@ namespace Cavokator
 
     public class WxColorCoderArgs : EventArgs
     {
-        public SpannableString RunwayCondition { get; set; }
+        public string RunwayCondition { get; set; }
     }
 
-    
-
-    //TODO: **EXAMPLE FOR UNDERLINE**
-    // https://forums.xamarin.com/discussion/15310/how-to-use-clickable-span
-    public class MyClickableSpan : ClickableSpan
-    {
-        public event EventHandler<MyClickableSpanArgs> ClickedMyClickableSpan;
-
-        private SpannableString _text_value { get; set; }
-
-        public MyClickableSpan(SpannableString input_value)
-        {
-            _text_value = input_value;
-        }
-        
-        public override void OnClick(View widget)
-        {
-            ClickedMyClickableSpan?.Invoke(this, new MyClickableSpanArgs () { Clicklable_Text = _text_value });
-        }
-
-    }
-
-    public class MyClickableSpanArgs : EventArgs
-    {
-        public SpannableString Clicklable_Text { get; set; }
-    }
-
-    //********************************
 
 }

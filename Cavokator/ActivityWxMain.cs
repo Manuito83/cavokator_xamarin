@@ -990,12 +990,18 @@ namespace Cavokator
 
         //TODO: **EXAMPLE FOR UNDERLINE**
 
-        // Eventhandler to show Toast
+        // Eventhandler to show RUNWAY CONDITION DIALOG
         private void OnClickRunwayCondition(object source, WxColorCoderArgs condition)
         {
             RunOnUiThread(() =>
             {
-                Console.WriteLine(condition.RunwayCondition);
+                //Console.WriteLine(condition.RunwayCondition);
+
+                // Pull up dialog
+                var transaction = FragmentManager.BeginTransaction();
+                var wxRwyCondDialog = new WxRwyCondDialog();
+                wxRwyCondDialog.Show(transaction, "rwycond_dialog");
+
             });
         }
         //*******************************

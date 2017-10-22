@@ -170,6 +170,21 @@ namespace Cavokator
 			// aapt resource value: 0x7f080004
 			public const int wx_request_button = 2131230724;
 			
+			// aapt resource value: 0x7f08001c
+			public const int wx_rwycond_closeButton = 2131230748;
+			
+			// aapt resource value: 0x7f08001b
+			public const int wx_rwycond_closeRelativeLayout = 2131230747;
+			
+			// aapt resource value: 0x7f08001a
+			public const int wx_rwycond_mainRelativeLayout = 2131230746;
+			
+			// aapt resource value: 0x7f080019
+			public const int wx_rwycond_title = 2131230745;
+			
+			// aapt resource value: 0x7f080018
+			public const int wx_rwycond_titleRelativeLayout = 2131230744;
+			
 			static Id()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -191,6 +206,9 @@ namespace Cavokator
 			
 			// aapt resource value: 0x7f030002
 			public const int wx_options_spinner = 2130903042;
+			
+			// aapt resource value: 0x7f030003
+			public const int wx_rwycond_dialog = 2130903043;
 			
 			static Layout()
 			{

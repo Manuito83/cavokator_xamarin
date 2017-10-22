@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirportConverter.cs" />
+    <Compile Include="MyClickableSpan.cs" />
     <Compile Include="WxColorCoder.cs" />
     <Compile Include="WxGet.cs" />
     <Compile Include="WxInfo.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="ActivityWxMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WxOptionsDialog.cs" />
+    <Compile Include="WxRwyCondDialog.cs" />
     <Compile Include="WxTaforDivider.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +99,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\wx_options_dialog.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\wx_rwycond_dialog.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
