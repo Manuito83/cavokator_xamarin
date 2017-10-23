@@ -405,7 +405,7 @@ namespace Cavokator
 
             //TODO: **EXAMPLE FOR UNDERLINE**
             // RUNWAY CONDITION
-            var conditionRegex = new Regex(@"LEBL|KT");
+            var conditionRegex = new Regex(@"((\b)+(R[0-9]{2})+(R|L|C|\/)+(([0-9]|\/){6})+(\b))|((\b)+(([0-9]|\/){8})+(\b))");
             var conditionMatches = conditionRegex.Matches(rawMetar);
             foreach (var match in conditionMatches.Cast<Match>())
             {
