@@ -18,11 +18,11 @@ namespace Cavokator
     /// Class used to create instances of ClickableSpan incorporating the actual text
     /// that was clicked as eventargs
     /// </summary>
-    public class MyClickableSpan : ClickableSpan
+    class MyClickableSpan : ClickableSpan
     {
         public event EventHandler<MyClickableSpanArgs> ClickedMyClickableSpan;
 
-        private string _text_value { get; set; }
+        private string _text_value;
 
         public MyClickableSpan(string input_value)
         {
@@ -35,7 +35,7 @@ namespace Cavokator
         }
     }
 
-    public class MyClickableSpanArgs : EventArgs
+    class MyClickableSpanArgs : EventArgs
     {
         public string Clicklable_Text { get; set; }
     }

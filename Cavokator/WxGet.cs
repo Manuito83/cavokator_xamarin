@@ -17,7 +17,7 @@ namespace Cavokator
         // Configuration
         private readonly int _connectionTimeOutSeconds = 10;
 
-        // ** TAFOR CONFIGURATON (ONLY IMPLEMENTED FOR LATEST VERSION) **
+        // ** TAFOR CONFIGURATION (ONLY IMPLEMENTED FOR LATEST VERSION) **
         private const int TaforHours = 24;
         private const bool TaforLast = true;
 

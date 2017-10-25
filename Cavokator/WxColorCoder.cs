@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using Android.Graphics;
 using Android.Text;
 using Android.Text.Style;
-using Android.Views;
+
 
 namespace Cavokator
 {
@@ -499,8 +499,8 @@ namespace Cavokator
 
     }
 
-
-    public class WxColorCoderArgs : EventArgs
+ 
+    class WxColorCoderArgs : EventArgs
     {
         public string RunwayCondition { get; set; }
     }

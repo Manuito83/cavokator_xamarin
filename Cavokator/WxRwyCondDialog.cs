@@ -51,8 +51,17 @@ namespace Cavokator
             };
 
 
-
+            // PASS INFORMATION FOR DECODING
+            DecodeCondition();
+            
             return view;
         }
+
+
+        private void DecodeCondition()
+        {
+            var decoder = new WxRwyCondDecoder(_condition_title);
+        }
+
     }
 }
