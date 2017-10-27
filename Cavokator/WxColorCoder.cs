@@ -118,7 +118,8 @@ namespace Cavokator
 
             // TODO: TESTING!! DO NOT DELETE AFTERWARDS
             // ** CAUTION: USE ONLY FOR TESTING **
-            rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 2129//95 33390335 R99/421594 R14L///99// R14L////// R88/////// R/SNOCLO R/CLRD//";
+            rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 333903350 R99/421594 " +
+                       "R14L/349995 R14L/12/456 R88/////// R/SNOCLO R/CLRD//";
             // TEST**TEST**TEST**
 
             var coloredMetar = new SpannableString(rawMetar);
@@ -408,6 +409,7 @@ namespace Cavokator
 
 
             //TODO: **EXAMPLE FOR UNDERLINE**
+            //TODO: NEED TO IMPLEMENT SNOCLO AND CLRD
             // RUNWAY CONDITION ASSESSMENT (METAR/SPECI)
             var conditionRegex = new Regex(@"((\b)+(R[0-9]{2})+(R|L|C|\/)+(([0-9]|\/){6})+(\b))|((\b)+(([0-9]|\/){8})+(\b))");
             var conditionMatches = conditionRegex.Matches(rawMetar);
