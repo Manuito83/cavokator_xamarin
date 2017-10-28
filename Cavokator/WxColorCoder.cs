@@ -118,8 +118,9 @@ namespace Cavokator
 
             // TODO: TESTING!! DO NOT DELETE AFTERWARDS
             // ** CAUTION: USE ONLY FOR TESTING **
-            rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 333903350 R99/421594 " +
-                       "R14L/349995 R14L/12/456 R88/////// R/SNOCLO R/CLRD//";
+            rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 R99/421594 R14L/349995 " +
+                       "R14L/1234// R88L/123456 R/SNOCLO R14L/CLRD// R11/CLRD//  " +
+                       "88////78 **MAL** R88L/1234567 333903350 R88L/12345 R88/12345678";
             // TEST**TEST**TEST**
 
             var coloredMetar = new SpannableString(rawMetar);
@@ -411,7 +412,10 @@ namespace Cavokator
             //TODO: **EXAMPLE FOR UNDERLINE**
             //TODO: NEED TO IMPLEMENT SNOCLO AND CLRD
             // RUNWAY CONDITION ASSESSMENT (METAR/SPECI)
-            var conditionRegex = new Regex(@"((\b)+(R[0-9]{2})+(R|L|C|\/)+(([0-9]|\/){6})+(\b))|((\b)+(([0-9]|\/){8})+(\b))");
+            var conditionRegex = new Regex(@"((?<=\s)+(R\d\d([LCR]?)+(\/)+([0-9]|\/){6})+(?=\s))|" +
+                                           @"((?<=\s)+(([0-9]|\/){8})+(?=\b))|" +
+                                           @"((\b)+(R\/SNOCLO)+(?=\s))|" +
+                                           @"((?<=\s)+(R\d\d([LCR]?)+(\/)+(CLRD)+(\/\/))+(?=\s))");
             var conditionMatches = conditionRegex.Matches(rawMetar);
             foreach (var match in conditionMatches.Cast<Match>())
             {

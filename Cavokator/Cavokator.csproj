@@ -91,6 +91,7 @@
     <Compile Include="WxOptionsDialog.cs" />
     <Compile Include="WxRwyCondDecoder.cs" />
     <Compile Include="WxRwyCondDialog.cs" />
+    <Compile Include="WxRwyCondition.cs" />
     <Compile Include="WxTaforDivider.cs" />
   </ItemGroup>
   <ItemGroup>
