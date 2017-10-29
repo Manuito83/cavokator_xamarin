@@ -170,14 +170,11 @@ namespace Cavokator
 			// aapt resource value: 0x7f080004
 			public const int wx_request_button = 2131230724;
 			
-			// aapt resource value: 0x7f08001c
-			public const int wx_rwycond_closeButton = 2131230748;
-			
 			// aapt resource value: 0x7f08001b
-			public const int wx_rwycond_closeRelativeLayout = 2131230747;
+			public const int wx_rwycond_closeButton = 2131230747;
 			
 			// aapt resource value: 0x7f08001a
-			public const int wx_rwycond_mainRelativeLayout = 2131230746;
+			public const int wx_rwycond_closeRelativeLayout = 2131230746;
 			
 			// aapt resource value: 0x7f080019
 			public const int wx_rwycond_title = 2131230745;

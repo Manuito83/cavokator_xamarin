@@ -60,6 +60,8 @@ namespace Cavokator
 
         private void DecodeCondition()
         {
+            var conditionLines = new 
+
             var decoder = new WxRwyCondDecoder(_condition_title);
         }
 
