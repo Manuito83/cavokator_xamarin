@@ -134,7 +134,7 @@ namespace Cavokator
                     if (intRunway <= 36)
                     {
                         _wxRunwayCondition.RwyCode = _InputCondition.Substring(0, 4);
-                        _wxRunwayCondition.RwyText = "Runway indicator " + _InputCondition.Substring(1, 3);
+                        _wxRunwayCondition.RwyText = Resource.String.Runway_Indicator + _InputCondition.Substring(1, 3);
 
                         // TODO
                         Console.WriteLine(_wxRunwayCondition.RwyCode + ": " + _wxRunwayCondition.RwyText);
