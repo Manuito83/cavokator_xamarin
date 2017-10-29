@@ -17,14 +17,20 @@ namespace Cavokator
 
         // Dialog fields
         private TextView _conditionTitle;
-        private string _condition_title;
-        
-        // Dismiss button
+        private TextView _mainErrorTextView;
+        private TextView _rwyCodeTextView;
+        private TextView _rwyTextTextView;
         private Button _dismissDialogButton;
 
-        public WxRwyCondDialog(string clicked_condition)
+
+        private string _entered_condition;
+        
+        // Dismiss button
+        
+
+        public WxRwyCondDialog(string condition_input)
         {
-            this._condition_title = clicked_condition;
+            this._entered_condition = condition_input;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -39,10 +45,13 @@ namespace Cavokator
 
             // Find view IDs
             _conditionTitle = view.FindViewById<TextView>(Resource.Id.wx_rwycond_title);
+            _mainErrorTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_main_error);
+            _rwyCodeTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwycode);
+            _rwyTextTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwytext);
             _dismissDialogButton = view.FindViewById<Button>(Resource.Id.wx_rwycond_closeButton);
 
             // Assign title from actual condition clicked
-            _conditionTitle.Text = _condition_title;
+            _conditionTitle.Text = _entered_condition;
 
             // CLOSE BUTTON (dismiss dialog)
             _dismissDialogButton.Click += delegate
@@ -60,9 +69,13 @@ namespace Cavokator
 
         private void DecodeCondition()
         {
-            var conditionLines = new 
+            var decoder = new WxRwyCondDecoder();
+            var decodedCondition = decoder.DecodeCondition(_entered_condition);
 
-            var decoder = new WxRwyCondDecoder(_condition_title);
+            _rwyTextTextView.Text = decodedCondition.RwyText;
+
+
+
         }
 
     }

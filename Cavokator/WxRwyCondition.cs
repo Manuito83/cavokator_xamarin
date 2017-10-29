@@ -1,6 +1,6 @@
 ﻿namespace Cavokator
 {
-    internal class WxRwyCondition
+    public class WxRwyCondition
     {
         // RUNWAY FIELD
         public string RwyCode;

@@ -13,10 +13,40 @@
             android:id="@+id/wx_rwycond_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TITLE"
+            android:text="RWY CONDITION"
             android:textColor="@android:color/white"
             android:textSize="25dp"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp" />
+        <TextView
+            android:text="Main error line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_rwycond_title"
+            android:id="@+id/wx_rwycond_main_error"
+            android:textSize="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10.0dp"
+            android:enabled="true"
+            android:textColor="@android:color/holo_red_light" />
+        <TextView
+            android:text="RwyCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_rwycond_main_error"
+            android:id="@+id/wx_rwycond_rwycode"
+            android:textColor="@android:color/holo_blue_light"
+            android:layout_marginTop="20.0dp" />
+        <TextView
+            android:text="RwyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/wx_rwycond_rwycode"
+            android:id="@+id/wx_rwycond_rwytext"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/wx_rwycond_main_error"
+            android:layout_marginLeft="25.0dp"
+            android:layout_marginTop="20.0dp" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/wx_rwycond_closeRelativeLayout"
