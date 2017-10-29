@@ -19,7 +19,7 @@ namespace Cavokator
         private TextView _conditionTitle;
         private TextView _mainErrorTextView;
         private TextView _rwyCodeTextView;
-        private TextView _rwyTextTextView;
+        private TextView _rwyTextTextValue;
         private Button _dismissDialogButton;
 
 
@@ -47,7 +47,7 @@ namespace Cavokator
             _conditionTitle = view.FindViewById<TextView>(Resource.Id.wx_rwycond_title);
             _mainErrorTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_main_error);
             _rwyCodeTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwycode);
-            _rwyTextTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwytext);
+            _rwyTextTextValue = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwytext);
             _dismissDialogButton = view.FindViewById<Button>(Resource.Id.wx_rwycond_closeButton);
 
             // Assign title from actual condition clicked
@@ -61,19 +61,28 @@ namespace Cavokator
 
 
             // PASS INFORMATION FOR DECODING
-            DecodeCondition();
+            ShowCondition();
             
             return view;
         }
 
 
-        private void DecodeCondition()
+        private void ShowCondition()
         {
             var decoder = new WxRwyCondDecoder();
             var decodedCondition = decoder.DecodeCondition(_entered_condition);
 
-            _rwyTextTextView.Text = decodedCondition.RwyText;
+            if (decodedCondition.MainError)
+            {
+                // TODO: SHOW ERROR - CONFIGURE TEXT
+            }
+            else
+            {
+                _mainErrorTextView.Visibility = ViewStates.Gone;
 
+                _rwyCodeTextView.Text = decodedCondition.RwyCode + ": ";
+                _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_Indicator) + " " + decodedCondition.RwyValue;
+            }
 
 
         }
