@@ -119,8 +119,9 @@ namespace Cavokator
             // TODO: TESTING!! DO NOT DELETE AFTERWARDS
             // ** CAUTION: USE ONLY FOR TESTING **
             rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 R99/421594 R14L/349995 " +
-                       "R14L/1234// R88L/123456 R/SNOCLO R14L/CLRD// R11/CLRD//  " +
-                       "88////78 **MAL** R88L/1234567 333903350 R88L/12345 R88/12345678";
+                       "R14L/1234// R88L/123456 R/SNOCLO R14L/CLRD// R11/CLRD// R88/349995 " +
+                       "R99/349995 88////78 **ERROR** R55L/123456 " +
+                       "**MAL** R88L/1234567 333903350 R88L/12345 R88/12345678";
             // TEST**TEST**TEST**
 
             var coloredMetar = new SpannableString(rawMetar);

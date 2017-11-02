@@ -12,10 +12,18 @@
         public string RwyCode;
         
         /// <summary>
-        /// Runway number
+        /// Runway designator
         /// </summary>
         public string RwyValue;
 
+        /// <summary>
+        /// Runway number
+        /// </summary>
+        public int RwyInt;
+
+        /// <summary>
+        /// Runway error
+        /// </summary>
         public bool RwyError;
 
         // RUNWAY DEPOSITS

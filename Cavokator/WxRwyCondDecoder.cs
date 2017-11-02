@@ -60,27 +60,54 @@ namespace Cavokator
             }
             else
             {
+
+                // TODO: IMPLEMENT ALL!
+
+                int intRunway;
+
                 switch (_ConditionType)
                 {
-                    case 1:
 
-                        int intRunway;
+                    case 1:
+                                                
                         int.TryParse(_rwyConditionText.Substring(1, 2), out intRunway);
 
                         if (intRunway <= 36)
                         {
                             _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 4);
                             _wxRunwayCondition.RwyValue = _rwyConditionText.Substring(1, 3);
-
-                            // TODO: IMPLEMENT ALL!
-
+                            _wxRunwayCondition.RwyInt = intRunway;
                         }
                         else
                         {
                             _wxRunwayCondition.RwyError = true;
                         }
-                    
+                        
                         break;
+
+
+
+                    case 2:
+
+                        int.TryParse(_rwyConditionText.Substring(1, 2), out intRunway);
+
+                        if (intRunway <= 36 || intRunway == 88 || intRunway == 99)
+                        {
+                            _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 3);
+                            _wxRunwayCondition.RwyValue = _rwyConditionText.Substring(1, 2);
+                            _wxRunwayCondition.RwyInt = intRunway;
+                        }
+                        else
+                        {
+                            _wxRunwayCondition.RwyError = true;
+                        }
+
+                        break;
+                        
+
+
+
+                                            
                 }
             }
 

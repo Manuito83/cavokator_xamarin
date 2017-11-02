@@ -20,12 +20,14 @@ namespace Cavokator
         private TextView _mainErrorTextView;
         private TextView _rwyCodeTextView;
         private TextView _rwyTextTextValue;
-        private Button _dismissDialogButton;
-
-
-        private string _entered_condition;
         
         // Dismiss button
+        private Button _dismissDialogButton;
+
+        // Condition that was submitted
+        private string _entered_condition;
+        
+        
         
 
         public WxRwyCondDialog(string condition_input)
@@ -80,8 +82,36 @@ namespace Cavokator
             {
                 _mainErrorTextView.Visibility = ViewStates.Gone;
 
+                // Runway Code
                 _rwyCodeTextView.Text = decodedCondition.RwyCode + ": ";
-                _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_Indicator) + " " + decodedCondition.RwyValue;
+
+                if (!decodedCondition.RwyError)
+                {
+                    if (decodedCondition.RwyInt <= 36)
+                    {
+                        // Runway Value
+                        _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_Indicator) 
+                                                 + " " + decodedCondition.RwyValue;
+                    }
+                    else if (decodedCondition.RwyInt == 88)
+                    {
+                        // Runway Value
+                        _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_AllRunways);
+                    }
+                    else if (decodedCondition.RwyInt == 99)
+                    {
+                        // Runway Value
+                        _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_ReportRepeated);
+                    }
+
+
+                }
+                else
+                {
+                    // TODO: RWY ERROR
+                }
+                
+
             }
 
 

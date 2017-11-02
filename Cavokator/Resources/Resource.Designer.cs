@@ -229,98 +229,104 @@ namespace Cavokator
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f050016
-			public const int Ago = 2131034134;
-			
-			// aapt resource value: 0x7f050004
-			public const int Airport_ID_TextView = 2131034116;
-			
-			// aapt resource value: 0x7f050001
-			public const int ApplicationName = 2131034113;
-			
-			// aapt resource value: 0x7f050003
-			public const int Clear_button = 2131034115;
-			
-			// aapt resource value: 0x7f050007
-			public const int Connection_Error = 2131034119;
-			
-			// aapt resource value: 0x7f05001a
-			public const int Day = 2131034138;
-			
-			// aapt resource value: 0x7f050017
-			public const int Days = 2131034135;
-			
-			// aapt resource value: 0x7f050009
-			public const int Error_fetching_airport = 2131034121;
-			
-			// aapt resource value: 0x7f05001d
-			public const int Fetching = 2131034141;
-			
-			// aapt resource value: 0x7f05001b
-			public const int Hour = 2131034139;
-			
 			// aapt resource value: 0x7f050018
-			public const int Hours = 2131034136;
-			
-			// aapt resource value: 0x7f050005
-			public const int Icao_Or_Iata = 2131034117;
-			
-			// aapt resource value: 0x7f050008
-			public const int Internet_Error = 2131034120;
-			
-			// aapt resource value: 0x7f050014
-			public const int Metar_Issued = 2131034132;
-			
-			// aapt resource value: 0x7f05001c
-			public const int Minute = 2131034140;
-			
-			// aapt resource value: 0x7f050019
-			public const int Minutes = 2131034137;
-			
-			// aapt resource value: 0x7f05000c
-			public const int Option_ChooseMetarOrTaforText = 2131034124;
-			
-			// aapt resource value: 0x7f050012
-			public const int Option_ColorWeatherText = 2131034130;
-			
-			// aapt resource value: 0x7f05000b
-			public const int Option_ConfigurationText = 2131034123;
-			
-			// aapt resource value: 0x7f050013
-			public const int Option_DivideTaforText = 2131034131;
-			
-			// aapt resource value: 0x7f05000f
-			public const int Option_Hour = 2131034127;
-			
-			// aapt resource value: 0x7f050010
-			public const int Option_Hours = 2131034128;
-			
-			// aapt resource value: 0x7f05000e
-			public const int Option_JustGetLast = 2131034126;
-			
-			// aapt resource value: 0x7f05000d
-			public const int Option_MetarHoursText = 2131034125;
-			
-			// aapt resource value: 0x7f050011
-			public const int Option_SaveDataText = 2131034129;
+			public const int Ago = 2131034136;
 			
 			// aapt resource value: 0x7f050006
-			public const int Requesting_METAR_Information = 2131034118;
+			public const int Airport_ID_TextView = 2131034118;
+			
+			// aapt resource value: 0x7f050003
+			public const int ApplicationName = 2131034115;
+			
+			// aapt resource value: 0x7f050005
+			public const int Clear_button = 2131034117;
+			
+			// aapt resource value: 0x7f050009
+			public const int Connection_Error = 2131034121;
+			
+			// aapt resource value: 0x7f05001c
+			public const int Day = 2131034140;
+			
+			// aapt resource value: 0x7f050019
+			public const int Days = 2131034137;
+			
+			// aapt resource value: 0x7f05000b
+			public const int Error_fetching_airport = 2131034123;
+			
+			// aapt resource value: 0x7f05001f
+			public const int Fetching = 2131034143;
+			
+			// aapt resource value: 0x7f05001d
+			public const int Hour = 2131034141;
+			
+			// aapt resource value: 0x7f05001a
+			public const int Hours = 2131034138;
+			
+			// aapt resource value: 0x7f050007
+			public const int Icao_Or_Iata = 2131034119;
+			
+			// aapt resource value: 0x7f05000a
+			public const int Internet_Error = 2131034122;
+			
+			// aapt resource value: 0x7f050016
+			public const int Metar_Issued = 2131034134;
+			
+			// aapt resource value: 0x7f05001e
+			public const int Minute = 2131034142;
+			
+			// aapt resource value: 0x7f05001b
+			public const int Minutes = 2131034139;
+			
+			// aapt resource value: 0x7f05000e
+			public const int Option_ChooseMetarOrTaforText = 2131034126;
+			
+			// aapt resource value: 0x7f050014
+			public const int Option_ColorWeatherText = 2131034132;
+			
+			// aapt resource value: 0x7f05000d
+			public const int Option_ConfigurationText = 2131034125;
+			
+			// aapt resource value: 0x7f050015
+			public const int Option_DivideTaforText = 2131034133;
+			
+			// aapt resource value: 0x7f050011
+			public const int Option_Hour = 2131034129;
+			
+			// aapt resource value: 0x7f050012
+			public const int Option_Hours = 2131034130;
+			
+			// aapt resource value: 0x7f050010
+			public const int Option_JustGetLast = 2131034128;
+			
+			// aapt resource value: 0x7f05000f
+			public const int Option_MetarHoursText = 2131034127;
+			
+			// aapt resource value: 0x7f050013
+			public const int Option_SaveDataText = 2131034131;
+			
+			// aapt resource value: 0x7f050008
+			public const int Requesting_METAR_Information = 2131034120;
+			
+			// aapt resource value: 0x7f050001
+			public const int Runway_AllRunways = 2131034113;
 			
 			// aapt resource value: 0x7f050000
 			public const int Runway_Indicator = 2131034112;
 			
 			// aapt resource value: 0x7f050002
-			public const int Send_button = 2131034114;
+			public const int Runway_ReportRepeated = 2131034114;
 			
-			// aapt resource value: 0x7f05000a
-			public const int Server_Timeout = 2131034122;
+			// aapt resource value: 0x7f050004
+			public const int Send_button = 2131034116;
 			
-			// aapt resource value: 0x7f05001e
-			public const int TaforNotAvailable = 2131034142;
+			// aapt resource value: 0x7f05000c
+			public const int Server_Timeout = 2131034124;
 			
-			// aapt resource value: 0x7f050015
-			public const int Tafor_Issued = 2131034133;
+			// aapt resource value: 0x7f050020
+			public const int TaforNotAvailable = 2131034144;
+			
+			// aapt resource value: 0x7f050017
+			public const int Tafor_Issued = 2131034135;
 			
 			static String()
 			{
