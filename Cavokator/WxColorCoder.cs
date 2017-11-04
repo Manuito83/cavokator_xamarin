@@ -409,9 +409,6 @@ namespace Cavokator
 
 
 
-
-            //TODO: **EXAMPLE FOR UNDERLINE**
-            //TODO: NEED TO IMPLEMENT SNOCLO AND CLRD
             // RUNWAY CONDITION ASSESSMENT (METAR/SPECI)
             var conditionRegex = new Regex(@"((?<=\s)+(R\d\d([LCR]?)+(\/)+([0-9]|\/){6})+(?=\s))|" +
                                            @"((?<=\s)+(([0-9]|\/){8})+(?=\b))|" +
@@ -430,9 +427,6 @@ namespace Cavokator
                 }
 
             }
-            //*******************************
-
-
 
 
 

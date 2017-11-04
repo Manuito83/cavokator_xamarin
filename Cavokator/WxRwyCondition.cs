@@ -7,17 +7,17 @@
         
         // **** RUNWAY BLOCK ****
         /// <summary>
-        /// Actual code from entered string
+        /// Actual string (e.g.: "R14L")
         /// </summary>
         public string RwyCode;
         
         /// <summary>
-        /// Runway designator
+        /// Runway designator (e.g.: "14L")
         /// </summary>
         public string RwyValue;
 
         /// <summary>
-        /// Runway number
+        /// Runway number integet (e.g.:"14")
         /// </summary>
         public int RwyInt;
 

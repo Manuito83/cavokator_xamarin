@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Android.Graphics;
 
 namespace Cavokator
 {
@@ -76,7 +77,11 @@ namespace Cavokator
 
             if (decodedCondition.MainError)
             {
-                // TODO: SHOW ERROR - CONFIGURE TEXT
+                _mainErrorTextView.Text = Resources.GetString(Resource.String.Main_Error);
+
+                // TODO: SHOW ERROR AND ADD ALL TEXTVIEW THAT NEED TO BE HIDDEN
+                _rwyCodeTextView.Visibility = ViewStates.Gone;
+                _rwyTextTextValue.Visibility = ViewStates.Gone;
             }
             else
             {
@@ -103,12 +108,11 @@ namespace Cavokator
                         // Runway Value
                         _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_ReportRepeated);
                     }
-
-
                 }
                 else
                 {
-                    // TODO: RWY ERROR
+                    _rwyTextTextValue.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_Error);
                 }
                 
 

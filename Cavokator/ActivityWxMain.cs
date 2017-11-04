@@ -607,7 +607,6 @@ namespace Cavokator
 
                             metarLines.TextFormatted = coloredMetar;
 
-                            //TODO: **EXAMPLE FOR UNDERLINE**
                             // Needed to make clickablespan clickable
                             metarLines.MovementMethod = new LinkMovementMethod();
                         }
@@ -738,7 +737,6 @@ namespace Cavokator
                             var myTextView = new TextView(this);
                             var markerTextView = new TextView(this);
 
-                            //TODO: **EXAMPLE FOR UNDERLINE**
                             // Needed to make clickablespan clickable
                             myTextView.MovementMethod = new LinkMovementMethod();
 
@@ -988,8 +986,6 @@ namespace Cavokator
 
 
 
-        //TODO: **EXAMPLE FOR UNDERLINE**
-
         // Eventhandler to show RUNWAY CONDITION DIALOG
         private void OnClickRunwayCondition(object source, WxColorCoderArgs condition)
         {
@@ -1002,8 +998,7 @@ namespace Cavokator
                 wxRwyCondDialog.Show(transaction, "rwycond_dialog");
             });
         }
-        //*******************************
-
+ 
 
 
 

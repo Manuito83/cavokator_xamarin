@@ -63,15 +63,17 @@ namespace Cavokator
 
                 // TODO: IMPLEMENT ALL!
 
+                // We pass and integer for runway number - error checking
                 int intRunway;
 
                 switch (_ConditionType)
                 {
 
                     case 1:
-                                                
-                        int.TryParse(_rwyConditionText.Substring(1, 2), out intRunway);
 
+
+                        // RUNWAY CODE
+                        int.TryParse(_rwyConditionText.Substring(1, 2), out intRunway);
                         if (intRunway <= 36)
                         {
                             _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 4);
@@ -80,6 +82,7 @@ namespace Cavokator
                         }
                         else
                         {
+                            _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 4);
                             _wxRunwayCondition.RwyError = true;
                         }
                         
@@ -89,8 +92,8 @@ namespace Cavokator
 
                     case 2:
 
+                        // RUNWAY CODE
                         int.TryParse(_rwyConditionText.Substring(1, 2), out intRunway);
-
                         if (intRunway <= 36 || intRunway == 88 || intRunway == 99)
                         {
                             _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 3);
