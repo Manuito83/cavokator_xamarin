@@ -60,50 +60,117 @@ namespace Cavokator
             }
             else
             {
-
                 // TODO: IMPLEMENT ALL!
-
-                // We pass and integer for runway number - error checking
-                int intRunway;
-
                 switch (_ConditionType)
                 {
 
+                    // (Type 1 for RXXL/123456)
                     case 1:
-
-
+                        
                         // RUNWAY CODE
-                        int.TryParse(_rwyConditionText.Substring(1, 2), out intRunway);
-                        if (intRunway <= 36)
+                        try
                         {
-                            _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 4);
-                            _wxRunwayCondition.RwyValue = _rwyConditionText.Substring(1, 3);
-                            _wxRunwayCondition.RwyInt = intRunway;
+                            int.TryParse(_rwyConditionText.Substring(1, 2), out int intRunway);
+                            if (intRunway <= 36)
+                            {
+                                _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 4);
+                                _wxRunwayCondition.RwyValue = _rwyConditionText.Substring(1, 3);
+                                _wxRunwayCondition.RwyInt = intRunway;
+                            }
+                            else
+                            {
+                                _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 4);
+                                _wxRunwayCondition.RwyError = true;
+                            }
                         }
-                        else
+                        catch
                         {
                             _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 4);
                             _wxRunwayCondition.RwyError = true;
                         }
-                        
+
+                        // DEPOSIT TYPE
+                        try
+                        {
+                            if (_rwyConditionText.Substring(5, 1) == "/")
+                            {
+                                _wxRunwayCondition.DepositCode = "/";
+                            }
+                            else
+                            {
+                                if (int.TryParse(_rwyConditionText.Substring(5, 1), out int intDeposits))
+                                {
+                                    _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(5, 1);
+                                }
+                                else
+                                {
+                                    _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(5, 1);
+                                    _wxRunwayCondition.DepositError = true;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(5, 1);
+                            _wxRunwayCondition.DepositError = true;
+                        }
+
+
                         break;
 
 
-
+                    // (Type 2 for RXX/123456)
                     case 2:
-
+                        
                         // RUNWAY CODE
-                        int.TryParse(_rwyConditionText.Substring(1, 2), out intRunway);
-                        if (intRunway <= 36 || intRunway == 88 || intRunway == 99)
+                        try
+                        {
+                            int.TryParse(_rwyConditionText.Substring(1, 2), out int intRunway);
+                            if (intRunway <= 36 || intRunway == 88 || intRunway == 99)
+                            {
+                                _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 3);
+                                _wxRunwayCondition.RwyValue = _rwyConditionText.Substring(1, 2);
+                                _wxRunwayCondition.RwyInt = intRunway;
+                            }
+                            else
+                            {
+                                _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 3);
+                                _wxRunwayCondition.RwyError = true;
+                            }
+                        }
+                        catch
                         {
                             _wxRunwayCondition.RwyCode = _rwyConditionText.Substring(0, 3);
-                            _wxRunwayCondition.RwyValue = _rwyConditionText.Substring(1, 2);
-                            _wxRunwayCondition.RwyInt = intRunway;
-                        }
-                        else
-                        {
                             _wxRunwayCondition.RwyError = true;
                         }
+
+                        
+                        // DEPOSIT TYPE
+                        try
+                        {
+                            if (_rwyConditionText.Substring(4, 1) == "/")
+                            {
+                                _wxRunwayCondition.DepositCode = "/";
+                            }
+                            else
+                            {
+                                if (int.TryParse(_rwyConditionText.Substring(4, 1), out int intDeposits))
+                                {
+                                    _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(4, 1);
+                                }
+                                else
+                                {
+                                    _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(4, 1);
+                                    _wxRunwayCondition.DepositError = true;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(4, 1);
+                            _wxRunwayCondition.DepositError = true;
+                        }
+
 
                         break;
                         

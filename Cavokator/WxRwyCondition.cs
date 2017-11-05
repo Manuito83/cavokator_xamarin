@@ -26,9 +26,15 @@
         /// </summary>
         public bool RwyError;
 
-        // RUNWAY DEPOSITS
+        // **** DEPOSITS BLOCK ****
+        /// <summary>
+        /// Deposit code (0-9) or /
+        /// </summary>
         public string DepositCode;
-        public string DepositValue;
+
+        /// <summary>
+        /// Deposit error
+        /// </summary>
         public bool DepositError;
 
         // EXTENT OF CONTAMINATION

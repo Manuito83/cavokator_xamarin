@@ -117,12 +117,15 @@ namespace Cavokator
         {
 
             // TODO: TESTING!! DO NOT DELETE AFTERWARDS
-            // ** CAUTION: USE ONLY FOR TESTING **
+            // ** CAUTION: USE ONLY FOR TESTING, COMMENT AFTERWARDS **
             rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 R99/421594 R14L/349995 " +
                        "R14L/1234// R88L/123456 R/SNOCLO R14L/CLRD// R11/CLRD// R88/349995 " +
-                       "R99/349995 88////78 **ERROR** R55L/123456 " +
+                       "R99/349995 88////78 " +
+                       "**VARIATIONS** R99/111111 R99/222222 R99/333333 R99/444444 R99/555555" +
+                       "R99/666666 R99/777777 R99/888888 R99/999999 R99/000000 R99/////// " +
+                       "**ERROR** R55L/123456 R82/123456 " +
                        "**MAL** R88L/1234567 333903350 R88L/12345 R88/12345678";
-            // TEST**TEST**TEST**
+            // ^^^ TEST ^^^ TEST ^^^ TEST ^^^
 
             var coloredMetar = new SpannableString(rawMetar);
 
@@ -410,7 +413,7 @@ namespace Cavokator
 
 
             // RUNWAY CONDITION ASSESSMENT (METAR/SPECI)
-            var conditionRegex = new Regex(@"((?<=\s)+(R\d\d([LCR]?)+(\/)+([0-9]|\/){6})+(?=\s))|" +
+            var conditionRegex = new Regex(@"((?<=\s)+(R)+(\d\d([LCR]?)+(\/)+([0-9]|\/){6})+(?=\s))|" +
                                            @"((?<=\s)+(([0-9]|\/){8})+(?=\b))|" +
                                            @"((\b)+(R\/SNOCLO)+(?=\s))|" +
                                            @"((?<=\s)+(R\d\d([LCR]?)+(\/)+(CLRD)+(\/\/))+(?=\s))");

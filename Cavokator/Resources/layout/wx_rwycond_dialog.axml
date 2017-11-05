@@ -9,6 +9,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+    <!-- TITLE -->
         <TextView
             android:id="@+id/wx_rwycond_title"
             android:layout_width="wrap_content"
@@ -18,6 +19,7 @@
             android:textSize="25dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp" />
+    <!-- MAIN ERROR LINE -->
         <TextView
             android:text="Main error line"
             android:layout_width="wrap_content"
@@ -29,6 +31,7 @@
             android:layout_marginTop="20.0dp"
             android:enabled="true"
             android:textColor="@android:color/holo_red_light" />
+    <!-- RUNWAY -->
         <TextView
             android:text="RwyCode"
             android:layout_width="wrap_content"
@@ -48,6 +51,90 @@
             android:layout_below="@id/wx_rwycond_title"
             android:layout_marginLeft="8.0dp"
             android:layout_marginTop="20.0dp" />
+    <!-- DEPOSITS -->
+        <TextView
+            android:text="Deposits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_rwycond_rwytext"
+            android:id="@+id/wx_rwycond_depositsCode"
+            android:textColor="@android:color/holo_blue_light"
+            android:layout_marginTop="10.0dp"
+            android:layout_marginLeft="20dp" />
+        <TextView
+            android:text="Deposits Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/wx_rwycond_depositsCode"
+            android:id="@+id/wx_rwycond_depositsText"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/wx_rwycond_rwytext"
+            android:layout_marginLeft="8.0dp"
+            android:layout_marginRight="8.0dp"
+            android:layout_marginTop="10.0dp" />
+    <!-- EXTENT -->
+        <TextView
+            android:text="Extent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_rwycond_depositsText"
+            android:id="@+id/wx_rwycond_extentCode"
+            android:textColor="@android:color/holo_blue_light"
+            android:layout_marginTop="10.0dp"
+            android:layout_marginLeft="20dp" />
+        <TextView
+            android:text="Extent Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/wx_rwycond_extentCode"
+            android:id="@+id/wx_rwycond_extentText"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/wx_rwycond_depositsText"
+            android:layout_marginLeft="8.0dp"
+            android:layout_marginRight="8.0dp"
+            android:layout_marginTop="10.0dp" />
+    <!-- DEPTH -->
+        <TextView
+            android:text="Depth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_rwycond_extentText"
+            android:id="@+id/wx_rwycond_depthCode"
+            android:textColor="@android:color/holo_blue_light"
+            android:layout_marginTop="10.0dp"
+            android:layout_marginLeft="20dp" />
+        <TextView
+            android:text="Depth Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/wx_rwycond_depthCode"
+            android:id="@+id/wx_rwycond_depthText"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/wx_rwycond_extentText"
+            android:layout_marginLeft="8.0dp"
+            android:layout_marginRight="8.0dp"
+            android:layout_marginTop="10.0dp" />
+    <!-- FRICTION -->
+        <TextView
+            android:text="Friction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wx_rwycond_depthText"
+            android:id="@+id/wx_rwycond_frictionCode"
+            android:textColor="@android:color/holo_blue_light"
+            android:layout_marginTop="10.0dp"
+            android:layout_marginLeft="20dp" />
+        <TextView
+            android:text="Friction Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/wx_rwycond_frictionCode"
+            android:id="@+id/wx_rwycond_frictionText"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/wx_rwycond_depthText"
+            android:layout_marginLeft="8.0dp"
+            android:layout_marginRight="8.0dp"
+            android:layout_marginTop="10.0dp" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/wx_rwycond_closeRelativeLayout"

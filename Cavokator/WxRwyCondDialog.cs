@@ -20,8 +20,17 @@ namespace Cavokator
         private TextView _conditionTitle;
         private TextView _mainErrorTextView;
         private TextView _rwyCodeTextView;
-        private TextView _rwyTextTextValue;
-        
+        private TextView _rwyTextTextView;
+        private TextView _rwyDepositCodeTextview;
+        private TextView _rwyDepositTextTextview;
+        private TextView _rwyExtentCodeTextview;
+        private TextView _rwyExtentTextTextview;
+        private TextView _rwyDepthCodeTextview;
+        private TextView _rwyDepthTextTextview;
+        private TextView _rwyFrictionCodeTextview;
+        private TextView _rwyFrictionTextTextview;
+
+
         // Dismiss button
         private Button _dismissDialogButton;
 
@@ -50,7 +59,16 @@ namespace Cavokator
             _conditionTitle = view.FindViewById<TextView>(Resource.Id.wx_rwycond_title);
             _mainErrorTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_main_error);
             _rwyCodeTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwycode);
-            _rwyTextTextValue = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwytext);
+            _rwyTextTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwytext);
+            _rwyDepositCodeTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_depositsCode);
+            _rwyDepositTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_depositsText);
+            _rwyExtentCodeTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_extentCode);
+            _rwyExtentTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_extentText);
+            _rwyDepthCodeTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_depthCode);
+            _rwyDepthTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_depthText);
+            _rwyFrictionCodeTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_frictionCode);
+            _rwyFrictionTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_frictionText);
+
             _dismissDialogButton = view.FindViewById<Button>(Resource.Id.wx_rwycond_closeButton);
 
             // Assign title from actual condition clicked
@@ -79,15 +97,24 @@ namespace Cavokator
             {
                 _mainErrorTextView.Text = Resources.GetString(Resource.String.Main_Error);
 
-                // TODO: SHOW ERROR AND ADD ALL TEXTVIEW THAT NEED TO BE HIDDEN
+                // Show error and hide rest of TextViews below with runway information
                 _rwyCodeTextView.Visibility = ViewStates.Gone;
-                _rwyTextTextValue.Visibility = ViewStates.Gone;
+                _rwyTextTextView.Visibility = ViewStates.Gone;
+                _rwyDepositCodeTextview.Visibility = ViewStates.Gone;
+                _rwyDepositTextTextview.Visibility = ViewStates.Gone;
+                _rwyExtentCodeTextview.Visibility = ViewStates.Gone;
+                _rwyExtentTextTextview.Visibility = ViewStates.Gone;
+                _rwyDepthCodeTextview.Visibility = ViewStates.Gone;
+                _rwyDepthTextTextview.Visibility = ViewStates.Gone;
+                _rwyFrictionCodeTextview.Visibility = ViewStates.Gone;
+                _rwyFrictionTextTextview.Visibility = ViewStates.Gone;
             }
             else
             {
+                // Make sure Main Error does not appear
                 _mainErrorTextView.Visibility = ViewStates.Gone;
 
-                // Runway Code
+                // ** RUNWAY CODE **
                 _rwyCodeTextView.Text = decodedCondition.RwyCode + ": ";
 
                 if (!decodedCondition.RwyError)
@@ -95,26 +122,87 @@ namespace Cavokator
                     if (decodedCondition.RwyInt <= 36)
                     {
                         // Runway Value
-                        _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_Indicator) 
+                        _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_Indicator) 
                                                  + " " + decodedCondition.RwyValue;
                     }
                     else if (decodedCondition.RwyInt == 88)
                     {
                         // Runway Value
-                        _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_AllRunways);
+                        _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_AllRunways);
                     }
                     else if (decodedCondition.RwyInt == 99)
                     {
                         // Runway Value
-                        _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_ReportRepeated);
+                        _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_ReportRepeated);
                     }
                 }
                 else
                 {
-                    _rwyTextTextValue.SetTextColor(Color.ParseColor("#ff0000"));
-                    _rwyTextTextValue.Text = Resources.GetString(Resource.String.Runway_Error);
+                    _rwyTextTextView.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_Error);
                 }
-                
+
+
+                // ** DEPOSIT CODE **
+                _rwyDepositCodeTextview.Text = decodedCondition.DepositCode + ": ";
+
+                if (!decodedCondition.DepositError)
+                {
+                    switch (decodedCondition.DepositCode)
+                    {
+                        case "/":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.DepositNO);
+                            break;
+
+                        case "0":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit0);
+                            break;
+
+                        case "1":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit1);
+                            break;
+
+                        case "2":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit2);
+                            break;
+
+                        case "3":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit3);
+                            break;
+
+                        case "4":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit4);
+                            break;
+
+                        case "5":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit5);
+                            break;
+
+                        case "6":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit6);
+                            break;
+
+                        case "7":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit7);
+                            break;
+
+                        case "8":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit8);
+                            break;
+
+                        case "9":
+                            _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit9);
+                            break;
+
+                    }
+
+
+                }
+                else
+                {
+
+                }
+
 
             }
 
