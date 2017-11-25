@@ -253,26 +253,26 @@ namespace Cavokator
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f050031
-			public const int Ago = 2131034161;
+			// aapt resource value: 0x7f050033
+			public const int Ago = 2131034163;
 			
-			// aapt resource value: 0x7f05001f
-			public const int Airport_ID_TextView = 2131034143;
-			
-			// aapt resource value: 0x7f05001c
-			public const int ApplicationName = 2131034140;
+			// aapt resource value: 0x7f050021
+			public const int Airport_ID_TextView = 2131034145;
 			
 			// aapt resource value: 0x7f05001e
-			public const int Clear_button = 2131034142;
+			public const int ApplicationName = 2131034142;
 			
-			// aapt resource value: 0x7f050022
-			public const int Connection_Error = 2131034146;
+			// aapt resource value: 0x7f050020
+			public const int Clear_button = 2131034144;
 			
-			// aapt resource value: 0x7f050035
-			public const int Day = 2131034165;
+			// aapt resource value: 0x7f050024
+			public const int Connection_Error = 2131034148;
 			
-			// aapt resource value: 0x7f050032
-			public const int Days = 2131034162;
+			// aapt resource value: 0x7f050037
+			public const int Day = 2131034167;
+			
+			// aapt resource value: 0x7f050034
+			public const int Days = 2131034164;
 			
 			// aapt resource value: 0x7f050005
 			public const int Deposit0 = 2131034117;
@@ -307,101 +307,107 @@ namespace Cavokator
 			// aapt resource value: 0x7f05000f
 			public const int DepositNO = 2131034127;
 			
-			// aapt resource value: 0x7f050015
-			public const int Depth00 = 2131034133;
-			
-			// aapt resource value: 0x7f050016
-			public const int Depth99 = 2131034134;
+			// aapt resource value: 0x7f050010
+			public const int Deposit_Error = 2131034128;
 			
 			// aapt resource value: 0x7f050017
-			public const int DepthMORE = 2131034135;
-			
-			// aapt resource value: 0x7f050024
-			public const int Error_fetching_airport = 2131034148;
-			
-			// aapt resource value: 0x7f050010
-			public const int Extent1 = 2131034128;
-			
-			// aapt resource value: 0x7f050011
-			public const int Extent2 = 2131034129;
-			
-			// aapt resource value: 0x7f050012
-			public const int Extent5 = 2131034130;
-			
-			// aapt resource value: 0x7f050013
-			public const int Extent9 = 2131034131;
-			
-			// aapt resource value: 0x7f050014
-			public const int ExtentNO = 2131034132;
-			
-			// aapt resource value: 0x7f050038
-			public const int Fetching = 2131034168;
-			
-			// aapt resource value: 0x7f05001a
-			public const int Friction99 = 2131034138;
-			
-			// aapt resource value: 0x7f050019
-			public const int FrictionBA = 2131034137;
+			public const int Depth00 = 2131034135;
 			
 			// aapt resource value: 0x7f050018
-			public const int FrictionCoefficient = 2131034136;
+			public const int Depth99 = 2131034136;
+			
+			// aapt resource value: 0x7f050019
+			public const int DepthMORE = 2131034137;
+			
+			// aapt resource value: 0x7f050026
+			public const int Error_fetching_airport = 2131034150;
+			
+			// aapt resource value: 0x7f050011
+			public const int Extent1 = 2131034129;
+			
+			// aapt resource value: 0x7f050012
+			public const int Extent2 = 2131034130;
+			
+			// aapt resource value: 0x7f050013
+			public const int Extent5 = 2131034131;
+			
+			// aapt resource value: 0x7f050014
+			public const int Extent9 = 2131034132;
+			
+			// aapt resource value: 0x7f050015
+			public const int ExtentNO = 2131034133;
+			
+			// aapt resource value: 0x7f050016
+			public const int Extent_Error = 2131034134;
+			
+			// aapt resource value: 0x7f05003a
+			public const int Fetching = 2131034170;
+			
+			// aapt resource value: 0x7f05001c
+			public const int Friction99 = 2131034140;
 			
 			// aapt resource value: 0x7f05001b
-			public const int FrictionNO = 2131034139;
+			public const int FrictionBA = 2131034139;
 			
-			// aapt resource value: 0x7f050036
-			public const int Hour = 2131034166;
+			// aapt resource value: 0x7f05001a
+			public const int FrictionCoefficient = 2131034138;
 			
-			// aapt resource value: 0x7f050033
-			public const int Hours = 2131034163;
+			// aapt resource value: 0x7f05001d
+			public const int FrictionNO = 2131034141;
 			
-			// aapt resource value: 0x7f050020
-			public const int Icao_Or_Iata = 2131034144;
+			// aapt resource value: 0x7f050038
+			public const int Hour = 2131034168;
 			
-			// aapt resource value: 0x7f050023
-			public const int Internet_Error = 2131034147;
+			// aapt resource value: 0x7f050035
+			public const int Hours = 2131034165;
+			
+			// aapt resource value: 0x7f050022
+			public const int Icao_Or_Iata = 2131034146;
+			
+			// aapt resource value: 0x7f050025
+			public const int Internet_Error = 2131034149;
 			
 			// aapt resource value: 0x7f050000
 			public const int Main_Error = 2131034112;
 			
-			// aapt resource value: 0x7f05002f
-			public const int Metar_Issued = 2131034159;
+			// aapt resource value: 0x7f050031
+			public const int Metar_Issued = 2131034161;
 			
-			// aapt resource value: 0x7f050037
-			public const int Minute = 2131034167;
+			// aapt resource value: 0x7f050039
+			public const int Minute = 2131034169;
 			
-			// aapt resource value: 0x7f050034
-			public const int Minutes = 2131034164;
-			
-			// aapt resource value: 0x7f050027
-			public const int Option_ChooseMetarOrTaforText = 2131034151;
-			
-			// aapt resource value: 0x7f05002d
-			public const int Option_ColorWeatherText = 2131034157;
-			
-			// aapt resource value: 0x7f050026
-			public const int Option_ConfigurationText = 2131034150;
-			
-			// aapt resource value: 0x7f05002e
-			public const int Option_DivideTaforText = 2131034158;
-			
-			// aapt resource value: 0x7f05002a
-			public const int Option_Hour = 2131034154;
-			
-			// aapt resource value: 0x7f05002b
-			public const int Option_Hours = 2131034155;
+			// aapt resource value: 0x7f050036
+			public const int Minutes = 2131034166;
 			
 			// aapt resource value: 0x7f050029
-			public const int Option_JustGetLast = 2131034153;
+			public const int Option_ChooseMetarOrTaforText = 2131034153;
+			
+			// aapt resource value: 0x7f05002f
+			public const int Option_ColorWeatherText = 2131034159;
 			
 			// aapt resource value: 0x7f050028
-			public const int Option_MetarHoursText = 2131034152;
+			public const int Option_ConfigurationText = 2131034152;
+			
+			// aapt resource value: 0x7f050030
+			public const int Option_DivideTaforText = 2131034160;
 			
 			// aapt resource value: 0x7f05002c
-			public const int Option_SaveDataText = 2131034156;
+			public const int Option_Hour = 2131034156;
 			
-			// aapt resource value: 0x7f050021
-			public const int Requesting_METAR_Information = 2131034145;
+			// aapt resource value: 0x7f05002d
+			public const int Option_Hours = 2131034157;
+			
+			// aapt resource value: 0x7f05002b
+			public const int Option_JustGetLast = 2131034155;
+			
+			// aapt resource value: 0x7f05002a
+			public const int Option_MetarHoursText = 2131034154;
+			
+			// aapt resource value: 0x7f05002e
+			public const int Option_SaveDataText = 2131034158;
+			
+			// aapt resource value: 0x7f050023
+			public const int Requesting_METAR_Information = 2131034147;
 			
 			// aapt resource value: 0x7f050002
 			public const int Runway_AllRunways = 2131034114;
@@ -415,17 +421,17 @@ namespace Cavokator
 			// aapt resource value: 0x7f050003
 			public const int Runway_ReportRepeated = 2131034115;
 			
-			// aapt resource value: 0x7f05001d
-			public const int Send_button = 2131034141;
+			// aapt resource value: 0x7f05001f
+			public const int Send_button = 2131034143;
 			
-			// aapt resource value: 0x7f050025
-			public const int Server_Timeout = 2131034149;
+			// aapt resource value: 0x7f050027
+			public const int Server_Timeout = 2131034151;
 			
-			// aapt resource value: 0x7f050039
-			public const int TaforNotAvailable = 2131034169;
+			// aapt resource value: 0x7f05003b
+			public const int TaforNotAvailable = 2131034171;
 			
-			// aapt resource value: 0x7f050030
-			public const int Tafor_Issued = 2131034160;
+			// aapt resource value: 0x7f050032
+			public const int Tafor_Issued = 2131034162;
 			
 			static String()
 			{

@@ -1,10 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+  
   <string name="Main_Error">*decoding error*</string>
+  
   <string name="Runway_Indicator">Runway</string>
   <string name="Runway_AllRunways">All runways</string>
   <string name="Runway_ReportRepeated">Previous report is being repeated</string>
   <string name="Runway_Error">Error! Runway code not valid</string>
+  
   <string name="Deposit0">Clear and dry</string>
   <string name="Deposit1">Damp</string>
   <string name="Deposit2">Wet and water patches</string>
@@ -14,19 +17,26 @@
   <string name="Deposit6">Slush</string>
   <string name="Deposit7">Ice</string>
   <string name="Deposit8">Compacted or rolled snow</string>
-  <string name="Deposit9">Fruzen ruts or ridges</string>
+  <string name="Deposit9">Frozen ruts or ridges</string>
   <string name="DepositNO">Type of deposit not reported</string>
+  <string name="Deposit_Error">Error! Deposit code not valid</string>
+  
   <string name="Extent1">Less than 10% of runway contaminated (covered)</string>
   <string name="Extent2" formatted="false">11% to 25% of runway contaminated (covered)</string>
   <string name="Extent5" formatted="false">26% to 50% of runway contaminated (covered)</string>
   <string name="Extent9" formatted="false">51% to 100% of runway contaminated (covered)</string>
   <string name="ExtentNO">Contamination extent not reported</string>
+  <string name="Extent_Error">Error! Extent code not valid</string>
+  
   <string name="Depth00">Less than 1 mm</string>
   <string name="Depth99">Runway or runways non-operational due to snow, slush, ice, large drifts or runway clearance, but depth not reported</string>
   <string name="DepthMORE">or more</string>
   <string name="Depth00">Depth of deposit operationally not significant or not measurable</string>
+  <string name="Depth_Error">Error! Depth code not valid</string>
+  
   <string name="FrictionCoefficient">Friction coefficient</string>
   <string name="FrictionBA">Braking action</string>
   <string name="Friction99">Friction coefficient unreliable</string>
   <string name="FrictionNO">Braking conditions not reported and/or runway not operational</string>
+
 </resources>

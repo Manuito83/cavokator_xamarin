@@ -195,13 +195,52 @@ namespace Cavokator
                             break;
 
                     }
-
-
                 }
                 else
                 {
-
+                    // Probably never gonna happen, as we got all numbers covered
+                    _rwyDepositTextTextview.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit_Error);
                 }
+
+
+
+                // ** EXTENT CODE **
+                _rwyExtentCodeTextview.Text = decodedCondition.ExtentCode + ": ";
+
+                if (!decodedCondition.ExtentError)
+                {
+                    switch (decodedCondition.ExtentCode)
+                    {
+                        case "/":
+                            _rwyExtentTextTextview.Text = Resources.GetString(Resource.String.ExtentNO);
+                            break;
+
+                        case "1":
+                            _rwyExtentTextTextview.Text = Resources.GetString(Resource.String.Extent1);
+                            break;
+
+                        case "2":
+                            _rwyExtentTextTextview.Text = Resources.GetString(Resource.String.Extent2);
+                            break;
+
+                        case "5":
+                            _rwyExtentTextTextview.Text = Resources.GetString(Resource.String.Extent5);
+                            break;
+
+                        case "9":
+                            _rwyExtentTextTextview.Text = Resources.GetString(Resource.String.Extent9);
+                            break;
+                    }
+                }
+                else
+                {
+                    _rwyExtentTextTextview.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyExtentTextTextview.Text = Resources.GetString(Resource.String.Extent_Error);
+                }
+
+
+
 
 
             }

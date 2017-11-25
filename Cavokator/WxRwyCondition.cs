@@ -37,20 +37,26 @@
         /// </summary>
         public bool DepositError;
 
-        // EXTENT OF CONTAMINATION
+        // **** EXTENT BLOCK ****
+        /// <summary>
+        /// Extent code (1,2,5,9) or /
+        /// </summary>
         public string ExtentCode;
-        public string ExtentValue;
+
+        /// <summary>
+        /// Extent error
+        /// </summary>
         public bool ExtentError;
 
-        // DEPTH OF DEPOSITS
+        // **** DEPTH BLOCK ****
+        /// <summary>
+        /// Depth code (00 -> 90, 91 -> 99) or /
+        /// </summary>
         public string DepthCode;
-        public string DepthValue;
         public bool DepthError;
 
-
-        // FRICTION COEFFICIENT
+        // **** FRICTION BLOCK ****
         public string FrictionCode;
-        public string FrictionValue;
         public bool FrictionError;
    
     }

@@ -98,13 +98,10 @@ namespace Cavokator
                             }
                             else
                             {
-                                if (int.TryParse(_rwyConditionText.Substring(5, 1), out int intDeposits))
+                                _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(5, 1);
+
+                                if (!int.TryParse(_rwyConditionText.Substring(5, 1), out int intDeposits))
                                 {
-                                    _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(5, 1);
-                                }
-                                else
-                                {
-                                    _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(5, 1);
                                     _wxRunwayCondition.DepositError = true;
                                 }
                             }
@@ -113,6 +110,37 @@ namespace Cavokator
                         {
                             _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(5, 1);
                             _wxRunwayCondition.DepositError = true;
+                        }
+
+                        // EXTENT TYPE
+                        try
+                        {
+                            if (_rwyConditionText.Substring(6, 1) == "/")
+                            {
+                                _wxRunwayCondition.ExtentCode = "/";
+                            }
+                            else
+                            {
+                                if (int.TryParse(_rwyConditionText.Substring(6, 1), out int intExtent))
+                                {
+
+                                    _wxRunwayCondition.ExtentCode = _rwyConditionText.Substring(6, 1);
+
+                                    if (!(intExtent == 1 || intExtent == 2 || intExtent == 5 || intExtent == 9))
+                                    {
+                                        _wxRunwayCondition.ExtentError = true;
+                                    }
+                                }
+                                else
+                                {
+                                    _wxRunwayCondition.ExtentError = true;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            _wxRunwayCondition.ExtentCode = _rwyConditionText.Substring(6, 1);
+                            _wxRunwayCondition.ExtentError = true;
                         }
 
 
@@ -154,13 +182,10 @@ namespace Cavokator
                             }
                             else
                             {
-                                if (int.TryParse(_rwyConditionText.Substring(4, 1), out int intDeposits))
+                                _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(4, 1);
+
+                                if (!int.TryParse(_rwyConditionText.Substring(4, 1), out int intDeposits))
                                 {
-                                    _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(4, 1);
-                                }
-                                else
-                                {
-                                    _wxRunwayCondition.DepositCode = _rwyConditionText.Substring(4, 1);
                                     _wxRunwayCondition.DepositError = true;
                                 }
                             }
@@ -171,13 +196,41 @@ namespace Cavokator
                             _wxRunwayCondition.DepositError = true;
                         }
 
+                        
+                        // EXTENT TYPE
+                        try
+                        {
+                            if (_rwyConditionText.Substring(5, 1) == "/")
+                            {
+                                _wxRunwayCondition.ExtentCode = "/";
+                            }
+                            else
+                            {
+                                if (int.TryParse(_rwyConditionText.Substring(5, 1), out int intExtent))
+                                {
+
+                                    _wxRunwayCondition.ExtentCode = _rwyConditionText.Substring(5, 1);
+
+                                    if (!(intExtent == 1 || intExtent == 2 || intExtent == 5 || intExtent == 9))
+                                    {
+                                        _wxRunwayCondition.ExtentError = true;
+                                    }
+                                }
+                                else
+                                {
+                                    _wxRunwayCondition.ExtentError = true;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            _wxRunwayCondition.ExtentCode = _rwyConditionText.Substring(5, 1);
+                            _wxRunwayCondition.ExtentError = true;
+                        }
+
 
                         break;
-                        
 
-
-
-                                            
                 }
             }
 
