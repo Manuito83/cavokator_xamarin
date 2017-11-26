@@ -53,6 +53,7 @@
         /// Depth code (00 -> 90, 91 -> 99) or /
         /// </summary>
         public string DepthCode;
+        public int DepthValue;
         public bool DepthError;
 
         // **** FRICTION BLOCK ****
