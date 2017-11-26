@@ -4,6 +4,10 @@
     {
         // ERROR
         public bool MainError;
+
+        public bool SNOCLO;
+
+        public bool CLRD;
         
         // **** RUNWAY BLOCK ****
         /// <summary>
@@ -31,10 +35,6 @@
         /// Deposit code (0-9) or /
         /// </summary>
         public string DepositCode;
-
-        /// <summary>
-        /// Deposit error
-        /// </summary>
         public bool DepositError;
 
         // **** EXTENT BLOCK ****
@@ -42,22 +42,22 @@
         /// Extent code (1,2,5,9) or /
         /// </summary>
         public string ExtentCode;
-
-        /// <summary>
-        /// Extent error
-        /// </summary>
         public bool ExtentError;
 
         // **** DEPTH BLOCK ****
         /// <summary>
-        /// Depth code (00 -> 90, 92 -> 99) or /
+        /// Depth code (00 -> 90, 92 -> 99) or //
         /// </summary>
         public string DepthCode;
         public int DepthValue;
         public bool DepthError;
 
         // **** FRICTION BLOCK ****
+        /// <summary>
+        /// Friction code (00 -> 95, 99) or //
+        /// </summary>
         public string FrictionCode;
+        public int FrictionValue;
         public bool FrictionError;
    
     }

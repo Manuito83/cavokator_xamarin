@@ -28,15 +28,21 @@
   <string name="ExtentNO">Contamination extent not reported</string>
   <string name="Extent_Error">Error! Extent code not valid</string>
   
-  <string name="Depth00">Less than 1 mm</string>
+  <string name="Depth00">Depth less than 1 mm</string>
   <string name="Depth99">Runway or runways non-operational due to snow, slush, ice, large drifts or runway clearance, but depth not reported</string>
+  <string name="Depth">Depth</string>
   <string name="DepthMORE">or more</string>
   <string name="Depth_Error">Error! Depth code not valid</string>
   <string name="DepthNO">Depth of deposit operationally not significant or not measurable</string>
   
   <string name="FrictionCoefficient">Friction coefficient</string>
-  <string name="FrictionBA">Braking action</string>
+  <string name="FrictionBA91">Braking action poor</string>
+  <string name="FrictionBA92">Braking action medium/poor</string>
+  <string name="FrictionBA93">Braking action medium</string>
+  <string name="FrictionBA94">Braking action medium/good</string>
+  <string name="FrictionBA95">Braking action good</string>
   <string name="Friction99">Friction coefficient unreliable</string>
   <string name="FrictionNO">Braking conditions not reported and/or runway not operational</string>
+  <string name="Friction_Error">Error! Friction code not valid</string>
 
 </resources>

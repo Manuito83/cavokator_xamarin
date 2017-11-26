@@ -240,9 +240,9 @@ namespace Cavokator
                 }
 
 
-                // TODO NEXT
+
                 // ** DEPTH CODE **
-                _rwyExtentCodeTextview.Text = decodedCondition.DepthCode + ": ";
+                _rwyDepthCodeTextview.Text = decodedCondition.DepthCode + ": ";
 
                 if (!decodedCondition.DepthError)
                 {
@@ -250,7 +250,30 @@ namespace Cavokator
                     {
                         _rwyDepthTextTextview.Text = Resources.GetString(Resource.String.DepthNO);
                     }
-                    elseif (decodedCondition.DepthCode == 0)
+                    else if (decodedCondition.DepthValue == 0)
+                    {
+                        _rwyDepthTextTextview.Text = Resources.GetString(Resource.String.Depth00);
+                    }
+                    else if (decodedCondition.DepthValue >= 1 && decodedCondition.DepthValue <= 90)
+                    {
+                        _rwyDepthTextTextview.Text = (Resources.GetString(Resource.String.Depth) +
+                                                     " " + decodedCondition.DepthValue + " mm");
+                    }
+                    else if (decodedCondition.DepthValue >= 92 && decodedCondition.DepthValue <= 97)
+                    {
+                        _rwyDepthTextTextview.Text = (Resources.GetString(Resource.String.Depth) +
+                                                     " " + decodedCondition.DepthValue + " cm");
+                    }
+                    else if (decodedCondition.DepthValue == 98)
+                    {
+                        _rwyDepthTextTextview.Text = (Resources.GetString(Resource.String.Depth) +
+                                                     " " + decodedCondition.DepthValue + " cm" +
+                                                     " " + Resources.GetString(Resource.String.DepthMORE));
+                    }
+                    else if (decodedCondition.DepthValue == 99)
+                    {
+                        _rwyDepthTextTextview.Text = Resources.GetString(Resource.String.Depth99);
+                    }
                 }
                 else
                 {
@@ -260,6 +283,52 @@ namespace Cavokator
 
 
 
+                // ** FRICTION CODE **
+                _rwyFrictionCodeTextview.Text = decodedCondition.FrictionCode + ": ";
+
+                if (!decodedCondition.FrictionError)
+                {
+                    if (decodedCondition.FrictionCode == "//")
+                    {
+                        _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.FrictionNO);
+                    }
+                    else if (decodedCondition.FrictionValue >= 1 && decodedCondition.FrictionValue <= 90)
+                    {
+                        _rwyFrictionTextTextview.Text = (Resources.GetString(Resource.String.FrictionCoefficient) +
+                                                     " ." + decodedCondition.FrictionValue);
+                    }
+                    else if (decodedCondition.FrictionValue == 91)
+                    {
+                        _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.FrictionBA91);
+                    }
+                    else if (decodedCondition.FrictionValue == 92)
+                    {
+                        _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.FrictionBA92);
+                    }
+                    else if (decodedCondition.FrictionValue == 93)
+                    {
+                        _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.FrictionBA93);
+                    }
+                    else if (decodedCondition.FrictionValue == 94)
+                    {
+                        _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.FrictionBA94);
+                    }
+                    else if (decodedCondition.FrictionValue == 95)
+                    {
+                        _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.FrictionBA95);
+                    }
+                    else if (decodedCondition.FrictionValue == 99)
+                    {
+                        _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.Friction99);
+                    }
+                }
+                else
+                {
+                    _rwyFrictionTextTextview.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.Friction_Error);
+                }
+
+                
             }
 
 
