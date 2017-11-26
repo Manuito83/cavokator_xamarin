@@ -240,6 +240,23 @@ namespace Cavokator
                 }
 
 
+                // TODO NEXT
+                // ** DEPTH CODE **
+                _rwyExtentCodeTextview.Text = decodedCondition.DepthCode + ": ";
+
+                if (!decodedCondition.DepthError)
+                {
+                    if (decodedCondition.DepthCode == "//")
+                    {
+                        _rwyDepthTextTextview.Text = Resources.GetString(Resource.String.DepthNO);
+                    }
+                    elseif (decodedCondition.DepthCode == 0)
+                }
+                else
+                {
+                    _rwyDepthTextTextview.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyDepthTextTextview.Text = Resources.GetString(Resource.String.Depth_Error);
+                }
 
 
 

@@ -142,9 +142,46 @@ namespace Cavokator
                             _wxRunwayCondition.ExtentCode = _rwyConditionText.Substring(6, 1);
                             _wxRunwayCondition.ExtentError = true;
                         }
+                        
+
+
+                        // CONTAMINATION DEPTH
+                        try
+                        {
+                            if (_rwyConditionText.Substring(7, 2) == "/")
+                            {
+                                _wxRunwayCondition.DepthCode = "/";
+                            }
+                            else
+                            {
+                                if (int.TryParse(_rwyConditionText.Substring(7, 2), out int intDepth))
+                                {
+
+                                    _wxRunwayCondition.DepthCode = _rwyConditionText.Substring(7, 2);
+
+                                    if (intDepth == 91)
+                                    {
+                                        _wxRunwayCondition.ExtentError = true;
+                                    }
+                                }
+                                else
+                                {
+                                    _wxRunwayCondition.ExtentError = true;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            _wxRunwayCondition.DepthCode = _rwyConditionText.Substring(7, 2);
+                            _wxRunwayCondition.DepthError = true;
+                        }
+
+
+
 
 
                         break;
+
 
 
                     // (Type 2 for RXX/123456)
@@ -226,6 +263,39 @@ namespace Cavokator
                         {
                             _wxRunwayCondition.ExtentCode = _rwyConditionText.Substring(5, 1);
                             _wxRunwayCondition.ExtentError = true;
+                        }
+
+
+
+                        // CONTAMINATION DEPTH
+                        try
+                        {
+                            if (_rwyConditionText.Substring(6, 2) == "//")
+                            {
+                                _wxRunwayCondition.DepthCode = "//";
+                            }
+                            else
+                            {
+                                if (int.TryParse(_rwyConditionText.Substring(6, 2), out int intDepth))
+                                {
+
+                                    _wxRunwayCondition.DepthCode = _rwyConditionText.Substring(6, 2);
+
+                                    if (intDepth == 91)
+                                    {
+                                        _wxRunwayCondition.ExtentError = true;
+                                    }
+                                }
+                                else
+                                {
+                                    _wxRunwayCondition.ExtentError = true;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            _wxRunwayCondition.DepthCode = _rwyConditionText.Substring(6, 2);
+                            _wxRunwayCondition.DepthError = true;
                         }
 
 

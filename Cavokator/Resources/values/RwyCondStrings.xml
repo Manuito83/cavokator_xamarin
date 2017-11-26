@@ -31,8 +31,8 @@
   <string name="Depth00">Less than 1 mm</string>
   <string name="Depth99">Runway or runways non-operational due to snow, slush, ice, large drifts or runway clearance, but depth not reported</string>
   <string name="DepthMORE">or more</string>
-  <string name="Depth00">Depth of deposit operationally not significant or not measurable</string>
   <string name="Depth_Error">Error! Depth code not valid</string>
+  <string name="DepthNO">Depth of deposit operationally not significant or not measurable</string>
   
   <string name="FrictionCoefficient">Friction coefficient</string>
   <string name="FrictionBA">Braking action</string>
