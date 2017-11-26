@@ -316,6 +316,11 @@ namespace Cavokator
                 else
                 {
                     // TODO NEXT
+                    // R/SNOCLO
+                    if (_ConditionType == 4)
+                    {
+                        _wxRunwayCondition.SNOCLO = true;
+                    }
                 }
 
 

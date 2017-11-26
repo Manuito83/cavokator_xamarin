@@ -45,4 +45,6 @@
   <string name="FrictionNO">Braking conditions not reported and/or runway not operational</string>
   <string name="Friction_Error">Error! Friction code not valid</string>
 
+  <string name="SNOCLO">Aerodrome is closed due to extreme deposit of snow.</string>
+
 </resources>

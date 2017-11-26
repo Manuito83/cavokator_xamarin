@@ -109,7 +109,7 @@ namespace Cavokator
                 _rwyFrictionCodeTextview.Visibility = ViewStates.Gone;
                 _rwyFrictionTextTextview.Visibility = ViewStates.Gone;
             }
-            else
+            else if (!(decodedCondition.CLRD || decodedCondition.SNOCLO))
             {
                 // Make sure Main Error does not appear
                 _mainErrorTextView.Visibility = ViewStates.Gone;
@@ -329,6 +329,27 @@ namespace Cavokator
                 }
 
                 
+            }
+            else if (decodedCondition.SNOCLO)
+            {
+                _rwyDepositCodeTextview.Visibility = ViewStates.Gone;
+                _rwyDepositTextTextview.Visibility = ViewStates.Gone;
+                _rwyExtentCodeTextview.Visibility = ViewStates.Gone;
+                _rwyExtentTextTextview.Visibility = ViewStates.Gone;
+                _rwyDepthCodeTextview.Visibility = ViewStates.Gone;
+                _rwyDepthTextTextview.Visibility = ViewStates.Gone;
+                _rwyFrictionCodeTextview.Visibility = ViewStates.Gone;
+                _rwyFrictionTextTextview.Visibility = ViewStates.Gone;
+
+                // Make sure Main Error does not appear
+                _mainErrorTextView.Visibility = ViewStates.Gone;
+
+                _rwyCodeTextView.SetTextColor(Color.ParseColor("#ffff00"));
+                _rwyCodeTextView.Text = "R/SNOCLO: ";
+
+                _rwyTextTextView.SetTextColor(Color.ParseColor("#ff8c00"));
+                _rwyTextTextView.Text = Resources.GetString(Resource.String.SNOCLO);
+
             }
 
 
