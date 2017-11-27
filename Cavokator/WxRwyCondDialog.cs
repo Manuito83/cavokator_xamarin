@@ -351,6 +351,51 @@ namespace Cavokator
                 _rwyTextTextView.Text = Resources.GetString(Resource.String.SNOCLO);
 
             }
+            else if (decodedCondition.CLRD)
+            {
+                _rwyExtentCodeTextview.Visibility = ViewStates.Gone;
+                _rwyExtentTextTextview.Visibility = ViewStates.Gone;
+                _rwyDepthCodeTextview.Visibility = ViewStates.Gone;
+                _rwyDepthTextTextview.Visibility = ViewStates.Gone;
+                _rwyFrictionCodeTextview.Visibility = ViewStates.Gone;
+                _rwyFrictionTextTextview.Visibility = ViewStates.Gone;
+
+                // Make sure Main Error does not appear
+                _mainErrorTextView.Visibility = ViewStates.Gone;
+
+
+                // ** RUNWAY CODE **
+                _rwyCodeTextView.Text = decodedCondition.RwyCode + ": ";
+                if (!decodedCondition.RwyError)
+                {
+                    if (decodedCondition.RwyInt <= 36)
+                    {
+                        // Runway Value
+                        _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_Indicator)
+                                                 + " " + decodedCondition.RwyValue;
+                    }
+                    else if (decodedCondition.RwyInt == 88)
+                    {
+                        // Runway Value
+                        _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_AllRunways);
+                    }
+                    else if (decodedCondition.RwyInt == 99)
+                    {
+                        // Runway Value
+                        _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_ReportRepeated);
+                    }
+                }
+                else
+                {
+                    _rwyTextTextView.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_Error);
+                }
+
+                // CLRD CODE
+                _rwyDepositCodeTextview.Text = "CLRD: ";
+                _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.CLRD);
+
+            }
 
 
         }

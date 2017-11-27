@@ -120,7 +120,7 @@ namespace Cavokator
             // ** CAUTION: USE ONLY FOR TESTING, COMMENT AFTERWARDS **
             rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 R99/421594 R14L/349992 " +
                        "R14L/1234// R88L/123456 R/SNOCLO R14L/CLRD// R11/CLRD// R16/349995 " +
-                       "R99/349995 88////78 " +
+                       "R99/349995 88////78 R67/CLRD// R76L/CLRD// R88/CLRD// R99/CLRD// " +
                        "**VARIATIONS** R99/111111 R99/222222 R99/333333 R99/444444 R99/555555" +
                        "R99/666666 R99/777777 R99/888888 R99/999999 R99/000000 R99/////// " +
                        "**ERROR** R55L/123456 R82/123456 " +
