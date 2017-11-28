@@ -93,6 +93,7 @@ namespace Cavokator
             var decoder = new WxRwyCondDecoder();
             var decodedCondition = decoder.DecodeCondition(_entered_condition);
 
+            // SHOW MAIN ERROR
             if (decodedCondition.MainError)
             {
                 _mainErrorTextView.Text = Resources.GetString(Resource.String.Main_Error);
@@ -109,6 +110,7 @@ namespace Cavokator
                 _rwyFrictionCodeTextview.Visibility = ViewStates.Gone;
                 _rwyFrictionTextTextview.Visibility = ViewStates.Gone;
             }
+            // SHOW CONDITION FOR TYPES 1,2 AND 3
             else if (!(decodedCondition.CLRD || decodedCondition.SNOCLO))
             {
                 // Make sure Main Error does not appear
@@ -330,6 +332,7 @@ namespace Cavokator
 
                 
             }
+            // SHOW CONDITION FOR SNOCLO
             else if (decodedCondition.SNOCLO)
             {
                 _rwyDepositCodeTextview.Visibility = ViewStates.Gone;
@@ -351,6 +354,7 @@ namespace Cavokator
                 _rwyTextTextView.Text = Resources.GetString(Resource.String.SNOCLO);
 
             }
+            // SHOW CONDITION FOR CLRD (BOTH RXX/CLRD// AND RXXL/CLRD//
             else if (decodedCondition.CLRD)
             {
                 _rwyExtentCodeTextview.Visibility = ViewStates.Gone;
