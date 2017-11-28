@@ -98,122 +98,125 @@ namespace Cavokator
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f080002
-			public const int airport_entry = 2131230722;
-			
-			// aapt resource value: 0x7f080001
-			public const int choose_id_textview = 2131230721;
-			
-			// aapt resource value: 0x7f080003
-			public const int linearlayout_button_options = 2131230723;
-			
-			// aapt resource value: 0x7f080000
-			public const int linearlayout_wx_bottom = 2131230720;
-			
-			// aapt resource value: 0x7f080007
-			public const int linearlayout_wx_metarstafors = 2131230727;
-			
-			// aapt resource value: 0x7f080017
-			public const int spinnerTarget = 2131230743;
-			
-			// aapt resource value: 0x7f080005
-			public const int wx_clear_button = 2131230725;
-			
-			// aapt resource value: 0x7f080016
-			public const int wx_option_closeButton = 2131230742;
-			
-			// aapt resource value: 0x7f08000e
-			public const int wx_option_metarHours_seekbarText = 2131230734;
-			
-			// aapt resource value: 0x7f080006
-			public const int wx_options_button = 2131230726;
-			
-			// aapt resource value: 0x7f080015
-			public const int wx_options_closeRelativeLayout = 2131230741;
-			
-			// aapt resource value: 0x7f080012
-			public const int wx_options_colorWeatherSwitch = 2131230738;
-			
-			// aapt resource value: 0x7f080011
-			public const int wx_options_colorWeatherText = 2131230737;
-			
-			// aapt resource value: 0x7f080009
-			public const int wx_options_configuration_text = 2131230729;
-			
-			// aapt resource value: 0x7f080014
-			public const int wx_options_divideTaforSwitch = 2131230740;
-			
-			// aapt resource value: 0x7f080013
-			public const int wx_options_divideTaforText = 2131230739;
-			
-			// aapt resource value: 0x7f080008
-			public const int wx_options_mainRelativeLayout = 2131230728;
-			
-			// aapt resource value: 0x7f08000c
-			public const int wx_options_metarHours = 2131230732;
-			
-			// aapt resource value: 0x7f08000d
-			public const int wx_options_metarHours_seekbar = 2131230733;
-			
-			// aapt resource value: 0x7f08000b
-			public const int wx_options_metarORtafor_spinner = 2131230731;
-			
-			// aapt resource value: 0x7f08000a
-			public const int wx_options_metarORtafor_text = 2131230730;
-			
-			// aapt resource value: 0x7f080010
-			public const int wx_options_saveDataSwitch = 2131230736;
-			
-			// aapt resource value: 0x7f08000f
-			public const int wx_options_saveDataText = 2131230735;
-			
-			// aapt resource value: 0x7f080004
-			public const int wx_request_button = 2131230724;
-			
-			// aapt resource value: 0x7f080026
-			public const int wx_rwycond_closeButton = 2131230758;
-			
-			// aapt resource value: 0x7f080025
-			public const int wx_rwycond_closeRelativeLayout = 2131230757;
-			
-			// aapt resource value: 0x7f08001d
-			public const int wx_rwycond_depositsCode = 2131230749;
-			
-			// aapt resource value: 0x7f08001e
-			public const int wx_rwycond_depositsText = 2131230750;
+			// aapt resource value: 0x7f080022
+			public const int airport_entry = 2131230754;
 			
 			// aapt resource value: 0x7f080021
-			public const int wx_rwycond_depthCode = 2131230753;
-			
-			// aapt resource value: 0x7f080022
-			public const int wx_rwycond_depthText = 2131230754;
-			
-			// aapt resource value: 0x7f08001f
-			public const int wx_rwycond_extentCode = 2131230751;
-			
-			// aapt resource value: 0x7f080020
-			public const int wx_rwycond_extentText = 2131230752;
+			public const int choose_id_textview = 2131230753;
 			
 			// aapt resource value: 0x7f080023
-			public const int wx_rwycond_frictionCode = 2131230755;
+			public const int linearlayout_button_options = 2131230755;
+			
+			// aapt resource value: 0x7f080020
+			public const int linearlayout_wx_bottom = 2131230752;
+			
+			// aapt resource value: 0x7f080027
+			public const int linearlayout_wx_metarstafors = 2131230759;
+			
+			// aapt resource value: 0x7f08000f
+			public const int spinnerTarget = 2131230735;
+			
+			// aapt resource value: 0x7f08001f
+			public const int weather_fragment_container = 2131230751;
+			
+			// aapt resource value: 0x7f080025
+			public const int wx_clear_button = 2131230757;
+			
+			// aapt resource value: 0x7f08000e
+			public const int wx_option_closeButton = 2131230734;
+			
+			// aapt resource value: 0x7f080006
+			public const int wx_option_metarHours_seekbarText = 2131230726;
+			
+			// aapt resource value: 0x7f080026
+			public const int wx_options_button = 2131230758;
+			
+			// aapt resource value: 0x7f08000d
+			public const int wx_options_closeRelativeLayout = 2131230733;
+			
+			// aapt resource value: 0x7f08000a
+			public const int wx_options_colorWeatherSwitch = 2131230730;
+			
+			// aapt resource value: 0x7f080009
+			public const int wx_options_colorWeatherText = 2131230729;
+			
+			// aapt resource value: 0x7f080001
+			public const int wx_options_configuration_text = 2131230721;
+			
+			// aapt resource value: 0x7f08000c
+			public const int wx_options_divideTaforSwitch = 2131230732;
+			
+			// aapt resource value: 0x7f08000b
+			public const int wx_options_divideTaforText = 2131230731;
+			
+			// aapt resource value: 0x7f080000
+			public const int wx_options_mainRelativeLayout = 2131230720;
+			
+			// aapt resource value: 0x7f080004
+			public const int wx_options_metarHours = 2131230724;
+			
+			// aapt resource value: 0x7f080005
+			public const int wx_options_metarHours_seekbar = 2131230725;
+			
+			// aapt resource value: 0x7f080003
+			public const int wx_options_metarORtafor_spinner = 2131230723;
+			
+			// aapt resource value: 0x7f080002
+			public const int wx_options_metarORtafor_text = 2131230722;
+			
+			// aapt resource value: 0x7f080008
+			public const int wx_options_saveDataSwitch = 2131230728;
+			
+			// aapt resource value: 0x7f080007
+			public const int wx_options_saveDataText = 2131230727;
 			
 			// aapt resource value: 0x7f080024
-			public const int wx_rwycond_frictionText = 2131230756;
+			public const int wx_request_button = 2131230756;
 			
-			// aapt resource value: 0x7f08001a
-			public const int wx_rwycond_main_error = 2131230746;
+			// aapt resource value: 0x7f08001e
+			public const int wx_rwycond_closeButton = 2131230750;
 			
-			// aapt resource value: 0x7f08001b
-			public const int wx_rwycond_rwycode = 2131230747;
+			// aapt resource value: 0x7f08001d
+			public const int wx_rwycond_closeRelativeLayout = 2131230749;
 			
-			// aapt resource value: 0x7f08001c
-			public const int wx_rwycond_rwytext = 2131230748;
+			// aapt resource value: 0x7f080015
+			public const int wx_rwycond_depositsCode = 2131230741;
+			
+			// aapt resource value: 0x7f080016
+			public const int wx_rwycond_depositsText = 2131230742;
 			
 			// aapt resource value: 0x7f080019
-			public const int wx_rwycond_title = 2131230745;
+			public const int wx_rwycond_depthCode = 2131230745;
+			
+			// aapt resource value: 0x7f08001a
+			public const int wx_rwycond_depthText = 2131230746;
+			
+			// aapt resource value: 0x7f080017
+			public const int wx_rwycond_extentCode = 2131230743;
 			
 			// aapt resource value: 0x7f080018
-			public const int wx_rwycond_titleRelativeLayout = 2131230744;
+			public const int wx_rwycond_extentText = 2131230744;
+			
+			// aapt resource value: 0x7f08001b
+			public const int wx_rwycond_frictionCode = 2131230747;
+			
+			// aapt resource value: 0x7f08001c
+			public const int wx_rwycond_frictionText = 2131230748;
+			
+			// aapt resource value: 0x7f080012
+			public const int wx_rwycond_main_error = 2131230738;
+			
+			// aapt resource value: 0x7f080013
+			public const int wx_rwycond_rwycode = 2131230739;
+			
+			// aapt resource value: 0x7f080014
+			public const int wx_rwycond_rwytext = 2131230740;
+			
+			// aapt resource value: 0x7f080011
+			public const int wx_rwycond_title = 2131230737;
+			
+			// aapt resource value: 0x7f080010
+			public const int wx_rwycond_titleRelativeLayout = 2131230736;
 			
 			static Id()
 			{
@@ -229,16 +232,16 @@ namespace Cavokator
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int wx_main = 2130903040;
+			public const int wx_options_dialog = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int wx_options_dialog = 2130903041;
+			public const int wx_options_spinner = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int wx_options_spinner = 2130903042;
+			public const int wx_rwycond_dialog = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int wx_rwycond_dialog = 2130903043;
+			public const int wx_weather_main = 2130903043;
 			
 			static Layout()
 			{

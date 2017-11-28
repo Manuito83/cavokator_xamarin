@@ -88,6 +88,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="ActivityWxMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WxMetarFragment.cs" />
     <Compile Include="WxOptionsDialog.cs" />
     <Compile Include="WxRwyCondDecoder.cs" />
     <Compile Include="WxRwyCondDialog.cs" />
@@ -100,7 +101,7 @@
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
-    <AndroidResource Include="Resources\layout\wx_main.axml">
+    <AndroidResource Include="Resources\layout\wx_weather_main.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\wx_options_dialog.axml">
@@ -127,7 +128,9 @@
     <AndroidResource Include="Resources\anim\slide_up.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\values\Styles.xml" />
+    <AndroidResource Include="Resources\values\Styles.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\anim\slide_right.xml" />
