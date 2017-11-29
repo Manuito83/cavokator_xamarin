@@ -156,6 +156,9 @@
     <AndroidResource Include="Resources\layout\wx_rwycond_dialog.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\drawer_layout.xml" />
+    <AndroidResource Include="Resources\layout\drawer_header.xml" />
+    <AndroidResource Include="Resources\layout\drawer_view.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml">
