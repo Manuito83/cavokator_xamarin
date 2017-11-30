@@ -80,7 +80,8 @@ namespace Cavokator
             GetPreferences();
 
             // Set our view from the "main" layout resource
-            Activity.SetContentView(Resource.Layout.wx_weather_main);
+            // TODO
+            // Activity.SetContentView(Resource.Layout.wx_weather_main);
 
 
             _linearlayoutWxBottom = Activity.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_bottom);
@@ -193,8 +194,9 @@ namespace Cavokator
             // Close keyboard when click outside airport_entry EditText
             _linearlayoutWxBottom.Touch += delegate
             {
-                var imm = (InputMethodManager)Application.Context.GetSystemService(Activity.InputMethodService);
-                imm.HideSoftInputFromWindow(_airportEntryEditText.WindowToken, 0);
+                // TODO
+                //var imm = (InputMethodManager)Application.Context.GetSystemService(Activity.InputMethodService);
+                //imm.HideSoftInputFromWindow(_airportEntryEditText.WindowToken, 0);
 
             };
 
@@ -232,7 +234,8 @@ namespace Cavokator
                 // Pull up dialog
                 var transaction = FragmentManager.BeginTransaction();
                 var wxOptionsDialog = new WxOptionsDialog(_metarOrTafor, _hoursBefore, _mostRecent, _saveData, _doColorWeather, _doDivideTafor);
-                wxOptionsDialog.Show(transaction, "options_dialog");
+                // TODO
+                //wxOptionsDialog.Show(transaction, "options_dialog");
 
                 wxOptionsDialog.SpinnerChanged += OnMetarOrTaforChanged;
                 wxOptionsDialog.SeekbarChanged += OnHoursBeforeChanged;
@@ -247,7 +250,12 @@ namespace Cavokator
             // Use this to return your custom view for this Fragment
             // return inflater.Inflate(Resource.Layout.YourFragment, container, false);
 
-            return base.OnCreateView(inflater, container, savedInstanceState);
+            // TODO
+            View view = inflater.Inflate(Resource.Layout.wx_weather_main, container, false);
+            return view;
+
+            // TODO
+            // return base.OnCreateView(inflater, container, savedInstanceState);
         }
 
 
@@ -487,8 +495,9 @@ namespace Cavokator
             var linearlayoutWXmetarsTafors = Activity.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
 
             // Close keyboard when button pressed
-            var im = (InputMethodManager)Activity.GetSystemService(Activity.InputMethodService);
-            im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
+            // TODO
+            //var im = (InputMethodManager)Activity.GetSystemService(Activity.InputMethodService);
+            //im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
 
 
 
@@ -1002,7 +1011,8 @@ namespace Cavokator
                 var transaction = FragmentManager.BeginTransaction();
                 var wxRwyCondDialog = new WxRwyCondDialog(condition.RunwayCondition);
                 wxRwyCondDialog.SetStyle(DialogFragmentStyle.NoTitle, 0);
-                wxRwyCondDialog.Show(transaction, "rwycond_dialog");
+                // TODO
+                //wxRwyCondDialog.Show(transaction, "rwycond_dialog");
             });
         }
 
