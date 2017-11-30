@@ -15,6 +15,13 @@ namespace Cavokator
             SetContentView(Resource.Layout.drawer_layout);
 
 
+            var mFragment1 = new WxMetarFragment();
+
+            var trans = SupportFragmentManager.BeginTransaction();
+            trans.Add(Resource.Id.flContent, mFragment1, "mFragment1");
+
+
+
 
             //var newFragment = new WxMetarFragment();
             //var ft = FragmentManager.BeginTransaction();

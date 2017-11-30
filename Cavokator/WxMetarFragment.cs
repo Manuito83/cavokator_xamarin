@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Cavokator
 {
-    public class WxMetarFragment : Fragment
+    public class WxMetarFragment : Android.Support.V4.App.Fragment
     {
 
         // Main fields
