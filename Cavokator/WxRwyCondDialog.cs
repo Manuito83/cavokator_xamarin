@@ -13,7 +13,7 @@ using Android.Graphics;
 
 namespace Cavokator
 {
-    class WxRwyCondDialog : DialogFragment
+    class WxRwyCondDialog : Android.Support.V4.App.DialogFragment
     {
 
         // Dialog fields
@@ -53,7 +53,8 @@ namespace Cavokator
             // Inflate view
             var view = inflater.Inflate(Resource.Layout.wx_rwycond_dialog, container, false);
 
-            SetStyle(DialogFragmentStyle.NoTitle, 0);
+            // TODO: delete?
+            //SetStyle(DialogFragmentStyle.NoTitle, 0);
 
             // Find view IDs
             _conditionTitle = view.FindViewById<TextView>(Resource.Id.wx_rwycond_title);

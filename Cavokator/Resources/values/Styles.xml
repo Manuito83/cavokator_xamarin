@@ -4,4 +4,14 @@
     <item name="android:windowEnterAnimation">@anim/slide_up</item>
     <item name="android:windowExitAnimation">@anim/slide_right</item>
   </style>
+
+  <style name="Theme.CavocatorDesign" parent="Base.Theme.CavocatorDesign">
+  </style>
+
+  <style name="Base.Theme.CavocatorDesign" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">#673AB7</item>
+    <item name="colorPrimaryDark">#512DA8</item>
+    <item name="colorAccent">#FF4081</item>
+  </style>
+
 </resources> 

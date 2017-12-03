@@ -70,26 +70,29 @@ namespace Cavokator
         // Keep count of string length in EditText field, so that we know if it has decreased (deletion)
         private int _editTextIdLength;
 
-
-
+        // View that will be used for FindViewById
+        private View thisView;
+        
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+        }
+
+
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            // In order to return the view for this Fragment
+            thisView = inflater.Inflate(Resource.Layout.wx_weather_main, container, false);
 
             // Get ISharedPreferences
             GetPreferences();
 
-            // Set our view from the "main" layout resource
-            // TODO
-            // Activity.SetContentView(Resource.Layout.wx_weather_main);
-
-
-            _linearlayoutWxBottom = Activity.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_bottom);
-            _airportEntryEditText = Activity.FindViewById<EditText>(Resource.Id.airport_entry);
-            _chooseIDtextview = Activity.FindViewById<TextView>(Resource.Id.choose_id_textview);
-            _wxRequestButton = Activity.FindViewById<Button>(Resource.Id.wx_request_button);
-            _wxClearButton = Activity.FindViewById<Button>(Resource.Id.wx_clear_button);
-            _wxOptionsButton = Activity.FindViewById<ImageButton>(Resource.Id.wx_options_button);
+            _linearlayoutWxBottom = thisView.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_bottom);
+            _airportEntryEditText = thisView.FindViewById<EditText>(Resource.Id.airport_entry);
+            _chooseIDtextview = thisView.FindViewById<TextView>(Resource.Id.choose_id_textview);
+            _wxRequestButton = thisView.FindViewById<Button>(Resource.Id.wx_request_button);
+            _wxClearButton = thisView.FindViewById<Button>(Resource.Id.wx_clear_button);
+            _wxOptionsButton = thisView.FindViewById<ImageButton>(Resource.Id.wx_options_button);
 
             _wxRequestButton.Text = Resources.GetString(Resource.String.Send_button);
             _wxClearButton.Text = Resources.GetString(Resource.String.Clear_button);
@@ -194,10 +197,8 @@ namespace Cavokator
             // Close keyboard when click outside airport_entry EditText
             _linearlayoutWxBottom.Touch += delegate
             {
-                // TODO
-                //var imm = (InputMethodManager)Application.Context.GetSystemService(Activity.InputMethodService);
-                //imm.HideSoftInputFromWindow(_airportEntryEditText.WindowToken, 0);
-
+                var imm = (InputMethodManager)Application.Context.GetSystemService(Context.InputMethodService);
+                imm.HideSoftInputFromWindow(_airportEntryEditText.WindowToken, 0);
             };
 
 
@@ -215,7 +216,7 @@ namespace Cavokator
                 _wxInfo.AirportTaforsUtc = null;
                 _wxInfo.AirportTafors = null;
 
-                var linearlayoutWXmetarsTafors = Activity.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
+                var linearlayoutWXmetarsTafors = thisView.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
 
                 // Remove all previous views from the linear layout
                 linearlayoutWXmetarsTafors.RemoveAllViews();
@@ -234,8 +235,7 @@ namespace Cavokator
                 // Pull up dialog
                 var transaction = FragmentManager.BeginTransaction();
                 var wxOptionsDialog = new WxOptionsDialog(_metarOrTafor, _hoursBefore, _mostRecent, _saveData, _doColorWeather, _doDivideTafor);
-                // TODO
-                //wxOptionsDialog.Show(transaction, "options_dialog");
+                wxOptionsDialog.Show(transaction, "options_dialog");
 
                 wxOptionsDialog.SpinnerChanged += OnMetarOrTaforChanged;
                 wxOptionsDialog.SeekbarChanged += OnHoursBeforeChanged;
@@ -243,19 +243,10 @@ namespace Cavokator
                 wxOptionsDialog.ColorWeatherChanged += OnColorWeatherChanged;
                 wxOptionsDialog.DivideTaforChanged += OnDivideTaforChanged;
             };
-        }
 
-        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-        {
-            // Use this to return your custom view for this Fragment
-            // return inflater.Inflate(Resource.Layout.YourFragment, container, false);
 
-            // TODO
-            View view = inflater.Inflate(Resource.Layout.wx_weather_main, container, false);
-            return view;
+            return thisView;
 
-            // TODO
-            // return base.OnCreateView(inflater, container, savedInstanceState);
         }
 
 
@@ -276,7 +267,7 @@ namespace Cavokator
             _wxInfo.AirportTafors = null;
 
             // Clear focus of airport_entry
-            var airportEntry = Activity.FindViewById<EditText>(Resource.Id.airport_entry);
+            var airportEntry = thisView.FindViewById<EditText>(Resource.Id.airport_entry);
             airportEntry.ClearFocus();
 
 
@@ -308,7 +299,7 @@ namespace Cavokator
 
         private void SanitizeAirportIds()
         {
-            var airportEntry = Activity.FindViewById<EditText>(Resource.Id.airport_entry);
+            var airportEntry = thisView.FindViewById<EditText>(Resource.Id.airport_entry);
 
             // Split airport list entered
             // We perform the same operation to both lists, the user one and the ICAO one
@@ -432,7 +423,7 @@ namespace Cavokator
             var wxDestroy = Application.Context.GetSharedPreferences("WX_OnPause", FileCreationMode.Private);
 
             // Save ICAO ID LIST
-            _airportEntryEditText = Activity.FindViewById<EditText>(Resource.Id.airport_entry);
+            _airportEntryEditText = thisView.FindViewById<EditText>(Resource.Id.airport_entry);
             wxDestroy.Edit().PutString("_airportEntryEditText.Text", _airportEntryEditText.Text).Apply();
 
             // Save AIRPORT IDs
@@ -492,12 +483,11 @@ namespace Cavokator
             requestedWx.PercentageCompleted += OnPercentageCompleted;
 
 
-            var linearlayoutWXmetarsTafors = Activity.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
+            var linearlayoutWXmetarsTafors = thisView.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
 
             // Close keyboard when button pressed
-            // TODO
-            //var im = (InputMethodManager)Activity.GetSystemService(Activity.InputMethodService);
-            //im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
+            var im = (InputMethodManager)Activity.GetSystemService(Context.InputMethodService);
+            im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
 
 
 
@@ -527,7 +517,7 @@ namespace Cavokator
         // Shows weather either live or from stored SharedPreferences
         private void ShowWeather()
         {
-            var linearlayoutWXmetarsTafors = Activity.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
+            var linearlayoutWXmetarsTafors = thisView.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
 
             // Get and show weather information
             for (var i = 0; i < _wxInfo.AirportIDs.Count; i++)
@@ -574,11 +564,11 @@ namespace Cavokator
 
                     airportName = ApplyAirportIDLineStyle(airportName);
 
+
                     Activity.RunOnUiThread(() =>
                     {
                         linearlayoutWXmetarsTafors.AddView(airportName);
                     });
-
 
 
                     // METAR DATETIME LINE
@@ -1010,9 +1000,9 @@ namespace Cavokator
                 // Pull up dialog
                 var transaction = FragmentManager.BeginTransaction();
                 var wxRwyCondDialog = new WxRwyCondDialog(condition.RunwayCondition);
-                wxRwyCondDialog.SetStyle(DialogFragmentStyle.NoTitle, 0);
-                // TODO
-                //wxRwyCondDialog.Show(transaction, "rwycond_dialog");
+                // TODO: delete?
+                //wxRwyCondDialog.SetStyle(DialogFragmentStyle.NoTitle, 0);
+                wxRwyCondDialog.Show(transaction, "rwycond_dialog");
             });
         }
 
@@ -1127,7 +1117,7 @@ namespace Cavokator
         {
             foreach (var pair in _metarUtcFieldsIds)
             {
-                var utcTextView = Activity.FindViewById<TextView>(int.Parse(pair.Key));
+                var utcTextView = thisView.FindViewById<TextView>(int.Parse(pair.Key));
 
                 var utcNow = DateTime.UtcNow;
                 var timeComparison = utcNow - pair.Value;
@@ -1162,7 +1152,7 @@ namespace Cavokator
         {
             foreach (var pair in _taforUtcFieldsIds)
             {
-                var utcTextView = Activity.FindViewById<TextView>(int.Parse(pair.Key));
+                var utcTextView = thisView.FindViewById<TextView>(int.Parse(pair.Key));
 
                 var utcNow = DateTime.UtcNow;
                 var timeComparison = utcNow - pair.Value;

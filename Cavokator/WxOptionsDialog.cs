@@ -8,7 +8,7 @@ using Android.Widget;
 
 namespace Cavokator
 {
-    class WxOptionsDialog : DialogFragment
+    class WxOptionsDialog : Android.Support.V4.App.DialogFragment
     {
 
         public event EventHandler<WXOptionsDialogEventArgs> SpinnerChanged;
