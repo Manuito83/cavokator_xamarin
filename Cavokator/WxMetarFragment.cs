@@ -82,7 +82,7 @@ namespace Cavokator
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // In order to return the view for this Fragment
-            thisView = inflater.Inflate(Resource.Layout.wx_weather_main, container, false);
+            thisView = inflater.Inflate(Resource.Layout.wx_metar_fragment, container, false);
 
             // Get ISharedPreferences
             GetPreferences();
@@ -1078,8 +1078,16 @@ namespace Cavokator
         // Eventhandler to update UTC Times every minute
         private void OnTimedUtcEvent(object state)
         {
-            UpdateMetarUtcLine();
-            UpdateTaforUtcLine();
+            
+            // TODO: OK???
+            
+            // Only update time if fragment is visible! 
+            // Otherwise it won't find the corresponding views (error)
+            if (thisView.IsAttachedToWindow)
+            {
+                UpdateMetarUtcLine();
+                UpdateTaforUtcLine();
+            }
         }
 
 

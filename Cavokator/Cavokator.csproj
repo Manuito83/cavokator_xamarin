@@ -129,6 +129,7 @@
     <Compile Include="AirportConverter.cs" />
     <Compile Include="MyClickableSpan.cs" />
     <Compile Include="WxColorCoder.cs" />
+    <Compile Include="WxConditionFragment.cs" />
     <Compile Include="WxGet.cs" />
     <Compile Include="WxInfo.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -147,7 +148,7 @@
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
-    <AndroidResource Include="Resources\layout\wx_weather_main.axml">
+    <AndroidResource Include="Resources\layout\wx_metar_fragment.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\wx_options_dialog.axml">
@@ -232,6 +233,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\ic_menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\wx_condition_fragment.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Annotations.26.1.0.1\build\MonoAndroid80\Xamarin.Android.Support.Annotations.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Annotations.26.1.0.1\build\MonoAndroid80\Xamarin.Android.Support.Annotations.targets')" />
