@@ -9,9 +9,9 @@
   </style>
 
   <style name="Base.Theme.CavocatorDesign" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="colorPrimary">#673AB7</item>
-    <item name="colorPrimaryDark">#512DA8</item>
-    <item name="colorAccent">#FF4081</item>
+    <item name="colorPrimary">#263238</item>
+    <item name="colorPrimaryDark">#000a12</item>
+    <item name="colorAccent">#FF0000</item>
   </style>
 
 </resources> 

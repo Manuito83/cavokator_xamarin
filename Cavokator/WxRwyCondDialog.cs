@@ -53,9 +53,6 @@ namespace Cavokator
             // Inflate view
             var view = inflater.Inflate(Resource.Layout.wx_rwycond_dialog, container, false);
 
-            // TODO: delete?
-            //SetStyle(DialogFragmentStyle.NoTitle, 0);
-
             // Find view IDs
             _conditionTitle = view.FindViewById<TextView>(Resource.Id.wx_rwycond_title);
             _mainErrorTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_main_error);

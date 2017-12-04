@@ -589,7 +589,9 @@ namespace Cavokator
                             linearlayoutWXmetarsTafors.AddView(metarUtcLine);
                         });
 
-                        // Save dictionary of TextViews so that we can update the time difference later on
+                        // Save dictionary of TextViews so that we can update the time difference later
+                        // We clear them first, so they don't add up if view is regenerated (fragment reload)
+                        _metarUtcFieldsIds.Clear();
                         _metarUtcFieldsIds.Add(metarUtcLine.Id.ToString(), _wxInfo.AirportMetarsUtc[i][0]);
                     }
 
@@ -681,7 +683,9 @@ namespace Cavokator
                             linearlayoutWXmetarsTafors.AddView(taforUtcLine);
                         });
 
-                        // Save dictionary of TextViews so that we can update the time difference later on
+                        // Save dictionary of TextViews so that we can update the time difference later
+                        // We clear them first, so they don't add up if view is regenerated (fragment reload)
+                        _taforUtcFieldsIds.Clear();
                         _taforUtcFieldsIds.Add(taforUtcLine.Id.ToString(), _wxInfo.AirportTaforsUtc[i][0]);
                     }
 
@@ -1000,8 +1004,6 @@ namespace Cavokator
                 // Pull up dialog
                 var transaction = FragmentManager.BeginTransaction();
                 var wxRwyCondDialog = new WxRwyCondDialog(condition.RunwayCondition);
-                // TODO: delete?
-                //wxRwyCondDialog.SetStyle(DialogFragmentStyle.NoTitle, 0);
                 wxRwyCondDialog.Show(transaction, "rwycond_dialog");
             });
         }
@@ -1078,11 +1080,6 @@ namespace Cavokator
         // Eventhandler to update UTC Times every minute
         private void OnTimedUtcEvent(object state)
         {
-            
-            // TODO: OK???
-            
-            // Only update time if fragment is visible! 
-            // Otherwise it won't find the corresponding views (error)
             if (thisView.IsAttachedToWindow)
             {
                 UpdateMetarUtcLine();

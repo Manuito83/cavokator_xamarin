@@ -3,27 +3,28 @@
 
   <group android:checkableBehavior="single">
     <item
-        android:id="@+id/nav_item_1"
-        android:title="My item 1" />
+        android:id="@+id/action_fragment_metar"
+        android:title="Weather Information" />
         <!--android:icon=""-->
     <item
-        android:id="@+id/nav_item_2"
-        android:title="My item 2" />
+        android:id="@+id/action_fragment_condition"
+        android:title="Runway Condition" />
         <!--android:icon=""-->
   </group>
 
+  <!--
   <item android:title="Sub items">
     <menu>
       <item
           android:id="@+id/nav_sub_1"
           android:title="My sub item 1" />
-          <!--android:icon=""-->
+          android:icon=""
       <item
           android:id="@+id/nav_sub_2"
           android:title="My sub item 2" />
-          <!--android:icon=""-->
-
+          android:icon=""
     </menu>
   </item>
+  --> 
 
 </menu>

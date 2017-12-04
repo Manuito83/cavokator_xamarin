@@ -5,6 +5,8 @@ using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Views;
+using System.Collections.Generic;
+using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace Cavokator
 {
@@ -16,6 +18,11 @@ namespace Cavokator
 
         DrawerLayout drawerLayout;
 
+        private SupportFragment mCurrentFragment;
+        private WxMetarFragment mWxMetarFragment;
+        private WxConditionFragment mWxConditionFragment;
+        private Stack<SupportFragment> mStackFragment;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -23,6 +30,12 @@ namespace Cavokator
             SetContentView(Resource.Layout.drawer_layout);
 
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+
+            mWxMetarFragment = new WxMetarFragment();
+            mWxConditionFragment = new WxConditionFragment();
+
+            mStackFragment = new Stack<SupportFragment>();
+
 
             // Initialize Toolbar
             Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
@@ -35,34 +48,16 @@ namespace Cavokator
             var navigationView = FindViewById<NavigationView>(Resource.Id.my_navigation_view);
             navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;
 
-
-
-
-
+            // Add fragments to container (FrameLayout)
             var ft = SupportFragmentManager.BeginTransaction(); 
-            ft.AddToBackStack(null);
-            ft.Add(Resource.Id.flContent, new WxMetarFragment());
+            ft.Add(Resource.Id.flContent, mWxMetarFragment);
             ft.Commit();
-                        
+
+            mCurrentFragment = mWxMetarFragment;
 
         }
 
-
-
-        public override void OnBackPressed()
-        {
-            if (drawerLayout.IsDrawerOpen((int)GravityFlags.Start))
-            {
-                drawerLayout.CloseDrawers();
-            }
-            else
-            {
-                base.OnBackPressed();
-            }
-        }
-
-
-
+        
         // Assess button pressed
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
@@ -77,18 +72,49 @@ namespace Cavokator
         {
             switch (e.MenuItem.ItemId)
             {
-                //case (Resource.Id.nav_home):
-                //    // React on 'nav_home' selection
-                //    break;
-                //case (Resource.Id.nav_messages):
-                //    //
-                //    break;
-                //case (Resource.Id.nav_friends):
-                //    // React on 'Friends' selection
-                //    break;
+                case Resource.Id.action_fragment_metar:
+                    ReplaceFragment(mWxMetarFragment);
+                    break;
+                case Resource.Id.action_fragment_condition:
+                    ReplaceFragment(mWxConditionFragment);
+                    break;
             }
+            
             // Close drawer
             drawerLayout.CloseDrawers();
+        }
+
+
+        public void ReplaceFragment (SupportFragment fragment)
+        {
+            if (fragment.IsVisible)
+            {
+                return;
+            }
+
+            var ft = SupportFragmentManager.BeginTransaction();
+
+            ft.Replace(Resource.Id.flContent, fragment);
+            ft.Commit();
+            //ft.AddToBackStack(null);
+
+            mCurrentFragment = fragment;
+        }
+
+
+        public override void OnBackPressed()
+        {
+            if (drawerLayout.IsDrawerOpen((int)GravityFlags.Start))
+            {
+                drawerLayout.CloseDrawers();
+            }
+            else
+            {
+                base.OnBackPressed();
+            }
+
+            
+
         }
 
     }

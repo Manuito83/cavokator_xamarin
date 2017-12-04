@@ -16,7 +16,8 @@
         android:paddingBottom="20dp"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        android:paddingLeft="20dp">
+        android:paddingLeft="20dp"
+        android:background="@color/wx_background_color">
         <TextView
             android:text="CHOOSE AIRPORT ID"
             android:layout_width="match_parent"

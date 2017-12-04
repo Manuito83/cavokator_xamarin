@@ -315,7 +315,6 @@ namespace Cavokator
                 // Conditions type 4, 5 or 6
                 else
                 {
-                    // TODO NEXT
                     // R/SNOCLO
                     if (_ConditionType == 4)
                     {
