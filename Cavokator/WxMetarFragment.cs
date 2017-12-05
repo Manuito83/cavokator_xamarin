@@ -1,7 +1,11 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Content.Res;
 using Android.Graphics;
 using Android.OS;
+using Android.Support.V4.Content;
+using Android.Support.V4.Content.Res;
+using Android.Support.V7.Content.Res;
 using Android.Text;
 using Android.Text.Method;
 using Android.Util;
@@ -29,6 +33,12 @@ namespace Cavokator
         private ImageButton _wxOptionsButton;
         private TextView _chooseIDtextview;
 
+
+        // STYLING
+        private Color _color_wxMainBackground;
+        private Color _color_wxMainText;
+
+        
 
         // ProgressDialog to show while we fetch the wx information
         private ProgressDialog _wxProgressDialog;
@@ -84,6 +94,9 @@ namespace Cavokator
             // In order to return the view for this Fragment
             thisView = inflater.Inflate(Resource.Layout.wx_metar_fragment, container, false);
 
+            // Assign colors to variables
+            ApplyTheme();
+
             // Get ISharedPreferences
             GetPreferences();
 
@@ -106,7 +119,8 @@ namespace Cavokator
             _wxRequestButton.Click += OnRequestButtonClicked;
 
 
-
+            // Background color
+            _linearlayoutWxBottom.SetBackgroundColor(_color_wxMainBackground);
 
             // Get a list of ICAO/IATA/Airport's name from CSV at first execution
             // We get the whole list of 5000+ because it is faster to iterate compared to consulting CSV 
@@ -249,6 +263,16 @@ namespace Cavokator
 
         }
 
+
+        /// <summary>
+        /// Assign colors depending on selected theme
+        /// </summary>
+        private void ApplyTheme()
+        {
+            // TODO: Implement theme selection
+            _color_wxMainText = new Color(ContextCompat.GetColor(Activity, Resource.Color.color_mainText_LIGHT));
+            _color_wxMainBackground = new Color(ContextCompat.GetColor(Activity, Resource.Color.color_mainBackground_LIGHT));
+        }
 
 
         // Action when wx request button is clicked
@@ -926,11 +950,14 @@ namespace Cavokator
             return utcLine;
         }
 
+        
 
         // Configuration for metar lines
         private TextView ApplyMetarLineStyle(TextView metarLines)
         {
-            metarLines.SetTextColor(Color.WhiteSmoke);
+
+            // TODO: IMPLEMENT
+            metarLines.SetTextColor(_color_wxMainText);
             metarLines.SetTextSize(ComplexUnitType.Dip, 14);
             var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(25, 5, 0, 0);
@@ -942,7 +969,7 @@ namespace Cavokator
         // Configuration for tafor lines
         private TextView ApplyTaforLineStyle(TextView taforLines)
         {
-            taforLines.SetTextColor(Color.WhiteSmoke);
+            taforLines.SetTextColor(_color_wxMainText);
             taforLines.SetTextSize(ComplexUnitType.Dip, 14);
             LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(25, 5, 0, 0);
@@ -950,10 +977,10 @@ namespace Cavokator
             return taforLines;
         }
 
-        // Configuration for spplited lines
+        // Configuration for splited lines
         private TextView ApplyTaforSplittedLineStyle(TextView taforLines)
         {
-            taforLines.SetTextColor(Color.WhiteSmoke);
+            taforLines.SetTextColor(_color_wxMainText);
             taforLines.SetTextSize(ComplexUnitType.Dip, 14);
             LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(10, 5, 0, 0);
@@ -962,7 +989,7 @@ namespace Cavokator
         }
 
 
-        // Configuration for spplited lines
+        // Configuration for splited lines
         private TextView ApplyMarkerLineStyle(TextView taforLines)
         {
             taforLines.SetTextColor(Color.Cyan);

@@ -4,8 +4,7 @@
     android:id="@+id/weather_fragment_container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fillViewport="true"
-    tools:gridSpec="1|8|#0093eeff|K:#ee8700ff:16,l:72,l:16,r|S:#83ee00ff:16,0,l:16,56,l:16,0,r">
+    android:fillViewport="true">
     <LinearLayout
         android:id="@+id/linearlayout_wx_bottom"
         android:layout_width="fill_parent"
@@ -16,8 +15,7 @@
         android:paddingBottom="20dp"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        android:paddingLeft="20dp"
-        android:background="@color/wx_background_color">
+        android:paddingLeft="20dp">
         <TextView
             android:text="CHOOSE AIRPORT ID"
             android:layout_width="match_parent"

@@ -8,10 +8,11 @@
   <style name="Theme.CavocatorDesign" parent="Base.Theme.CavocatorDesign">
   </style>
 
+  <!-- base theme -->
   <style name="Base.Theme.CavocatorDesign" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="colorPrimary">#263238</item>
-    <item name="colorPrimaryDark">#000a12</item>
-    <item name="colorAccent">#FF0000</item>
+    <item name="colorPrimary">#455a64</item>
+    <item name="colorPrimaryDark">#1c313a</item>
+    <item name="colorAccent">#263238</item>
+    <item name="sssor_mainText_LIGHT" format="color">#000000</item>
   </style>
-
 </resources> 
