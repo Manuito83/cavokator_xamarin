@@ -4,12 +4,12 @@
   <group android:checkableBehavior="single">
     <item
         android:id="@+id/action_fragment_metar"
-        android:title="Weather Information" />
-        <!--android:icon=""-->
+        android:title="Weather Information" 
+        android:icon="@drawable/ic_cloud_print_outline_black_48dp" />
     <item
         android:id="@+id/action_fragment_condition"
-        android:title="Runway Condition" />
-        <!--android:icon=""-->
+        android:title="Runway Condition" 
+        android:icon="@drawable/ic_snowflake_black_48dp" />
   </group>
 
   <!--

@@ -29,7 +29,7 @@ namespace Cavokator
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // In order to return the view for this Fragment
-            thisView = inflater.Inflate(Resource.Layout.wx_condition_fragment, container, false);
+            thisView = inflater.Inflate(Resource.Layout.condition_fragment, container, false);
 
             return thisView;
         }
