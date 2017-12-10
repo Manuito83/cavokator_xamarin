@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace Cavokator
 {
-    class WxRwyCondDecoder
+    class ConditionDecoder
     {
         // String used for main decoding
         private string _rwyConditionText;
@@ -31,7 +31,7 @@ namespace Cavokator
         private int _ConditionType;
 
         // We will use a WxRwyCondition container
-        private WxRwyCondition _wxRunwayCondition = new WxRwyCondition();
+        private ConditionContainer _wxRunwayCondition = new ConditionContainer();
 
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Cavokator
         /// </summary>
         /// <param name="input_condition"></param>
         /// <returns></returns>
-        public WxRwyCondition DecodeCondition(string input_condition)
+        public ConditionContainer DecodeCondition(string input_condition)
         {
 
             _rwyConditionText = input_condition;

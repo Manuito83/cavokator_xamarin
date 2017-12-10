@@ -150,9 +150,11 @@ namespace Cavokator
             {
                 _metarHoursSeekBar.Progress = _hoursBefore;
             }
-            
+
 
             // Set initial value for seekbar text
+            _metarHoursSeekBarText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+
             if (_metarHoursSeekBar.Progress == 0)
             {
                 _metarHoursSeekBarText.Text = GetString(Resource.String.Option_JustGetLast);

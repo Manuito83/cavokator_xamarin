@@ -18,13 +18,13 @@ namespace Cavokator
     /// Class used to create instances of ClickableSpan incorporating the actual text
     /// that was clicked as eventargs
     /// </summary>
-    class MyClickableSpan : ClickableSpan
+    class ClickableSpan : Android.Text.Style.ClickableSpan
     {
         public event EventHandler<MyClickableSpanArgs> ClickedMyClickableSpan;
 
         private string _text_value;
 
-        public MyClickableSpan(string input_value)
+        public ClickableSpan(string input_value)
         {
             _text_value = input_value;
         }

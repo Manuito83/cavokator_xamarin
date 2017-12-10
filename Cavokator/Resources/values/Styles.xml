@@ -13,6 +13,5 @@
     <item name="colorPrimary">#455a64</item>
     <item name="colorPrimaryDark">#1c313a</item>
     <item name="colorAccent">#263238</item>
-    <item name="sssor_mainText_LIGHT" format="color">#000000</item>
   </style>
 </resources> 

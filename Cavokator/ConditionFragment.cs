@@ -13,7 +13,7 @@ using Android.Widget;
 
 namespace Cavokator
 {
-    public class WxConditionFragment : Android.Support.V4.App.Fragment
+    public class ConditionFragment : Android.Support.V4.App.Fragment
     {
 
         // View that will be used for FindViewById

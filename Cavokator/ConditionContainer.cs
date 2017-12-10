@@ -1,6 +1,6 @@
 ﻿namespace Cavokator
 {
-    public class WxRwyCondition
+    public class ConditionContainer
     {
         // ERROR
         public bool MainError;

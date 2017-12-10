@@ -20,7 +20,7 @@ namespace Cavokator
 
         private SupportFragment mCurrentFragment;
         private WxMetarFragment mWxMetarFragment;
-        private WxConditionFragment mWxConditionFragment;
+        private ConditionFragment mWxConditionFragment;
         private Stack<SupportFragment> mStackFragment;
 
         protected override void OnCreate(Bundle bundle)
@@ -32,7 +32,7 @@ namespace Cavokator
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
 
             mWxMetarFragment = new WxMetarFragment();
-            mWxConditionFragment = new WxConditionFragment();
+            mWxConditionFragment = new ConditionFragment();
 
             mStackFragment = new Stack<SupportFragment>();
 

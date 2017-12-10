@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<resources>
-  <!-- LIGHT THEME (white-ish background, black text, etc...) -->
-  <color name="color_mainBackground_LIGHT">#ECEFF1</color>
-  <color name="color_mainText_LIGHT">#000000</color>
-</resources>

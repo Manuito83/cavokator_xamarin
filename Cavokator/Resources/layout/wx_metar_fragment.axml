@@ -44,17 +44,20 @@
                 android:text="SEND"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
+                android:elevation="4dp"
                 android:id="@+id/wx_request_button" />
             <Button
                 android:text="CLEAR"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
+                android:elevation="4dp"
                 android:id="@+id/wx_clear_button" />
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/wx_options_button"
                 android:scaleType="centerInside"
+                android:elevation="4dp"
                 android:src="@drawable/options_button" />
         </LinearLayout>
         <LinearLayout

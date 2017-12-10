@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+
 namespace Cavokator
 {
     public class WxMetarFragment : Android.Support.V4.App.Fragment
@@ -33,15 +34,10 @@ namespace Cavokator
         private ImageButton _wxOptionsButton;
         private TextView _chooseIDtextview;
 
-
-        // STYLING
-        private Color _color_wxMainBackground;
-        private Color _color_wxMainText;
-
-        
-
+ 
         // ProgressDialog to show while we fetch the wx information
-        private ProgressDialog _wxProgressDialog;
+        private AlertDialog.Builder _wxAlertDialogBuilder;
+        private AlertDialog _wxAlertDialog;
 
 
         /// <summary>
@@ -94,8 +90,6 @@ namespace Cavokator
             // In order to return the view for this Fragment
             thisView = inflater.Inflate(Resource.Layout.wx_metar_fragment, container, false);
 
-            // Assign colors to variables
-            ApplyTheme();
 
             // Get ISharedPreferences
             GetPreferences();
@@ -120,7 +114,7 @@ namespace Cavokator
 
 
             // Background color
-            _linearlayoutWxBottom.SetBackgroundColor(_color_wxMainBackground);
+            _linearlayoutWxBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
 
             // Get a list of ICAO/IATA/Airport's name from CSV at first execution
             // We get the whole list of 5000+ because it is faster to iterate compared to consulting CSV 
@@ -264,16 +258,6 @@ namespace Cavokator
         }
 
 
-        /// <summary>
-        /// Assign colors depending on selected theme
-        /// </summary>
-        private void ApplyTheme()
-        {
-            // TODO: Implement theme selection
-            _color_wxMainText = new Color(ContextCompat.GetColor(Activity, Resource.Color.color_mainText_LIGHT));
-            _color_wxMainBackground = new Color(ContextCompat.GetColor(Activity, Resource.Color.color_mainBackground_LIGHT));
-        }
-
 
         // Action when wx request button is clicked
         private async void OnRequestButtonClicked(object sender, EventArgs e)
@@ -294,21 +278,18 @@ namespace Cavokator
             var airportEntry = thisView.FindViewById<EditText>(Resource.Id.airport_entry);
             airportEntry.ClearFocus();
 
+            
+            // Show our AlertDialog
+            _wxAlertDialogBuilder = new AlertDialog.Builder(Activity);
+            _wxAlertDialogBuilder.SetTitle(Resources.GetString(Resource.String.Fetching));
+            _wxAlertDialogBuilder.SetMessage("");
+            _wxAlertDialog = _wxAlertDialogBuilder.Create();
+            _wxAlertDialog.Show();
 
-
-            // Show our ProgressDialog
-            _wxProgressDialog = new ProgressDialog(Activity);
-            _wxProgressDialog.SetMessage(Resources.GetString(Resource.String.Fetching));
-            _wxProgressDialog.SetCancelable(true);
-            _wxProgressDialog.SetProgressStyle(ProgressDialogStyle.Horizontal);
-            _wxProgressDialog.Progress = 0;
-            _wxProgressDialog.Max = 100;
-            _wxProgressDialog.Show();
-
+            
             // Sanitizes _icaoIdList before RequestWeather() makes use of it!
             await Task.Factory.StartNew(SanitizeAirportIds);
-
-
+            
             // We won't start fetching weather unless we have a valid entry
             if (_myAirportsList != null && _myAirportsList.Count > 0)
             {
@@ -317,7 +298,7 @@ namespace Cavokator
             }
             else
             {
-                _wxProgressDialog.Dismiss();
+                _wxAlertDialog.Dismiss();
             }
         }
 
@@ -574,7 +555,7 @@ namespace Cavokator
                         {
                             if (_myAirportDefinitions[j].icao == _wxInfo.AirportIDs[i].ToUpper())
                             {
-                                airportName.Text = _myAirportsList[i] + " - " + _myAirportDefinitions[j].description;
+                                airportName.Text = _myAirportsList[i].ToUpper() + " - " + _myAirportDefinitions[j].description;
                                 break;
                             }
 
@@ -582,7 +563,7 @@ namespace Cavokator
                     }
                     catch
                     {
-                        airportName.Text = _myAirportsList[i];
+                        airportName.Text = _myAirportsList[i].ToUpper();
                     }
 
 
@@ -672,7 +653,7 @@ namespace Cavokator
                         };
 
                         // Convert to readable time comparison
-                        taforUtcLine.SetTextColor(Color.Yellow);
+                        taforUtcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
                         taforUtcLine.SetTextSize(ComplexUnitType.Dip, 14);
                         var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
                         wxTextViewParams.SetMargins(5, 20, 0, 0);
@@ -884,7 +865,7 @@ namespace Cavokator
         // Configuration for error lines
         private TextView ApplyErrorLineStyle(TextView errorAirportName)
         {
-            errorAirportName.SetTextColor(Color.Red);
+            errorAirportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
             errorAirportName.SetTextSize(ComplexUnitType.Dip, 16);
             LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             airportTextViewParams.SetMargins(0, 40, 0, 0);
@@ -896,7 +877,7 @@ namespace Cavokator
         // Configuration for airport lines
         private TextView ApplyAirportIDLineStyle(TextView airportName)
         {
-            airportName.SetTextColor(Color.Magenta);
+            airportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaTextWarning));
             airportName.SetTextSize(ComplexUnitType.Dip, 16);
             LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             airportTextViewParams.SetMargins(0, 70, 0, 0);
@@ -913,30 +894,30 @@ namespace Cavokator
             {
                 if (timeComparison.Hours >= 6)
                 {
-                    utcLine.SetTextColor(Color.Red);
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                 }
                 else if (timeComparison.Hours >= 2)
                 {
-                    utcLine.SetTextColor(Color.Yellow);
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
                 }
                 else
                 {
-                    utcLine.SetTextColor(Color.Green);
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning));
                 }
             }
             else if (type == "tafor")
             {
                 if (timeComparison.Hours >= 18)
                 {
-                    utcLine.SetTextColor(Color.Red);
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                 }
                 else if (timeComparison.Hours >= 6)
                 {
-                    utcLine.SetTextColor(Color.Yellow);
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
                 }
                 else
                 {
-                    utcLine.SetTextColor(Color.Green);
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning));
                 }
             }
 
@@ -955,9 +936,7 @@ namespace Cavokator
         // Configuration for metar lines
         private TextView ApplyMetarLineStyle(TextView metarLines)
         {
-
-            // TODO: IMPLEMENT
-            metarLines.SetTextColor(_color_wxMainText);
+            metarLines.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             metarLines.SetTextSize(ComplexUnitType.Dip, 14);
             var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(25, 5, 0, 0);
@@ -969,7 +948,7 @@ namespace Cavokator
         // Configuration for tafor lines
         private TextView ApplyTaforLineStyle(TextView taforLines)
         {
-            taforLines.SetTextColor(_color_wxMainText);
+            taforLines.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             taforLines.SetTextSize(ComplexUnitType.Dip, 14);
             LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(25, 5, 0, 0);
@@ -980,7 +959,7 @@ namespace Cavokator
         // Configuration for splited lines
         private TextView ApplyTaforSplittedLineStyle(TextView taforLines)
         {
-            taforLines.SetTextColor(_color_wxMainText);
+            taforLines.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             taforLines.SetTextSize(ComplexUnitType.Dip, 14);
             LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(10, 5, 0, 0);
@@ -992,7 +971,7 @@ namespace Cavokator
         // Configuration for splited lines
         private TextView ApplyMarkerLineStyle(TextView taforLines)
         {
-            taforLines.SetTextColor(Color.Cyan);
+            taforLines.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanTextWarning));
             taforLines.SetTextSize(ComplexUnitType.Dip, 14);
             LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(35, 5, 0, 0);
@@ -1123,22 +1102,21 @@ namespace Cavokator
                 Activity.RunOnUiThread(() =>
                 {
                     // Show the airport and percentage
-                    _wxProgressDialog.SetMessage(e.Airport.ToUpper());
-                    _wxProgressDialog.Progress = e.PercentageCompleted;
+                    _wxAlertDialog.SetMessage(e.Airport.ToUpper() + " - (" + e.PercentageCompleted + "%)");
                 });
             }
             // Error case
             else if (e.PercentageCompleted == 999)
             {
                 await Task.Delay(500);
-                _wxProgressDialog.Dismiss();
+                _wxAlertDialog.Dismiss();
             }
 
             // If we reached a 100%, we will wait a bit to that users can see the whole bar
             if (e.PercentageCompleted == 100)
             {
-                await Task.Delay(250);
-                _wxProgressDialog.Dismiss();
+                await Task.Delay(750);
+                _wxAlertDialog.Dismiss();
             }
 
         }
@@ -1161,15 +1139,15 @@ namespace Cavokator
                 {
                     if (timeComparison.Hours > 6)
                     {
-                        utcTextView.SetTextColor(Color.Red);
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     }
                     else if (timeComparison.Hours >= 2)
                     {
-                        utcTextView.SetTextColor(Color.Yellow);
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
                     }
                     else
                     {
-                        utcTextView.SetTextColor(Color.Green);
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning));
                     }
 
                     utcTextView.Text = utcString;
@@ -1196,18 +1174,19 @@ namespace Cavokator
                 {
                     if (timeComparison.Hours >= 18)
                     {
-                        utcTextView.SetTextColor(Color.Red);
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     }
                     else if (timeComparison.Hours >= 6)
                     {
-                        utcTextView.SetTextColor(Color.Yellow);
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
                     }
                     else
                     {
-                        utcTextView.SetTextColor(Color.Green);
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning));
                     }
 
                     utcTextView.Text = utcString;
+
                 });
 
 

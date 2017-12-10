@@ -59,8 +59,7 @@
             android:id="@+id/wx_option_metarHours_seekbarText"
             android:layout_marginRight="30dp"
             android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:textColor="@android:color/white" />
+            android:gravity="center" />
         <TextView
             android:text="Save data"
             android:layout_width="wrap_content"
