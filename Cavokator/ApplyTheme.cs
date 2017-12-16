@@ -16,7 +16,8 @@ namespace Cavokator
         YellowTextWarning,
         GreenTextWarning,
         CyanTextWarning,
-        MagentaTextWarning
+        MagentaTextWarning,
+        TextHint        
     }
 
 
@@ -33,6 +34,7 @@ namespace Cavokator
         private Color _color_greenTextWarning_LIGHT = Color.ParseColor("#1d781d");
         private Color _color_cyanTextWarning_LIGHT = Color.ParseColor("#039be5");
         private Color _color_magentaTextWarning_LIGHT = Color.ParseColor("#aa00ff");
+        private Color _color_textHint_LIGHT = Color.ParseColor("#8C8C8C");
 
 
 
@@ -71,6 +73,10 @@ namespace Cavokator
                 case DesiredColor.MagentaTextWarning:
                     if (_currentTheme == "LIGHT")
                         myColor = _color_magentaTextWarning_LIGHT;
+                    break;
+                case DesiredColor.TextHint:
+                    if (_currentTheme == "LIGHT")
+                        myColor = _color_textHint_LIGHT;
                     break;
             }
 

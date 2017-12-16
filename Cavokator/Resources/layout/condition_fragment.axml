@@ -5,8 +5,74 @@
     android:layout_height="fill_parent"
     android:id="@+id/condition_background">
     <TextView
-        android:text="FRAGMENT CONDITION"
+        android:text="ENTER RUNWAY CONDITION"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30.0dp"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/condition_intro" />
+    <EditText
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/condition_intro"
+        android:id="@+id/condition_entry"
+        android:layout_centerInParent="true"
+        android:textSize="35dp"
+        android:layout_marginTop="30.0dp"
+        android:inputType="textCapCharacters|textNoSuggestions"
+        android:textAllCaps="true"
+        android:maxLength="12"
+        android:gravity="center"
+        android:backgroundTint="#263238" />
+    <Button
+        android:text="Decode!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/condition_entry"
+        android:id="@+id/condition_decodeButton"
+        android:layout_marginTop="20.0dp"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:text="Example: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35.5dp"
+        android:layout_marginLeft="30.0dp"
+        android:layout_below="@id/condition_decodeButton"
+        android:id="@+id/condition_example" />
+    <TextView
+        android:text="R27L/3466912"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/condition_example"
+        android:id="@+id/condition_example1"
+        android:layout_marginTop="7.5dp"
+        android:layout_marginLeft="40.0dp" />
+    <TextView
+        android:text="883466912"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/condition_example1"
+        android:id="@+id/condition_example2"
+        android:layout_marginTop="7.5dp"
+        android:layout_marginLeft="40.0dp" />
+    <TextView
+        android:text="R27/CLRD//"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/condition_example2"
+        android:id="@+id/condition_example3"
+        android:layout_marginTop="7.5dp"
+        android:layout_marginLeft="40.0dp" />
+    <TextView
+        android:text="R/SNOCLO"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/condition_example3"
+        android:id="@+id/condition_example4"
+        android:layout_marginTop="7.5dp"
+        android:layout_marginLeft="40.0dp" />
 </RelativeLayout>
