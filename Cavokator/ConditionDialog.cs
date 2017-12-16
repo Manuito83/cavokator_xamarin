@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
+﻿using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Android.Graphics;
 
 namespace Cavokator
 {
-    class WxRwyCondDialog : Android.Support.V4.App.DialogFragment
+    class ConditionDialog : Android.Support.V4.App.DialogFragment
     {
 
         // Dialog fields
@@ -41,7 +32,7 @@ namespace Cavokator
         
         
 
-        public WxRwyCondDialog(string condition_input)
+        public ConditionDialog(string condition_input)
         {
             this._entered_condition = condition_input;
         }

@@ -3,9 +3,6 @@ using Android.Content;
 using Android.Content.Res;
 using Android.Graphics;
 using Android.OS;
-using Android.Support.V4.Content;
-using Android.Support.V4.Content.Res;
-using Android.Support.V7.Content.Res;
 using Android.Text;
 using Android.Text.Method;
 using Android.Util;
@@ -195,8 +192,7 @@ namespace Cavokator
                 }
 
             }
-
-
+            
 
             // Sets up timer to update METAR UTC
             UtcTimerTick();
@@ -1009,7 +1005,7 @@ namespace Cavokator
             {
                 // Pull up dialog
                 var transaction = FragmentManager.BeginTransaction();
-                var wxRwyCondDialog = new WxRwyCondDialog(condition.RunwayCondition);
+                var wxRwyCondDialog = new ConditionDialog(condition.RunwayCondition);
                 wxRwyCondDialog.Show(transaction, "rwycond_dialog");
             });
         }

@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 
 namespace Cavokator
@@ -50,6 +39,10 @@ namespace Cavokator
 
             _rwyConditionText = input_condition;
 
+
+            // Error checking (is this condition valid?)
+            ValidityCheck();
+            
             // Find out what it is about
             DiscernType();
 
@@ -255,10 +248,10 @@ namespace Cavokator
                         }
                         else
                         {
+                            _wxRunwayCondition.DepthCode = _rwyConditionText.Substring(position4, 2);
+
                             if (int.TryParse(_rwyConditionText.Substring(position4, 2), out int intDepth))
                             {
-
-                                _wxRunwayCondition.DepthCode = _rwyConditionText.Substring(position4, 2);
                                 _wxRunwayCondition.DepthValue = intDepth;
 
                                 if (intDepth == 91)
@@ -289,10 +282,11 @@ namespace Cavokator
                         }
                         else
                         {
+                            _wxRunwayCondition.FrictionCode = _rwyConditionText.Substring(position6, 2);
+
                             if (int.TryParse(_rwyConditionText.Substring(position6, 2), out int intFriction))
                             {
-
-                                _wxRunwayCondition.FrictionCode = _rwyConditionText.Substring(position6, 2);
+                                
                                 _wxRunwayCondition.FrictionValue = intFriction;
 
                                 if (intFriction >= 96 && intFriction <= 98)
@@ -382,6 +376,19 @@ namespace Cavokator
             return _wxRunwayCondition;
         }
 
+
+        private void ValidityCheck()
+        {
+            var conditionRegex = new Regex(@"((^)+(R)+(\d\d([LCR]?)+(\/)+([0-9]|\/){6})+(\z))|" +
+                                           @"((^)+(([0-9]|\/){8})+(?=\b))|" +
+                                           @"((\b)+(R\/SNOCLO)+(\z))|" +
+                                           @"((^)+(R\d\d([LCR]?)+(\/)+(CLRD)+(\/\/))+(\z))");
+            var conditionMatches = conditionRegex.Matches(_rwyConditionText);
+
+            if (conditionMatches.Count != 1)
+                _MainError = true;
+
+        }
 
 
         private void DiscernType()

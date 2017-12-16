@@ -1,6 +1,10 @@
-﻿using Android.OS;
+﻿using Android.App;
+using Android.OS;
+using Android.Content;
 using Android.Views;
+using Android.Views.InputMethods;
 using Android.Widget;
+using System;
 
 namespace Cavokator
 {
@@ -12,6 +16,7 @@ namespace Cavokator
         private TextView _introTextView;
         private EditText _conditionEntryEditText;
         private Button _conditionRequestButton;
+        // TODO: ADD HERE CLEAR BUTTON!
         private TextView _exampleTextView;
         private TextView _example1TextView;
         private TextView _example2TextView;
@@ -35,9 +40,41 @@ namespace Cavokator
             // Assign fields and style
             ApplyStyle();
 
-            
+            // Subscribe events
+            _conditionRequestButton.Click += OnRequestButtonClicked;
+
+
+
+            // Close keyboard when click outside airport_entry EditText
+            _relativeLayoutMain.Touch += delegate
+            {
+                var imm = (InputMethodManager)Application.Context.GetSystemService(Context.InputMethodService);
+                imm.HideSoftInputFromWindow(_conditionEntryEditText.WindowToken, 0);
+            };
+
+
 
             return thisView;
+        }
+
+
+        // Action when wx request button is clicked
+        private void OnRequestButtonClicked(object sender, EventArgs e)
+        {
+            
+            // Clear focus of _condition_entry
+            var conditiontEntry = thisView.FindViewById<EditText>(Resource.Id.condition_entry);
+            conditiontEntry.ClearFocus();
+
+
+            Activity.RunOnUiThread(() =>
+            {
+                // Pull up dialog
+                var transaction = FragmentManager.BeginTransaction();
+                var wxRwyCondDialog = new ConditionDialog(conditiontEntry.Text);
+                wxRwyCondDialog.Show(transaction, "condition_dialog");
+            });
+
         }
 
 
