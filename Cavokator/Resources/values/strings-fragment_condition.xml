@@ -3,6 +3,7 @@
 
   <string name="condition_Intro">ENTER RUNWAY CONDITION</string>
   <string name="condition_Decode">Decode!</string>
+  <string name="condition_Clear">Clear</string>
   <string name="condition_Example">Example:</string>
 
 </resources>

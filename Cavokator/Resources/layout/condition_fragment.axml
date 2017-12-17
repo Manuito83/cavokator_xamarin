@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/condition_background"
-    android:focusableInTouchMode="true" >
+    android:focusableInTouchMode="true">
     <TextView
         android:text="ENTER RUNWAY CONDITION"
         android:layout_width="wrap_content"
@@ -27,21 +27,33 @@
         android:maxLength="11"
         android:gravity="center"
         android:backgroundTint="#263238" />
-    <Button
-        android:text="Decode!"
+    <LinearLayout
+        android:id="@+id/condition_buttons_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/condition_entry"
-        android:id="@+id/condition_decodeButton"
-        android:layout_marginTop="20.0dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true">
+        <Button
+            android:text="Decode!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/condition_decodeButton"
+            android:layout_marginTop="20.0dp"
+            android:layout_marginRight="15.0dp" />
+        <Button
+            android:text="Clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/condition_clearButton"
+            android:layout_marginTop="20.0dp" />
+    </LinearLayout>
     <TextView
         android:text="Example: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="35.5dp"
         android:layout_marginLeft="30.0dp"
-        android:layout_below="@id/condition_decodeButton"
+        android:layout_below="@id/condition_buttons_layout"
         android:id="@+id/condition_example" />
     <TextView
         android:text="R27L/356691"

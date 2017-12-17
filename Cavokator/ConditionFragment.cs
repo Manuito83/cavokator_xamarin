@@ -16,7 +16,7 @@ namespace Cavokator
         private TextView _introTextView;
         private EditText _conditionEntryEditText;
         private Button _conditionRequestButton;
-        // TODO: ADD HERE CLEAR BUTTON!
+        private Button _conditionClearButton;
         private TextView _exampleTextView;
         private TextView _example1TextView;
         private TextView _example2TextView;
@@ -42,6 +42,7 @@ namespace Cavokator
 
             // Subscribe events
             _conditionRequestButton.Click += OnRequestButtonClicked;
+            _conditionClearButton.Click += OnClearButtonClicked;
 
 
 
@@ -61,7 +62,7 @@ namespace Cavokator
         // Action when wx request button is clicked
         private void OnRequestButtonClicked(object sender, EventArgs e)
         {
-            
+
             // Clear focus of _condition_entry
             var conditiontEntry = thisView.FindViewById<EditText>(Resource.Id.condition_entry);
             conditiontEntry.ClearFocus();
@@ -77,13 +78,23 @@ namespace Cavokator
 
         }
 
+        
+        // Action when wx request button is clicked
+        private void OnClearButtonClicked(object sender, EventArgs e)
+        {
+            _conditionEntryEditText.Text = "";
+        }
+
+
 
         private void ApplyStyle()
         {
+            // FindViewById
             _relativeLayoutMain = thisView.FindViewById<RelativeLayout>(Resource.Id.condition_background);
             _introTextView = thisView.FindViewById<TextView>(Resource.Id.condition_intro);
             _conditionEntryEditText = thisView.FindViewById<EditText>(Resource.Id.condition_entry);
             _conditionRequestButton = thisView.FindViewById<Button>(Resource.Id.condition_decodeButton);
+            _conditionClearButton = thisView.FindViewById<Button>(Resource.Id.condition_clearButton);
             _exampleTextView = thisView.FindViewById<TextView>(Resource.Id.condition_example);
             _example1TextView = thisView.FindViewById<TextView>(Resource.Id.condition_example1);
             _example2TextView = thisView.FindViewById<TextView>(Resource.Id.condition_example2);
@@ -100,8 +111,10 @@ namespace Cavokator
             _example3TextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.TextHint));
             _example4TextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.TextHint));
 
+            // Strings
             _introTextView.Text = Resources.GetString(Resource.String.condition_Intro);
             _conditionRequestButton.Text = Resources.GetString(Resource.String.condition_Decode);
+            _conditionClearButton.Text = Resources.GetString(Resource.String.condition_Clear);
             _exampleTextView.Text = Resources.GetString(Resource.String.condition_Example);
         }
 

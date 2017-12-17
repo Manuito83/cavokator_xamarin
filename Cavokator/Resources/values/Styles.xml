@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <resources>
+  <!-- dialog animation -->
   <style name="dialog_animation">
     <item name="android:windowEnterAnimation">@anim/slide_up</item>
     <item name="android:windowExitAnimation">@anim/slide_right</item>
   </style>
 
+  <!-- app theme -->
   <style name="Theme.CavocatorDesign" parent="Base.Theme.CavocatorDesign">
   </style>
 
@@ -12,6 +14,20 @@
   <style name="Base.Theme.CavocatorDesign" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="colorPrimary">#455a64</item>
     <item name="colorPrimaryDark">#1c313a</item>
-    <item name="colorAccent">#263238</item>
+    <item name="colorAccent">#bc477b</item>
   </style>
+
+  <!-- SettingsThemeSwitch -->
+  <style name="SettingsThemeSwitch" parent="Theme.AppCompat.Light">
+    <!-- active thumb & track color (30% transparency) -->
+    <item name="colorControlActivated">#bc477b</item>
+
+    <!-- inactive thumb color -->
+    <item name="colorSwitchThumbNormal">#000000</item>
+
+    <!-- inactive track color (30% transparency) -->
+    <item name="android:colorForeground">#bc477b</item>
+  </style>
+
+
 </resources> 

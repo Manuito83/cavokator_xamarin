@@ -2237,26 +2237,26 @@ namespace Cavokator
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f02006f
-			public const int avd_hide_password_1 = 2130837615;
-			
-			// aapt resource value: 0x7f020070
-			public const int avd_hide_password_2 = 2130837616;
-			
 			// aapt resource value: 0x7f020071
-			public const int avd_hide_password_3 = 2130837617;
+			public const int avd_hide_password_1 = 2130837617;
+			
+			// aapt resource value: 0x7f020072
+			public const int avd_hide_password_2 = 2130837618;
+			
+			// aapt resource value: 0x7f020073
+			public const int avd_hide_password_3 = 2130837619;
 			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
 			
-			// aapt resource value: 0x7f020072
-			public const int avd_show_password_1 = 2130837618;
-			
-			// aapt resource value: 0x7f020073
-			public const int avd_show_password_2 = 2130837619;
-			
 			// aapt resource value: 0x7f020074
-			public const int avd_show_password_3 = 2130837620;
+			public const int avd_show_password_1 = 2130837620;
+			
+			// aapt resource value: 0x7f020075
+			public const int avd_show_password_2 = 2130837621;
+			
+			// aapt resource value: 0x7f020076
+			public const int avd_show_password_3 = 2130837622;
 			
 			// aapt resource value: 0x7f020055
 			public const int design_bottom_navigation_item_background = 2130837589;
@@ -2283,58 +2283,64 @@ namespace Cavokator
 			public const int ic_cloud_print_outline_black_48dp = 2130837596;
 			
 			// aapt resource value: 0x7f02005d
-			public const int ic_menu = 2130837597;
+			public const int ic_help_circle_black_48dp = 2130837597;
 			
 			// aapt resource value: 0x7f02005e
-			public const int ic_snowflake_black_48dp = 2130837598;
+			public const int ic_menu = 2130837598;
 			
 			// aapt resource value: 0x7f02005f
-			public const int navigation_empty_icon = 2130837599;
+			public const int ic_settings_black_48dp = 2130837599;
 			
 			// aapt resource value: 0x7f020060
-			public const int notification_action_background = 2130837600;
+			public const int ic_snowflake_black_48dp = 2130837600;
 			
 			// aapt resource value: 0x7f020061
-			public const int notification_bg = 2130837601;
+			public const int navigation_empty_icon = 2130837601;
 			
 			// aapt resource value: 0x7f020062
-			public const int notification_bg_low = 2130837602;
+			public const int notification_action_background = 2130837602;
 			
 			// aapt resource value: 0x7f020063
-			public const int notification_bg_low_normal = 2130837603;
+			public const int notification_bg = 2130837603;
 			
 			// aapt resource value: 0x7f020064
-			public const int notification_bg_low_pressed = 2130837604;
+			public const int notification_bg_low = 2130837604;
 			
 			// aapt resource value: 0x7f020065
-			public const int notification_bg_normal = 2130837605;
+			public const int notification_bg_low_normal = 2130837605;
 			
 			// aapt resource value: 0x7f020066
-			public const int notification_bg_normal_pressed = 2130837606;
+			public const int notification_bg_low_pressed = 2130837606;
 			
 			// aapt resource value: 0x7f020067
-			public const int notification_icon_background = 2130837607;
-			
-			// aapt resource value: 0x7f02006d
-			public const int notification_template_icon_bg = 2130837613;
-			
-			// aapt resource value: 0x7f02006e
-			public const int notification_template_icon_low_bg = 2130837614;
+			public const int notification_bg_normal = 2130837607;
 			
 			// aapt resource value: 0x7f020068
-			public const int notification_tile_bg = 2130837608;
+			public const int notification_bg_normal_pressed = 2130837608;
 			
 			// aapt resource value: 0x7f020069
-			public const int notify_panel_notification_icon_bg = 2130837609;
+			public const int notification_icon_background = 2130837609;
+			
+			// aapt resource value: 0x7f02006f
+			public const int notification_template_icon_bg = 2130837615;
+			
+			// aapt resource value: 0x7f020070
+			public const int notification_template_icon_low_bg = 2130837616;
 			
 			// aapt resource value: 0x7f02006a
-			public const int options_button = 2130837610;
+			public const int notification_tile_bg = 2130837610;
 			
 			// aapt resource value: 0x7f02006b
-			public const int tooltip_frame_dark = 2130837611;
+			public const int notify_panel_notification_icon_bg = 2130837611;
 			
 			// aapt resource value: 0x7f02006c
-			public const int tooltip_frame_light = 2130837612;
+			public const int options_button = 2130837612;
+			
+			// aapt resource value: 0x7f02006d
+			public const int tooltip_frame_dark = 2130837613;
+			
+			// aapt resource value: 0x7f02006e
+			public const int tooltip_frame_light = 2130837614;
 			
 			static Drawable()
 			{
@@ -2367,8 +2373,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070036
 			public const int SYM = 2131165238;
 			
-			// aapt resource value: 0x7f0700aa
-			public const int action0 = 2131165354;
+			// aapt resource value: 0x7f0700ad
+			public const int action0 = 2131165357;
 			
 			// aapt resource value: 0x7f07007b
 			public const int action_bar = 2131165307;
@@ -2391,23 +2397,26 @@ namespace Cavokator
 			// aapt resource value: 0x7f070059
 			public const int action_bar_title = 2131165273;
 			
-			// aapt resource value: 0x7f0700a7
-			public const int action_container = 2131165351;
+			// aapt resource value: 0x7f0700aa
+			public const int action_container = 2131165354;
 			
 			// aapt resource value: 0x7f07007c
 			public const int action_context_bar = 2131165308;
 			
-			// aapt resource value: 0x7f0700ae
-			public const int action_divider = 2131165358;
-			
-			// aapt resource value: 0x7f0700a6
-			public const int action_fragment_condition = 2131165350;
-			
-			// aapt resource value: 0x7f0700a5
-			public const int action_fragment_metar = 2131165349;
+			// aapt resource value: 0x7f0700b1
+			public const int action_divider = 2131165361;
 			
 			// aapt resource value: 0x7f0700a8
-			public const int action_image = 2131165352;
+			public const int action_fragment_condition = 2131165352;
+			
+			// aapt resource value: 0x7f0700a7
+			public const int action_fragment_metar = 2131165351;
+			
+			// aapt resource value: 0x7f0700a9
+			public const int action_fragment_settings = 2131165353;
+			
+			// aapt resource value: 0x7f0700ab
+			public const int action_image = 2131165355;
 			
 			// aapt resource value: 0x7f070003
 			public const int action_menu_divider = 2131165187;
@@ -2424,11 +2433,11 @@ namespace Cavokator
 			// aapt resource value: 0x7f07005b
 			public const int action_mode_close_button = 2131165275;
 			
-			// aapt resource value: 0x7f0700a9
-			public const int action_text = 2131165353;
+			// aapt resource value: 0x7f0700ac
+			public const int action_text = 2131165356;
 			
-			// aapt resource value: 0x7f0700b7
-			public const int actions = 2131165367;
+			// aapt resource value: 0x7f0700ba
+			public const int actions = 2131165370;
 			
 			// aapt resource value: 0x7f07005c
 			public const int activity_chooser_view_content = 2131165276;
@@ -2436,8 +2445,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f07002b
 			public const int add = 2131165227;
 			
-			// aapt resource value: 0x7f0700be
-			public const int airport_entry = 2131165374;
+			// aapt resource value: 0x7f0700c7
+			public const int airport_entry = 2131165383;
 			
 			// aapt resource value: 0x7f07006f
 			public const int alertTitle = 2131165295;
@@ -2466,8 +2475,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070062
 			public const int buttonPanel = 2131165282;
 			
-			// aapt resource value: 0x7f0700ab
-			public const int cancel_action = 2131165355;
+			// aapt resource value: 0x7f0700ae
+			public const int cancel_action = 2131165358;
 			
 			// aapt resource value: 0x7f070044
 			public const int center = 2131165252;
@@ -2481,11 +2490,11 @@ namespace Cavokator
 			// aapt resource value: 0x7f070072
 			public const int checkbox = 2131165298;
 			
-			// aapt resource value: 0x7f0700bd
-			public const int choose_id_textview = 2131165373;
+			// aapt resource value: 0x7f0700c6
+			public const int choose_id_textview = 2131165382;
 			
-			// aapt resource value: 0x7f0700b3
-			public const int chronometer = 2131165363;
+			// aapt resource value: 0x7f0700b6
+			public const int chronometer = 2131165366;
 			
 			// aapt resource value: 0x7f07004d
 			public const int clip_horizontal = 2131165261;
@@ -2500,37 +2509,43 @@ namespace Cavokator
 			public const int condition_background = 2131165322;
 			
 			// aapt resource value: 0x7f07008d
-			public const int condition_decodeButton = 2131165325;
+			public const int condition_buttons_layout = 2131165325;
+			
+			// aapt resource value: 0x7f07008f
+			public const int condition_clearButton = 2131165327;
+			
+			// aapt resource value: 0x7f07008e
+			public const int condition_decodeButton = 2131165326;
 			
 			// aapt resource value: 0x7f07008c
 			public const int condition_entry = 2131165324;
 			
-			// aapt resource value: 0x7f07008e
-			public const int condition_example = 2131165326;
-			
-			// aapt resource value: 0x7f07008f
-			public const int condition_example1 = 2131165327;
-			
 			// aapt resource value: 0x7f070090
-			public const int condition_example2 = 2131165328;
+			public const int condition_example = 2131165328;
 			
 			// aapt resource value: 0x7f070091
-			public const int condition_example3 = 2131165329;
+			public const int condition_example1 = 2131165329;
 			
 			// aapt resource value: 0x7f070092
-			public const int condition_example4 = 2131165330;
+			public const int condition_example2 = 2131165330;
+			
+			// aapt resource value: 0x7f070093
+			public const int condition_example3 = 2131165331;
+			
+			// aapt resource value: 0x7f070094
+			public const int condition_example4 = 2131165332;
 			
 			// aapt resource value: 0x7f07008b
 			public const int condition_intro = 2131165323;
 			
-			// aapt resource value: 0x7f070095
-			public const int container = 2131165333;
+			// aapt resource value: 0x7f070097
+			public const int container = 2131165335;
 			
 			// aapt resource value: 0x7f070065
 			public const int contentPanel = 2131165285;
 			
-			// aapt resource value: 0x7f070096
-			public const int coordinator = 2131165334;
+			// aapt resource value: 0x7f070098
+			public const int coordinator = 2131165336;
 			
 			// aapt resource value: 0x7f07006c
 			public const int custom = 2131165292;
@@ -2544,26 +2559,26 @@ namespace Cavokator
 			// aapt resource value: 0x7f07005f
 			public const int default_activity_button = 2131165279;
 			
-			// aapt resource value: 0x7f070098
-			public const int design_bottom_sheet = 2131165336;
+			// aapt resource value: 0x7f07009a
+			public const int design_bottom_sheet = 2131165338;
+			
+			// aapt resource value: 0x7f0700a1
+			public const int design_menu_item_action_area = 2131165345;
+			
+			// aapt resource value: 0x7f0700a0
+			public const int design_menu_item_action_area_stub = 2131165344;
 			
 			// aapt resource value: 0x7f07009f
-			public const int design_menu_item_action_area = 2131165343;
+			public const int design_menu_item_text = 2131165343;
 			
 			// aapt resource value: 0x7f07009e
-			public const int design_menu_item_action_area_stub = 2131165342;
-			
-			// aapt resource value: 0x7f07009d
-			public const int design_menu_item_text = 2131165341;
-			
-			// aapt resource value: 0x7f07009c
-			public const int design_navigation_view = 2131165340;
+			public const int design_navigation_view = 2131165342;
 			
 			// aapt resource value: 0x7f07001f
 			public const int disableHome = 2131165215;
 			
-			// aapt resource value: 0x7f0700a1
-			public const int drawer_layout = 2131165345;
+			// aapt resource value: 0x7f0700a3
+			public const int drawer_layout = 2131165347;
 			
 			// aapt resource value: 0x7f07007d
 			public const int edit_query = 2131165309;
@@ -2571,8 +2586,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f07002f
 			public const int end = 2131165231;
 			
-			// aapt resource value: 0x7f0700b9
-			public const int end_padder = 2131165369;
+			// aapt resource value: 0x7f0700bc
+			public const int end_padder = 2131165372;
 			
 			// aapt resource value: 0x7f07003e
 			public const int enterAlways = 2131165246;
@@ -2601,8 +2616,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070053
 			public const int @fixed = 2131165267;
 			
-			// aapt resource value: 0x7f0700a3
-			public const int flContent = 2131165347;
+			// aapt resource value: 0x7f0700a5
+			public const int flContent = 2131165349;
 			
 			// aapt resource value: 0x7f070057
 			public const int forever = 2131165271;
@@ -2619,8 +2634,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070061
 			public const int icon = 2131165281;
 			
-			// aapt resource value: 0x7f0700b8
-			public const int icon_group = 2131165368;
+			// aapt resource value: 0x7f0700bb
+			public const int icon_group = 2131165371;
 			
 			// aapt resource value: 0x7f070039
 			public const int ifRoom = 2131165241;
@@ -2628,8 +2643,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f07005e
 			public const int image = 2131165278;
 			
-			// aapt resource value: 0x7f0700b4
-			public const int info = 2131165364;
+			// aapt resource value: 0x7f0700b7
+			public const int info = 2131165367;
 			
 			// aapt resource value: 0x7f070058
 			public const int italic = 2131165272;
@@ -2637,8 +2652,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070000
 			public const int item_touch_helper_previous_elevation = 2131165184;
 			
-			// aapt resource value: 0x7f070094
-			public const int largeLabel = 2131165332;
+			// aapt resource value: 0x7f070096
+			public const int largeLabel = 2131165334;
 			
 			// aapt resource value: 0x7f070048
 			public const int left = 2131165256;
@@ -2649,14 +2664,14 @@ namespace Cavokator
 			// aapt resource value: 0x7f070018
 			public const int line3 = 2131165208;
 			
-			// aapt resource value: 0x7f0700bf
-			public const int linearlayout_button_options = 2131165375;
+			// aapt resource value: 0x7f0700c8
+			public const int linearlayout_button_options = 2131165384;
 			
-			// aapt resource value: 0x7f0700bc
-			public const int linearlayout_wx_bottom = 2131165372;
+			// aapt resource value: 0x7f0700c5
+			public const int linearlayout_wx_bottom = 2131165381;
 			
-			// aapt resource value: 0x7f0700c3
-			public const int linearlayout_wx_metarstafors = 2131165379;
+			// aapt resource value: 0x7f0700cc
+			public const int linearlayout_wx_metarstafors = 2131165388;
 			
 			// aapt resource value: 0x7f07001c
 			public const int listMode = 2131165212;
@@ -2664,14 +2679,14 @@ namespace Cavokator
 			// aapt resource value: 0x7f070060
 			public const int list_item = 2131165280;
 			
-			// aapt resource value: 0x7f0700e4
-			public const int masked = 2131165412;
+			// aapt resource value: 0x7f0700ed
+			public const int masked = 2131165421;
 			
-			// aapt resource value: 0x7f0700ad
-			public const int media_actions = 2131165357;
+			// aapt resource value: 0x7f0700b0
+			public const int media_actions = 2131165360;
 			
-			// aapt resource value: 0x7f0700ba
-			public const int message = 2131165370;
+			// aapt resource value: 0x7f0700c3
+			public const int message = 2131165379;
 			
 			// aapt resource value: 0x7f070030
 			public const int middle = 2131165232;
@@ -2682,11 +2697,11 @@ namespace Cavokator
 			// aapt resource value: 0x7f070026
 			public const int multiply = 2131165222;
 			
-			// aapt resource value: 0x7f0700a4
-			public const int my_navigation_view = 2131165348;
+			// aapt resource value: 0x7f0700a6
+			public const int my_navigation_view = 2131165350;
 			
-			// aapt resource value: 0x7f07009b
-			public const int navigation_header_container = 2131165339;
+			// aapt resource value: 0x7f07009d
+			public const int navigation_header_container = 2131165341;
 			
 			// aapt resource value: 0x7f07003a
 			public const int never = 2131165242;
@@ -2697,14 +2712,14 @@ namespace Cavokator
 			// aapt resource value: 0x7f07001d
 			public const int normal = 2131165213;
 			
-			// aapt resource value: 0x7f0700b6
-			public const int notification_background = 2131165366;
+			// aapt resource value: 0x7f0700b9
+			public const int notification_background = 2131165369;
 			
-			// aapt resource value: 0x7f0700b0
-			public const int notification_main_column = 2131165360;
+			// aapt resource value: 0x7f0700b3
+			public const int notification_main_column = 2131165363;
 			
-			// aapt resource value: 0x7f0700af
-			public const int notification_main_column_container = 2131165359;
+			// aapt resource value: 0x7f0700b2
+			public const int notification_main_column_container = 2131165362;
 			
 			// aapt resource value: 0x7f07004b
 			public const int parallax = 2131165259;
@@ -2730,11 +2745,11 @@ namespace Cavokator
 			// aapt resource value: 0x7f070049
 			public const int right = 2131165257;
 			
-			// aapt resource value: 0x7f0700b5
-			public const int right_icon = 2131165365;
+			// aapt resource value: 0x7f0700b8
+			public const int right_icon = 2131165368;
 			
-			// aapt resource value: 0x7f0700b1
-			public const int right_side = 2131165361;
+			// aapt resource value: 0x7f0700b4
+			public const int right_side = 2131165364;
 			
 			// aapt resource value: 0x7f07000c
 			public const int save_image_matrix = 2131165196;
@@ -2796,6 +2811,24 @@ namespace Cavokator
 			// aapt resource value: 0x7f070089
 			public const int select_dialog_listview = 2131165321;
 			
+			// aapt resource value: 0x7f0700bd
+			public const int settings_mainRelativeLayout = 2131165373;
+			
+			// aapt resource value: 0x7f0700be
+			public const int settings_mainTitle = 2131165374;
+			
+			// aapt resource value: 0x7f0700c0
+			public const int settings_textTheme = 2131165376;
+			
+			// aapt resource value: 0x7f0700bf
+			public const int settings_themeLayout = 2131165375;
+			
+			// aapt resource value: 0x7f0700c1
+			public const int settings_themeSwitch = 2131165377;
+			
+			// aapt resource value: 0x7f0700c2
+			public const int settings_themeSwitchText = 2131165378;
+			
 			// aapt resource value: 0x7f070073
 			public const int shortcut = 2131165299;
 			
@@ -2808,14 +2841,14 @@ namespace Cavokator
 			// aapt resource value: 0x7f070024
 			public const int showTitle = 2131165220;
 			
-			// aapt resource value: 0x7f070093
-			public const int smallLabel = 2131165331;
+			// aapt resource value: 0x7f070095
+			public const int smallLabel = 2131165333;
 			
-			// aapt resource value: 0x7f07009a
-			public const int snackbar_action = 2131165338;
+			// aapt resource value: 0x7f07009c
+			public const int snackbar_action = 2131165340;
 			
-			// aapt resource value: 0x7f070099
-			public const int snackbar_text = 2131165337;
+			// aapt resource value: 0x7f07009b
+			public const int snackbar_text = 2131165339;
 			
 			// aapt resource value: 0x7f070042
 			public const int snap = 2131165250;
@@ -2823,8 +2856,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070063
 			public const int spacer = 2131165283;
 			
-			// aapt resource value: 0x7f0700d3
-			public const int spinnerTarget = 2131165395;
+			// aapt resource value: 0x7f0700dc
+			public const int spinnerTarget = 2131165404;
 			
 			// aapt resource value: 0x7f070008
 			public const int split_action_bar = 2131165192;
@@ -2841,8 +2874,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f07004a
 			public const int start = 2131165258;
 			
-			// aapt resource value: 0x7f0700ac
-			public const int status_bar_latest_event_content = 2131165356;
+			// aapt resource value: 0x7f0700af
+			public const int status_bar_latest_event_content = 2131165359;
 			
 			// aapt resource value: 0x7f070075
 			public const int submenuarrow = 2131165301;
@@ -2865,8 +2898,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070068
 			public const int textSpacerNoTitle = 2131165288;
 			
-			// aapt resource value: 0x7f0700a0
-			public const int text_input_password_toggle = 2131165344;
+			// aapt resource value: 0x7f0700a2
+			public const int text_input_password_toggle = 2131165346;
 			
 			// aapt resource value: 0x7f070014
 			public const int textinput_counter = 2131165204;
@@ -2874,8 +2907,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070015
 			public const int textinput_error = 2131165205;
 			
-			// aapt resource value: 0x7f0700b2
-			public const int time = 2131165362;
+			// aapt resource value: 0x7f0700b5
+			public const int time = 2131165365;
 			
 			// aapt resource value: 0x7f07001b
 			public const int title = 2131165211;
@@ -2886,8 +2919,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f07006e
 			public const int title_template = 2131165294;
 			
-			// aapt resource value: 0x7f0700a2
-			public const int toolbar = 2131165346;
+			// aapt resource value: 0x7f0700a4
+			public const int toolbar = 2131165348;
 			
 			// aapt resource value: 0x7f07003d
 			public const int top = 2131165245;
@@ -2895,8 +2928,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f07006d
 			public const int topPanel = 2131165293;
 			
-			// aapt resource value: 0x7f070097
-			public const int touch_outside = 2131165335;
+			// aapt resource value: 0x7f070099
+			public const int touch_outside = 2131165337;
 			
 			// aapt resource value: 0x7f07000f
 			public const int transition_current_scene = 2131165199;
@@ -2925,11 +2958,11 @@ namespace Cavokator
 			// aapt resource value: 0x7f070016
 			public const int view_offset_helper = 2131165206;
 			
-			// aapt resource value: 0x7f0700e3
-			public const int visible = 2131165411;
+			// aapt resource value: 0x7f0700ec
+			public const int visible = 2131165420;
 			
-			// aapt resource value: 0x7f0700bb
-			public const int weather_fragment_container = 2131165371;
+			// aapt resource value: 0x7f0700c4
+			public const int weather_fragment_container = 2131165380;
 			
 			// aapt resource value: 0x7f07003b
 			public const int withText = 2131165243;
@@ -2937,104 +2970,104 @@ namespace Cavokator
 			// aapt resource value: 0x7f07002d
 			public const int wrap_content = 2131165229;
 			
-			// aapt resource value: 0x7f0700c1
-			public const int wx_clear_button = 2131165377;
-			
-			// aapt resource value: 0x7f0700d2
-			public const int wx_option_closeButton = 2131165394;
-			
 			// aapt resource value: 0x7f0700ca
-			public const int wx_option_metarHours_seekbarText = 2131165386;
-			
-			// aapt resource value: 0x7f0700c2
-			public const int wx_options_button = 2131165378;
-			
-			// aapt resource value: 0x7f0700d1
-			public const int wx_options_closeRelativeLayout = 2131165393;
-			
-			// aapt resource value: 0x7f0700ce
-			public const int wx_options_colorWeatherSwitch = 2131165390;
-			
-			// aapt resource value: 0x7f0700cd
-			public const int wx_options_colorWeatherText = 2131165389;
-			
-			// aapt resource value: 0x7f0700c5
-			public const int wx_options_configuration_text = 2131165381;
-			
-			// aapt resource value: 0x7f0700d0
-			public const int wx_options_divideTaforSwitch = 2131165392;
-			
-			// aapt resource value: 0x7f0700cf
-			public const int wx_options_divideTaforText = 2131165391;
-			
-			// aapt resource value: 0x7f0700c4
-			public const int wx_options_mainRelativeLayout = 2131165380;
-			
-			// aapt resource value: 0x7f0700c8
-			public const int wx_options_metarHours = 2131165384;
-			
-			// aapt resource value: 0x7f0700c9
-			public const int wx_options_metarHours_seekbar = 2131165385;
-			
-			// aapt resource value: 0x7f0700c7
-			public const int wx_options_metarORtafor_spinner = 2131165383;
-			
-			// aapt resource value: 0x7f0700c6
-			public const int wx_options_metarORtafor_text = 2131165382;
-			
-			// aapt resource value: 0x7f0700cc
-			public const int wx_options_saveDataSwitch = 2131165388;
-			
-			// aapt resource value: 0x7f0700cb
-			public const int wx_options_saveDataText = 2131165387;
-			
-			// aapt resource value: 0x7f0700c0
-			public const int wx_request_button = 2131165376;
-			
-			// aapt resource value: 0x7f0700e2
-			public const int wx_rwycond_closeButton = 2131165410;
-			
-			// aapt resource value: 0x7f0700e1
-			public const int wx_rwycond_closeRelativeLayout = 2131165409;
-			
-			// aapt resource value: 0x7f0700d9
-			public const int wx_rwycond_depositsCode = 2131165401;
-			
-			// aapt resource value: 0x7f0700da
-			public const int wx_rwycond_depositsText = 2131165402;
-			
-			// aapt resource value: 0x7f0700dd
-			public const int wx_rwycond_depthCode = 2131165405;
-			
-			// aapt resource value: 0x7f0700de
-			public const int wx_rwycond_depthText = 2131165406;
+			public const int wx_clear_button = 2131165386;
 			
 			// aapt resource value: 0x7f0700db
-			public const int wx_rwycond_extentCode = 2131165403;
+			public const int wx_option_closeButton = 2131165403;
 			
-			// aapt resource value: 0x7f0700dc
-			public const int wx_rwycond_extentText = 2131165404;
+			// aapt resource value: 0x7f0700d3
+			public const int wx_option_metarHours_seekbarText = 2131165395;
 			
-			// aapt resource value: 0x7f0700df
-			public const int wx_rwycond_frictionCode = 2131165407;
+			// aapt resource value: 0x7f0700cb
+			public const int wx_options_button = 2131165387;
 			
-			// aapt resource value: 0x7f0700e0
-			public const int wx_rwycond_frictionText = 2131165408;
-			
-			// aapt resource value: 0x7f0700d6
-			public const int wx_rwycond_main_error = 2131165398;
+			// aapt resource value: 0x7f0700da
+			public const int wx_options_closeRelativeLayout = 2131165402;
 			
 			// aapt resource value: 0x7f0700d7
-			public const int wx_rwycond_rwycode = 2131165399;
+			public const int wx_options_colorWeatherSwitch = 2131165399;
+			
+			// aapt resource value: 0x7f0700d6
+			public const int wx_options_colorWeatherText = 2131165398;
+			
+			// aapt resource value: 0x7f0700ce
+			public const int wx_options_configuration_text = 2131165390;
+			
+			// aapt resource value: 0x7f0700d9
+			public const int wx_options_divideTaforSwitch = 2131165401;
 			
 			// aapt resource value: 0x7f0700d8
-			public const int wx_rwycond_rwytext = 2131165400;
+			public const int wx_options_divideTaforText = 2131165400;
+			
+			// aapt resource value: 0x7f0700cd
+			public const int wx_options_mainRelativeLayout = 2131165389;
+			
+			// aapt resource value: 0x7f0700d1
+			public const int wx_options_metarHours = 2131165393;
+			
+			// aapt resource value: 0x7f0700d2
+			public const int wx_options_metarHours_seekbar = 2131165394;
+			
+			// aapt resource value: 0x7f0700d0
+			public const int wx_options_metarORtafor_spinner = 2131165392;
+			
+			// aapt resource value: 0x7f0700cf
+			public const int wx_options_metarORtafor_text = 2131165391;
 			
 			// aapt resource value: 0x7f0700d5
-			public const int wx_rwycond_title = 2131165397;
+			public const int wx_options_saveDataSwitch = 2131165397;
 			
 			// aapt resource value: 0x7f0700d4
-			public const int wx_rwycond_titleLinearLayout = 2131165396;
+			public const int wx_options_saveDataText = 2131165396;
+			
+			// aapt resource value: 0x7f0700c9
+			public const int wx_request_button = 2131165385;
+			
+			// aapt resource value: 0x7f0700eb
+			public const int wx_rwycond_closeButton = 2131165419;
+			
+			// aapt resource value: 0x7f0700ea
+			public const int wx_rwycond_closeRelativeLayout = 2131165418;
+			
+			// aapt resource value: 0x7f0700e2
+			public const int wx_rwycond_depositsCode = 2131165410;
+			
+			// aapt resource value: 0x7f0700e3
+			public const int wx_rwycond_depositsText = 2131165411;
+			
+			// aapt resource value: 0x7f0700e6
+			public const int wx_rwycond_depthCode = 2131165414;
+			
+			// aapt resource value: 0x7f0700e7
+			public const int wx_rwycond_depthText = 2131165415;
+			
+			// aapt resource value: 0x7f0700e4
+			public const int wx_rwycond_extentCode = 2131165412;
+			
+			// aapt resource value: 0x7f0700e5
+			public const int wx_rwycond_extentText = 2131165413;
+			
+			// aapt resource value: 0x7f0700e8
+			public const int wx_rwycond_frictionCode = 2131165416;
+			
+			// aapt resource value: 0x7f0700e9
+			public const int wx_rwycond_frictionText = 2131165417;
+			
+			// aapt resource value: 0x7f0700df
+			public const int wx_rwycond_main_error = 2131165407;
+			
+			// aapt resource value: 0x7f0700e0
+			public const int wx_rwycond_rwycode = 2131165408;
+			
+			// aapt resource value: 0x7f0700e1
+			public const int wx_rwycond_rwytext = 2131165409;
+			
+			// aapt resource value: 0x7f0700de
+			public const int wx_rwycond_title = 2131165406;
+			
+			// aapt resource value: 0x7f0700dd
+			public const int wx_rwycond_titleLinearLayout = 2131165405;
 			
 			static Id()
 			{
@@ -3282,22 +3315,25 @@ namespace Cavokator
 			public const int select_dialog_singlechoice_material = 2130903102;
 			
 			// aapt resource value: 0x7f03003f
-			public const int support_simple_spinner_dropdown_item = 2130903103;
+			public const int settings_fragment = 2130903103;
 			
 			// aapt resource value: 0x7f030040
-			public const int tooltip = 2130903104;
+			public const int support_simple_spinner_dropdown_item = 2130903104;
 			
 			// aapt resource value: 0x7f030041
-			public const int wx_metar_fragment = 2130903105;
+			public const int tooltip = 2130903105;
 			
 			// aapt resource value: 0x7f030042
-			public const int wx_options_dialog = 2130903106;
+			public const int wx_metar_fragment = 2130903106;
 			
 			// aapt resource value: 0x7f030043
-			public const int wx_options_spinner = 2130903107;
+			public const int wx_options_dialog = 2130903107;
 			
 			// aapt resource value: 0x7f030044
-			public const int wx_rwycond_dialog = 2130903108;
+			public const int wx_options_spinner = 2130903108;
+			
+			// aapt resource value: 0x7f030045
+			public const int wx_rwycond_dialog = 2130903109;
 			
 			static Layout()
 			{
@@ -3312,215 +3348,215 @@ namespace Cavokator
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f080069
-			public const int Ago = 2131230825;
-			
-			// aapt resource value: 0x7f080057
-			public const int Airport_ID_TextView = 2131230807;
-			
-			// aapt resource value: 0x7f080054
-			public const int ApplicationName = 2131230804;
-			
-			// aapt resource value: 0x7f080053
-			public const int CLRD = 2131230803;
-			
-			// aapt resource value: 0x7f080056
-			public const int Clear_button = 2131230806;
-			
-			// aapt resource value: 0x7f08005a
-			public const int Connection_Error = 2131230810;
-			
-			// aapt resource value: 0x7f08006d
-			public const int Day = 2131230829;
-			
-			// aapt resource value: 0x7f08006a
-			public const int Days = 2131230826;
-			
-			// aapt resource value: 0x7f080031
-			public const int Deposit0 = 2131230769;
-			
-			// aapt resource value: 0x7f080032
-			public const int Deposit1 = 2131230770;
-			
-			// aapt resource value: 0x7f080033
-			public const int Deposit2 = 2131230771;
+			// aapt resource value: 0x7f080046
+			public const int Ago = 2131230790;
 			
 			// aapt resource value: 0x7f080034
-			public const int Deposit3 = 2131230772;
+			public const int Airport_ID_TextView = 2131230772;
 			
-			// aapt resource value: 0x7f080035
-			public const int Deposit4 = 2131230773;
+			// aapt resource value: 0x7f080031
+			public const int ApplicationName = 2131230769;
 			
-			// aapt resource value: 0x7f080036
-			public const int Deposit5 = 2131230774;
+			// aapt resource value: 0x7f080076
+			public const int CLRD = 2131230838;
+			
+			// aapt resource value: 0x7f080033
+			public const int Clear_button = 2131230771;
 			
 			// aapt resource value: 0x7f080037
-			public const int Deposit6 = 2131230775;
-			
-			// aapt resource value: 0x7f080038
-			public const int Deposit7 = 2131230776;
-			
-			// aapt resource value: 0x7f080039
-			public const int Deposit8 = 2131230777;
-			
-			// aapt resource value: 0x7f08003a
-			public const int Deposit9 = 2131230778;
-			
-			// aapt resource value: 0x7f08003b
-			public const int DepositNO = 2131230779;
-			
-			// aapt resource value: 0x7f08003c
-			public const int Deposit_Error = 2131230780;
-			
-			// aapt resource value: 0x7f080045
-			public const int Depth = 2131230789;
-			
-			// aapt resource value: 0x7f080043
-			public const int Depth00 = 2131230787;
-			
-			// aapt resource value: 0x7f080044
-			public const int Depth99 = 2131230788;
-			
-			// aapt resource value: 0x7f080046
-			public const int DepthMORE = 2131230790;
-			
-			// aapt resource value: 0x7f080048
-			public const int DepthNO = 2131230792;
-			
-			// aapt resource value: 0x7f080047
-			public const int Depth_Error = 2131230791;
-			
-			// aapt resource value: 0x7f08005c
-			public const int Error_fetching_airport = 2131230812;
-			
-			// aapt resource value: 0x7f08003d
-			public const int Extent1 = 2131230781;
-			
-			// aapt resource value: 0x7f08003e
-			public const int Extent2 = 2131230782;
-			
-			// aapt resource value: 0x7f08003f
-			public const int Extent5 = 2131230783;
-			
-			// aapt resource value: 0x7f080040
-			public const int Extent9 = 2131230784;
-			
-			// aapt resource value: 0x7f080041
-			public const int ExtentNO = 2131230785;
-			
-			// aapt resource value: 0x7f080042
-			public const int Extent_Error = 2131230786;
-			
-			// aapt resource value: 0x7f080070
-			public const int Fetching = 2131230832;
-			
-			// aapt resource value: 0x7f08004f
-			public const int Friction99 = 2131230799;
+			public const int Connection_Error = 2131230775;
 			
 			// aapt resource value: 0x7f08004a
-			public const int FrictionBA91 = 2131230794;
+			public const int Day = 2131230794;
 			
-			// aapt resource value: 0x7f08004b
-			public const int FrictionBA92 = 2131230795;
+			// aapt resource value: 0x7f080047
+			public const int Days = 2131230791;
 			
-			// aapt resource value: 0x7f08004c
-			public const int FrictionBA93 = 2131230796;
-			
-			// aapt resource value: 0x7f08004d
-			public const int FrictionBA94 = 2131230797;
-			
-			// aapt resource value: 0x7f08004e
-			public const int FrictionBA95 = 2131230798;
-			
-			// aapt resource value: 0x7f080049
-			public const int FrictionCoefficient = 2131230793;
-			
-			// aapt resource value: 0x7f080050
-			public const int FrictionNO = 2131230800;
-			
-			// aapt resource value: 0x7f080051
-			public const int Friction_Error = 2131230801;
-			
-			// aapt resource value: 0x7f08006e
-			public const int Hour = 2131230830;
-			
-			// aapt resource value: 0x7f08006b
-			public const int Hours = 2131230827;
-			
-			// aapt resource value: 0x7f080058
-			public const int Icao_Or_Iata = 2131230808;
-			
-			// aapt resource value: 0x7f08005b
-			public const int Internet_Error = 2131230811;
-			
-			// aapt resource value: 0x7f08002c
-			public const int Main_Error = 2131230764;
-			
-			// aapt resource value: 0x7f080067
-			public const int Metar_Issued = 2131230823;
-			
-			// aapt resource value: 0x7f08006f
-			public const int Minute = 2131230831;
-			
-			// aapt resource value: 0x7f08006c
-			public const int Minutes = 2131230828;
-			
-			// aapt resource value: 0x7f08005f
-			public const int Option_ChooseMetarOrTaforText = 2131230815;
-			
-			// aapt resource value: 0x7f080065
-			public const int Option_ColorWeatherText = 2131230821;
-			
-			// aapt resource value: 0x7f08005e
-			public const int Option_ConfigurationText = 2131230814;
-			
-			// aapt resource value: 0x7f080066
-			public const int Option_DivideTaforText = 2131230822;
-			
-			// aapt resource value: 0x7f080062
-			public const int Option_Hour = 2131230818;
-			
-			// aapt resource value: 0x7f080063
-			public const int Option_Hours = 2131230819;
-			
-			// aapt resource value: 0x7f080061
-			public const int Option_JustGetLast = 2131230817;
-			
-			// aapt resource value: 0x7f080060
-			public const int Option_MetarHoursText = 2131230816;
-			
-			// aapt resource value: 0x7f080064
-			public const int Option_SaveDataText = 2131230820;
-			
-			// aapt resource value: 0x7f080059
-			public const int Requesting_METAR_Information = 2131230809;
-			
-			// aapt resource value: 0x7f08002e
-			public const int Runway_AllRunways = 2131230766;
-			
-			// aapt resource value: 0x7f080030
-			public const int Runway_Error = 2131230768;
-			
-			// aapt resource value: 0x7f08002d
-			public const int Runway_Indicator = 2131230765;
-			
-			// aapt resource value: 0x7f08002f
-			public const int Runway_ReportRepeated = 2131230767;
-			
-			// aapt resource value: 0x7f080052
-			public const int SNOCLO = 2131230802;
+			// aapt resource value: 0x7f080054
+			public const int Deposit0 = 2131230804;
 			
 			// aapt resource value: 0x7f080055
-			public const int Send_button = 2131230805;
+			public const int Deposit1 = 2131230805;
+			
+			// aapt resource value: 0x7f080056
+			public const int Deposit2 = 2131230806;
+			
+			// aapt resource value: 0x7f080057
+			public const int Deposit3 = 2131230807;
+			
+			// aapt resource value: 0x7f080058
+			public const int Deposit4 = 2131230808;
+			
+			// aapt resource value: 0x7f080059
+			public const int Deposit5 = 2131230809;
+			
+			// aapt resource value: 0x7f08005a
+			public const int Deposit6 = 2131230810;
+			
+			// aapt resource value: 0x7f08005b
+			public const int Deposit7 = 2131230811;
+			
+			// aapt resource value: 0x7f08005c
+			public const int Deposit8 = 2131230812;
 			
 			// aapt resource value: 0x7f08005d
-			public const int Server_Timeout = 2131230813;
+			public const int Deposit9 = 2131230813;
 			
-			// aapt resource value: 0x7f080071
-			public const int TaforNotAvailable = 2131230833;
+			// aapt resource value: 0x7f08005e
+			public const int DepositNO = 2131230814;
+			
+			// aapt resource value: 0x7f08005f
+			public const int Deposit_Error = 2131230815;
 			
 			// aapt resource value: 0x7f080068
-			public const int Tafor_Issued = 2131230824;
+			public const int Depth = 2131230824;
+			
+			// aapt resource value: 0x7f080066
+			public const int Depth00 = 2131230822;
+			
+			// aapt resource value: 0x7f080067
+			public const int Depth99 = 2131230823;
+			
+			// aapt resource value: 0x7f080069
+			public const int DepthMORE = 2131230825;
+			
+			// aapt resource value: 0x7f08006b
+			public const int DepthNO = 2131230827;
+			
+			// aapt resource value: 0x7f08006a
+			public const int Depth_Error = 2131230826;
+			
+			// aapt resource value: 0x7f080039
+			public const int Error_fetching_airport = 2131230777;
+			
+			// aapt resource value: 0x7f080060
+			public const int Extent1 = 2131230816;
+			
+			// aapt resource value: 0x7f080061
+			public const int Extent2 = 2131230817;
+			
+			// aapt resource value: 0x7f080062
+			public const int Extent5 = 2131230818;
+			
+			// aapt resource value: 0x7f080063
+			public const int Extent9 = 2131230819;
+			
+			// aapt resource value: 0x7f080064
+			public const int ExtentNO = 2131230820;
+			
+			// aapt resource value: 0x7f080065
+			public const int Extent_Error = 2131230821;
+			
+			// aapt resource value: 0x7f08004d
+			public const int Fetching = 2131230797;
+			
+			// aapt resource value: 0x7f080072
+			public const int Friction99 = 2131230834;
+			
+			// aapt resource value: 0x7f08006d
+			public const int FrictionBA91 = 2131230829;
+			
+			// aapt resource value: 0x7f08006e
+			public const int FrictionBA92 = 2131230830;
+			
+			// aapt resource value: 0x7f08006f
+			public const int FrictionBA93 = 2131230831;
+			
+			// aapt resource value: 0x7f080070
+			public const int FrictionBA94 = 2131230832;
+			
+			// aapt resource value: 0x7f080071
+			public const int FrictionBA95 = 2131230833;
+			
+			// aapt resource value: 0x7f08006c
+			public const int FrictionCoefficient = 2131230828;
+			
+			// aapt resource value: 0x7f080073
+			public const int FrictionNO = 2131230835;
+			
+			// aapt resource value: 0x7f080074
+			public const int Friction_Error = 2131230836;
+			
+			// aapt resource value: 0x7f08004b
+			public const int Hour = 2131230795;
+			
+			// aapt resource value: 0x7f080048
+			public const int Hours = 2131230792;
+			
+			// aapt resource value: 0x7f080035
+			public const int Icao_Or_Iata = 2131230773;
+			
+			// aapt resource value: 0x7f080038
+			public const int Internet_Error = 2131230776;
+			
+			// aapt resource value: 0x7f08004f
+			public const int Main_Error = 2131230799;
+			
+			// aapt resource value: 0x7f080044
+			public const int Metar_Issued = 2131230788;
+			
+			// aapt resource value: 0x7f08004c
+			public const int Minute = 2131230796;
+			
+			// aapt resource value: 0x7f080049
+			public const int Minutes = 2131230793;
+			
+			// aapt resource value: 0x7f08003c
+			public const int Option_ChooseMetarOrTaforText = 2131230780;
+			
+			// aapt resource value: 0x7f080042
+			public const int Option_ColorWeatherText = 2131230786;
+			
+			// aapt resource value: 0x7f08003b
+			public const int Option_ConfigurationText = 2131230779;
+			
+			// aapt resource value: 0x7f080043
+			public const int Option_DivideTaforText = 2131230787;
+			
+			// aapt resource value: 0x7f08003f
+			public const int Option_Hour = 2131230783;
+			
+			// aapt resource value: 0x7f080040
+			public const int Option_Hours = 2131230784;
+			
+			// aapt resource value: 0x7f08003e
+			public const int Option_JustGetLast = 2131230782;
+			
+			// aapt resource value: 0x7f08003d
+			public const int Option_MetarHoursText = 2131230781;
+			
+			// aapt resource value: 0x7f080041
+			public const int Option_SaveDataText = 2131230785;
+			
+			// aapt resource value: 0x7f080036
+			public const int Requesting_METAR_Information = 2131230774;
+			
+			// aapt resource value: 0x7f080051
+			public const int Runway_AllRunways = 2131230801;
+			
+			// aapt resource value: 0x7f080053
+			public const int Runway_Error = 2131230803;
+			
+			// aapt resource value: 0x7f080050
+			public const int Runway_Indicator = 2131230800;
+			
+			// aapt resource value: 0x7f080052
+			public const int Runway_ReportRepeated = 2131230802;
+			
+			// aapt resource value: 0x7f080075
+			public const int SNOCLO = 2131230837;
+			
+			// aapt resource value: 0x7f080032
+			public const int Send_button = 2131230770;
+			
+			// aapt resource value: 0x7f08003a
+			public const int Server_Timeout = 2131230778;
+			
+			// aapt resource value: 0x7f08004e
+			public const int TaforNotAvailable = 2131230798;
+			
+			// aapt resource value: 0x7f080045
+			public const int Tafor_Issued = 2131230789;
 			
 			// aapt resource value: 0x7f080000
 			public const int abc_action_bar_home_description = 2131230720;
@@ -3624,14 +3660,29 @@ namespace Cavokator
 			// aapt resource value: 0x7f080023
 			public const int character_counter_pattern = 2131230755;
 			
+			// aapt resource value: 0x7f08002f
+			public const int condition_Clear = 2131230767;
+			
+			// aapt resource value: 0x7f08002e
+			public const int condition_Decode = 2131230766;
+			
+			// aapt resource value: 0x7f080030
+			public const int condition_Example = 2131230768;
+			
+			// aapt resource value: 0x7f08002d
+			public const int condition_Intro = 2131230765;
+			
+			// aapt resource value: 0x7f08002c
+			public const int drawer_about = 2131230764;
+			
 			// aapt resource value: 0x7f08002a
-			public const int condition_Decode = 2131230762;
+			public const int drawer_runway = 2131230762;
 			
 			// aapt resource value: 0x7f08002b
-			public const int condition_Example = 2131230763;
+			public const int drawer_settings = 2131230763;
 			
 			// aapt resource value: 0x7f080029
-			public const int condition_Intro = 2131230761;
+			public const int drawer_weather = 2131230761;
 			
 			// aapt resource value: 0x7f080024
 			public const int password_toggle_content_description = 2131230756;
@@ -4260,6 +4311,9 @@ namespace Cavokator
 			
 			// aapt resource value: 0x7f090038
 			public const int RtlUnderlay_Widget_AppCompat_ActionButton_Overflow = 2131296312;
+			
+			// aapt resource value: 0x7f09018d
+			public const int SettingsThemeSwitch = 2131296653;
 			
 			// aapt resource value: 0x7f0900cf
 			public const int TextAppearance_AppCompat = 2131296463;

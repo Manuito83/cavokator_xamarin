@@ -4,7 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
     <RelativeLayout
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -18,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CONFIGURATION"
-            android:textColor="@android:color/holo_purple"
+            android:textColor="?attr/colorAccent"
             android:textSize="18dp" />
         <TextView
             android:id="@+id/wx_options_metarORtafor_text"
@@ -111,7 +110,6 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/wx_options_closeRelativeLayout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button

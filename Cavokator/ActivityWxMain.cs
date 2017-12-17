@@ -20,7 +20,8 @@ namespace Cavokator
 
         private SupportFragment mCurrentFragment;
         private WxMetarFragment mWxMetarFragment;
-        private ConditionFragment mWxConditionFragment;
+        private ConditionFragment mConditionFragment;
+        private SettingsFragment mSettingsFragment;
         private Stack<SupportFragment> mStackFragment;
 
         protected override void OnCreate(Bundle bundle)
@@ -32,7 +33,8 @@ namespace Cavokator
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
 
             mWxMetarFragment = new WxMetarFragment();
-            mWxConditionFragment = new ConditionFragment();
+            mConditionFragment = new ConditionFragment();
+            mSettingsFragment = new SettingsFragment();
 
             mStackFragment = new Stack<SupportFragment>();
 
@@ -76,7 +78,10 @@ namespace Cavokator
                     ReplaceFragment(mWxMetarFragment);
                     break;
                 case Resource.Id.action_fragment_condition:
-                    ReplaceFragment(mWxConditionFragment);
+                    ReplaceFragment(mConditionFragment);
+                    break;
+                case Resource.Id.action_fragment_settings:
+                    ReplaceFragment(mSettingsFragment);
                     break;
             }
             
