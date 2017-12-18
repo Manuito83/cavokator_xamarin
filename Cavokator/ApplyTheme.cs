@@ -3,7 +3,7 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.Support.V4.Content;
-
+using System;
 
 namespace Cavokator
 {
@@ -24,7 +24,7 @@ namespace Cavokator
     class ApplyTheme
     {
         // Current theme selection
-        private string _currentTheme = "LIGHT";
+        private string _currentTheme;
 
         // COLORS ##LIGHT##
         private Color _color_mainBackground_LIGHT = Color.ParseColor("#e0e0e0");
@@ -36,10 +36,14 @@ namespace Cavokator
         private Color _color_magentaTextWarning_LIGHT = Color.ParseColor("#aa00ff");
         private Color _color_textHint_LIGHT = Color.ParseColor("#8C8C8C");
 
+        // COLORS ##DARK##
+        private Color _color_mainBackground_DARK = Color.ParseColor("#000000");
 
 
         public Color GetColor (DesiredColor mDesiredColor)
         {
+
+            GetCurrentTheme();
 
             Color myColor = Color.Pink;
 
@@ -48,8 +52,9 @@ namespace Cavokator
                 case DesiredColor.MainBackground:
                     if (_currentTheme == "LIGHT")
                         myColor = _color_mainBackground_LIGHT;
+                    else if (_currentTheme == "DARK")
+                        myColor = _color_mainBackground_DARK;
                     break;
-
                 case DesiredColor.MainText:
                     if (_currentTheme == "LIGHT")
                         myColor = _color_mainText_LIGHT;
@@ -85,13 +90,35 @@ namespace Cavokator
 
         }
 
-
-        public string SetTheme (string themeName)
+        private void GetCurrentTheme()
         {
-            // IMPLEMENT
-            return null;
+            ISharedPreferences mThemePrefs = Application.Context.GetSharedPreferences("App_Preferences", FileCreationMode.Private);
+
+            // First initialization Theme
+            _currentTheme = mThemePrefs.GetString("themePREF", String.Empty);
+            if (_currentTheme == String.Empty)
+            {
+                mThemePrefs.Edit().PutString("themePREF", "LIGHT").Apply();
+                _currentTheme = "LIGHT";
+            }
         }
 
+        public void SetTheme (string themeName)
+        {
+            ISharedPreferences mThemePrefs = Application.Context.GetSharedPreferences("App_Preferences", FileCreationMode.Private);
+
+            if (themeName == "LIGHT")
+            {
+                mThemePrefs.Edit().PutString("themePREF", "LIGHT").Apply();
+                _currentTheme = "LIGHT";
+            }
+            else
+            {
+                mThemePrefs.Edit().PutString("themePREF", "DARK").Apply();
+                _currentTheme = "DARK";
+            }
+
+        }
 
     }
 }

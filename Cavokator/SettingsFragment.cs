@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Android.Support.V7.Widget;
 
 namespace Cavokator
 {
@@ -16,13 +17,16 @@ namespace Cavokator
     {
 
         // Main fields
-        private RelativeLayout _mainRelativeLayout;
+        private LinearLayout _backgroundLayout;
         // Title
         private TextView _mainTitle;
         // Theme
         private TextView _textTheme;
-        private Switch _themeSwitch;
+        private SwitchCompat _themeSwitch;
         private TextView _themeSwitchText;
+
+        // Settings Preferences
+        private string _currentTheme;
 
         // View that will be used for FindViewById
         private View thisView;
@@ -42,6 +46,35 @@ namespace Cavokator
             // Assign fields and style
             ApplyStyle();
 
+            // What are the current settings (or initialize in first run)?
+            GetCurrentPreferences();
+
+            // Adjust switches, sliders...
+            ApplyCurrentPreferences();
+
+            // Theme swith controls
+            _themeSwitch.CheckedChange += delegate
+            {
+                ISharedPreferences mSettingsPrefs = Application.Context.GetSharedPreferences("Settings_Preferences", FileCreationMode.Private);
+
+                if (!_themeSwitch.Checked)
+                {
+                    _currentTheme = "light";
+                    mSettingsPrefs.Edit().PutString("themePREF", "light").Apply();
+                    _themeSwitchText.Text = Resources.GetString(Resource.String.settings_themeSwitchLight);
+                    new ApplyTheme().SetTheme("LIGHT");
+                    ApplyStyle();
+                }
+                else
+                {
+                    _currentTheme = "dark";
+                    mSettingsPrefs.Edit().PutString("themePREF", "dark").Apply();
+                    _themeSwitchText.Text = Resources.GetString(Resource.String.settings_themeSwitchDark);
+                    new ApplyTheme().SetTheme("DARK");
+                    ApplyStyle();
+                }
+            };
+
             return thisView;
         }
 
@@ -49,24 +82,48 @@ namespace Cavokator
         private void ApplyStyle()
         {
             // FindViewById
-            _mainRelativeLayout = thisView.FindViewById<RelativeLayout>(Resource.Id.settings_mainRelativeLayout);
+            _backgroundLayout = thisView.FindViewById<LinearLayout>(Resource.Id.settings_backgroundLayout);
             _mainTitle = thisView.FindViewById<TextView>(Resource.Id.settings_mainTitle);
             _textTheme = thisView.FindViewById<TextView>(Resource.Id.settings_textTheme);
-            _themeSwitch = thisView.FindViewById<Switch>(Resource.Id.settings_themeSwitch);
+            _themeSwitch = thisView.FindViewById<SwitchCompat>(Resource.Id.settings_themeSwitch);
             _themeSwitchText = thisView.FindViewById<TextView>(Resource.Id.settings_themeSwitchText);
 
             // Styling
-            _mainRelativeLayout.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
-            _textTheme.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-            _themeSwitchText.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _backgroundLayout.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
+            _textTheme.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _themeSwitchText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
 
             // Strings
-            // TODO: REPLACE AND ADD
-            // _introTextView.Text = Resources.GetString(Resource.String.condition_Intro);
-
+            _mainTitle.Text = Resources.GetString(Resource.String.settings_settingsTitle);
+            _textTheme.Text = Resources.GetString(Resource.String.settings_textTheme);
         }
 
+        private void GetCurrentPreferences()
+        {
+            ISharedPreferences mSettingsPrefs = Application.Context.GetSharedPreferences("Settings_Preferences", FileCreationMode.Private);
+            
+            // First initialization Theme
+            _currentTheme = mSettingsPrefs.GetString("themePREF", String.Empty);
+            if (_currentTheme == String.Empty)
+            {
+                mSettingsPrefs.Edit().PutString("themePREF", "light").Apply();
+                _currentTheme = "light";
+            }
+        }
 
+        private void ApplyCurrentPreferences()
+        {
+            if (_currentTheme == "light")
+            {
+                _themeSwitch.Checked = false;
+                _themeSwitchText.Text = Resources.GetString(Resource.String.settings_themeSwitchLight);
+            }
+            else
+            {
+                _themeSwitch.Checked = true;
+                _themeSwitchText.Text = Resources.GetString(Resource.String.settings_themeSwitchDark);
+            }
 
+        }
     }
 }
