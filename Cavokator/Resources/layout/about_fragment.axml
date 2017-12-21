@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/about_backgroundLayout">
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_appicon"
+        android:layout_marginTop="17.0dp" />
+    <TextView
+        android:id="@+id/about_mainTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CAVOKATOR"
+        android:textColor="?attr/colorAccent"
+        android:textSize="22dp"
+        android:layout_marginTop="8.0dp"
+        android:layout_marginLeft="0.0dp"
+        android:gravity="center" />
+    <TextView
+        android:text="lalala"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/about_textAbout"
+        android:layout_marginTop="17.0dp"
+        android:textSize="18dp"
+        android:layout_marginLeft="22.0dp"
+        android:layout_marginRight="22.0dp" />
+</LinearLayout>

@@ -15,7 +15,7 @@
         android:title="@string/drawer_settings"
         android:icon="@drawable/ic_settings_black_48dp" />
     <item
-        android:id="@+id/action_fragment_settings"
+        android:id="@+id/action_fragment_about"
         android:title="@string/drawer_about"
         android:icon="@drawable/ic_help_circle_black_48dp" />
   </group>

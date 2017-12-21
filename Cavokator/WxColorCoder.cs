@@ -44,7 +44,7 @@ namespace Cavokator
             "CAVOK", "NOSIG", "NSC", "00000KT"
         };
 
-
+        // TODO: OVC001, etc...?
         private List<string> RegularWeather { get; } = new List<string>
         {
             @"[-]RA(([A-Z]+)|(\z))",                // -RA, -RA(whatever), including last word in string

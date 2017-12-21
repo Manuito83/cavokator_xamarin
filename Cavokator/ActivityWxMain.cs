@@ -22,6 +22,7 @@ namespace Cavokator
         private WxMetarFragment mWxMetarFragment;
         private ConditionFragment mConditionFragment;
         private SettingsFragment mSettingsFragment;
+        private AboutFragment mAboutFragment;
         private Stack<SupportFragment> mStackFragment;
 
         protected override void OnCreate(Bundle bundle)
@@ -35,6 +36,7 @@ namespace Cavokator
             mWxMetarFragment = new WxMetarFragment();
             mConditionFragment = new ConditionFragment();
             mSettingsFragment = new SettingsFragment();
+            mAboutFragment = new AboutFragment();
 
             mStackFragment = new Stack<SupportFragment>();
 
@@ -82,6 +84,9 @@ namespace Cavokator
                     break;
                 case Resource.Id.action_fragment_settings:
                     ReplaceFragment(mSettingsFragment);
+                    break;
+                case Resource.Id.action_fragment_about:
+                    ReplaceFragment(mAboutFragment);
                     break;
             }
             

@@ -103,14 +103,15 @@ namespace Cavokator
             _chooseIDtextview.Text = Resources.GetString(Resource.String.Airport_ID_TextView);
             _airportEntryEditText.Hint = Resources.GetString(Resource.String.Icao_Or_Iata);
 
-
+            
             // Subscribe events
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
             _wxRequestButton.Click += OnRequestButtonClicked;
 
 
-            // Background color
+            // Styling
+            _chooseIDtextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _linearlayoutWxBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
 
             // Get a list of ICAO/IATA/Airport's name from CSV at first execution

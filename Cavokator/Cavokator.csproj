@@ -123,6 +123,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutFragment.cs" />
     <Compile Include="AirportConverter.cs" />
     <Compile Include="ApplyTheme.cs" />
     <Compile Include="ClickableSpan.cs" />
@@ -168,6 +169,7 @@
     <AndroidResource Include="Resources\layout\settings_fragment.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\about_fragment.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings-fragment_metar.xml">
