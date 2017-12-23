@@ -439,14 +439,14 @@ namespace Cavokator
         // Take raw weather and apply green color
         private SpannableString SpanGoodMetar(SpannableString rawMetar, int index, int length)
         {
-            rawMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning)),index, index + length, 0);
+            rawMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.GreenText)),index, index + length, 0);
             return rawMetar;
         }
 
         // Take already green-colored weather and apply yellow color
         private SpannableString SpanRegularMetar(SpannableString goodColoredMetar, int index, int length)
         {
-            goodColoredMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning)), index, index + length, 0);
+            goodColoredMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.YellowText)), index, index + length, 0);
             return goodColoredMetar;
         }
 
@@ -461,7 +461,7 @@ namespace Cavokator
         // Apply information color
         private SpannableString SpanInfoColor(SpannableString entryColoredMetar, int index, int length)
         {
-            entryColoredMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanTextWarning)), index, index + length, 0);
+            entryColoredMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), index, index + length, 0);
             return entryColoredMetar;
         }
 

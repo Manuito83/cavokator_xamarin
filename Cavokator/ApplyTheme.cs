@@ -13,10 +13,10 @@ namespace Cavokator
         MainBackground,
         MainText, 
         RedTextWarning,
-        YellowTextWarning,
-        GreenTextWarning,
-        CyanTextWarning,
-        MagentaTextWarning,
+        YellowText,
+        GreenText,
+        CyanText,
+        MagentaText,
         TextHint        
     }
 
@@ -74,25 +74,25 @@ namespace Cavokator
                     else if (_currentTheme == "DARK")
                         myColor = _color_redTextWarning_DARK;
                     break;
-                case DesiredColor.YellowTextWarning:
+                case DesiredColor.YellowText:
                     if (_currentTheme == "LIGHT")
                         myColor = _color_yellowTextWarning_LIGHT;
                     else if (_currentTheme == "DARK")
                         myColor = _color_yellowTextWarning_DARK;
                     break;
-                case DesiredColor.GreenTextWarning:
+                case DesiredColor.GreenText:
                     if (_currentTheme == "LIGHT")
                         myColor = _color_greenTextWarning_LIGHT;
                     else if (_currentTheme == "DARK")
                         myColor = _color_greenTextWarning_DARK;
                     break;
-                case DesiredColor.CyanTextWarning:
+                case DesiredColor.CyanText:
                     if (_currentTheme == "LIGHT")
                         myColor = _color_cyanTextWarning_LIGHT;
                     else if (_currentTheme == "DARK")
                         myColor = _color_cyanTextWarning_DARK;
                     break;
-                case DesiredColor.MagentaTextWarning:
+                case DesiredColor.MagentaText:
                     if (_currentTheme == "LIGHT")
                         myColor = _color_magentaTextWarning_LIGHT;
                     else if (_currentTheme == "DARK")

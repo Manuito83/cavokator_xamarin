@@ -650,7 +650,7 @@ namespace Cavokator
                         };
 
                         // Convert to readable time comparison
-                        taforUtcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
+                        taforUtcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
                         taforUtcLine.SetTextSize(ComplexUnitType.Dip, 14);
                         var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
                         wxTextViewParams.SetMargins(5, 20, 0, 0);
@@ -874,7 +874,7 @@ namespace Cavokator
         // Configuration for airport lines
         private TextView ApplyAirportIDLineStyle(TextView airportName)
         {
-            airportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaTextWarning));
+            airportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             airportName.SetTextSize(ComplexUnitType.Dip, 16);
             LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             airportTextViewParams.SetMargins(0, 70, 0, 0);
@@ -895,11 +895,11 @@ namespace Cavokator
                 }
                 else if (timeComparison.Hours >= 2)
                 {
-                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
                 }
                 else
                 {
-                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning));
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
                 }
             }
             else if (type == "tafor")
@@ -910,11 +910,11 @@ namespace Cavokator
                 }
                 else if (timeComparison.Hours >= 6)
                 {
-                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
                 }
                 else
                 {
-                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning));
+                    utcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
                 }
             }
 
@@ -968,7 +968,7 @@ namespace Cavokator
         // Configuration for splited lines
         private TextView ApplyMarkerLineStyle(TextView taforLines)
         {
-            taforLines.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanTextWarning));
+            taforLines.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
             taforLines.SetTextSize(ComplexUnitType.Dip, 14);
             LinearLayout.LayoutParams wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(35, 5, 0, 0);
@@ -1140,11 +1140,11 @@ namespace Cavokator
                     }
                     else if (timeComparison.Hours >= 2)
                     {
-                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
                     }
                     else
                     {
-                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning));
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
                     }
 
                     utcTextView.Text = utcString;
@@ -1175,11 +1175,11 @@ namespace Cavokator
                     }
                     else if (timeComparison.Hours >= 6)
                     {
-                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
                     }
                     else
                     {
-                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenTextWarning));
+                        utcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
                     }
 
                     utcTextView.Text = utcString;

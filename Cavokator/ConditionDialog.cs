@@ -61,17 +61,17 @@ namespace Cavokator
             _rwyFrictionTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_frictionText);
 
             _conditionBackground.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
-            _conditionTitle.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaTextWarning));
+            _conditionTitle.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             _mainErrorTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
-            _rwyCodeTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaTextWarning));
+            _rwyCodeTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             _rwyTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-            _rwyDepositCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaTextWarning));
+            _rwyDepositCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             _rwyDepositTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-            _rwyExtentCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaTextWarning));
+            _rwyExtentCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             _rwyExtentTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-            _rwyDepthCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaTextWarning));
+            _rwyDepthCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             _rwyDepthTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-            _rwyFrictionCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaTextWarning));
+            _rwyFrictionCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             _rwyFrictionTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
 
 
@@ -353,7 +353,7 @@ namespace Cavokator
                 // Make sure Main Error does not appear
                 _mainErrorTextView.Visibility = ViewStates.Gone;
 
-                _rwyCodeTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowTextWarning));
+                _rwyCodeTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
                 _rwyCodeTextView.Text = "R/SNOCLO: ";
 
                 _rwyTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));

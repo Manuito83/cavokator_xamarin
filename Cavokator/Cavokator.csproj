@@ -169,7 +169,9 @@
     <AndroidResource Include="Resources\layout\settings_fragment.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\about_fragment.axml" />
+    <AndroidResource Include="Resources\layout\about_fragment.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings-fragment_metar.xml">
@@ -311,6 +313,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings-fragment_settings.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\strings-about.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
