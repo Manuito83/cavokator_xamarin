@@ -5,8 +5,14 @@
         // ERROR
         public bool MainError;
 
+        /// <summary>
+        /// Checking if SNOCLO is present
+        /// </summary>
         public bool SNOCLO;
 
+        /// <summary>
+        /// Checking if CLRD is present
+        /// </summary>
         public bool CLRD;
         
         // **** RUNWAY BLOCK ****

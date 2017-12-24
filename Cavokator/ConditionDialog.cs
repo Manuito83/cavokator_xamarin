@@ -30,8 +30,6 @@ namespace Cavokator
         private string _entered_condition;
         
         
-        
-
         public ConditionDialog(string condition_input)
         {
             this._entered_condition = condition_input;
@@ -41,7 +39,6 @@ namespace Cavokator
         {
             base.OnCreateView(inflater, container, savedInstanceState);
             
-
             // Inflate view
             var view = inflater.Inflate(Resource.Layout.wx_rwycond_dialog, container, false);
 
@@ -96,8 +93,9 @@ namespace Cavokator
 
         private void ShowCondition()
         {
-            var decoder = new ConditionDecoder();
-            var decodedCondition = decoder.DecodeCondition(_entered_condition);
+            ConditionDecoder decoder = new ConditionDecoder();
+
+            ConditionContainer decodedCondition = decoder.DecodeCondition(_entered_condition);
 
             // SHOW MAIN ERROR
             if (decodedCondition.MainError)

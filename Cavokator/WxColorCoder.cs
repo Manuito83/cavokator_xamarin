@@ -44,7 +44,7 @@ namespace Cavokator
             "CAVOK", "NOSIG", "NSC", "00000KT"
         };
 
-        // TODO: OVC001, etc...?
+
         private List<string> RegularWeather { get; } = new List<string>
         {
             @"[-]RA(([A-Z]+)|(\z))",                // -RA, -RA(whatever), including last word in string
@@ -64,6 +64,9 @@ namespace Cavokator
             @"\sIC",                                // Ice Crystals
             @"[-]PE", @"\sPE",                      // Ice Pellets
 
+            @"OVC003", @"OVC004",                   // Cloud cover
+            @"BKN003", @"BKN004",
+
             @"[-]SN", "DRSN", "DRSN",               // Snow
 
             @"[-]GR", @"\sGR",                      // Hail
@@ -75,7 +78,7 @@ namespace Cavokator
             "VCFG", "MIFG", "PRFG", "BCFG",
             "DRDU", "BLDU", "DRSA", "BLSA", "BLPY",
 
-            "RERA", "VCSH", "VCTS", "SHRA"          // Some others
+            "RERA", "VCSH", "VCTS", @"\sSHRA"          // Some others
         };
 
 
@@ -96,6 +99,9 @@ namespace Cavokator
             "SHSN", "SHPE", "SHGR", "SHGS",         // Red Showers
 
             @"\sFG", @"\sVA+(\s|\b)",               // Visibility
+
+            @"OVC001", @"OVC002",                   // Cloud cover
+            @"BKN001", @"BKN002",
 
             @"\sPO", @"\sSQ", @"\sFC", @"\sSS",     // Sand/Dust Whirls, Squalls, Funnel Cloud, Sandstorm
             @"\sDS+(\s|\z)",                        // Trying to avoid american "distant" (DSNT)
