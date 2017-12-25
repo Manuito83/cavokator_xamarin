@@ -1,4 +1,6 @@
 ﻿using Android.App;
+using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.Widget;
@@ -8,6 +10,7 @@ using Android.Views;
 using System.Collections.Generic;
 using SupportFragment = Android.Support.V4.App.Fragment;
 
+
 namespace Cavokator
 {
     [Activity(Label = "Cavokator", MainLauncher = true, Icon = "@drawable/ic_appicon",
@@ -15,6 +18,14 @@ namespace Cavokator
 
     public class ActivityWxMain : AppCompatActivity
     {
+
+        // TODO: UPDATE AIRPORTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+        // TODO: Did we create a changelog for this version?
+        public static bool versionWithChangelog = true;
+        // TODO: "true" only for testing!
+        bool overrideShowChangelog = true; 
 
         DrawerLayout drawerLayout;
 
@@ -59,9 +70,48 @@ namespace Cavokator
 
             mCurrentFragment = mWxMetarFragment;
 
+
+            //Did we change version number and are showing changelog ?
+            if (versionWithChangelog)
+            {
+                ShowChangelog();
+            }
         }
 
-        
+
+        private void ShowChangelog()
+        {
+            try
+            {
+                // Get current version code first
+                PackageInfo pInfo = PackageManager.GetPackageInfo(PackageName, 0);
+                int currentVersionCode = pInfo.VersionCode;
+
+                System.Console.WriteLine("VERSION: " + currentVersionCode);
+
+                // Get current preferences
+                ISharedPreferences mVersionCodePrefs = Application.Context.GetSharedPreferences("AppVersion_Preferences", FileCreationMode.Private);
+                int savedVersion = mVersionCodePrefs.GetInt("appVersionPREF", 0);
+                
+                // Show dialog if version is old
+                if ((savedVersion < currentVersionCode) || (overrideShowChangelog))
+                {
+                    // Pull up dialog
+                    var transaction = SupportFragmentManager.BeginTransaction();
+                    var changelogDialog = new ChangelogDialog();
+                    changelogDialog.Show(transaction, "changelog_dialog");
+                }                    
+                
+                // Update version code and preferences
+                mVersionCodePrefs.Edit().PutInt("appVersionPREF", currentVersionCode).Apply();
+            }
+            catch
+            {
+                // If something is wrong, dialog won't show up
+            }
+        }
+
+
         // Assess button pressed
         public override bool OnOptionsItemSelected(IMenuItem item)
         {

@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/wx_rwycond_frictionCode"
             android:id="@+id/wx_rwycond_frictionText"
-             android:layout_below="@id/wx_rwycond_depthText"
+            android:layout_below="@id/wx_rwycond_depthText"
             android:layout_marginLeft="8.0dp"
             android:layout_marginRight="8.0dp"
             android:layout_marginTop="10.0dp" />
@@ -135,6 +135,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/wx_rwycond_closeButton"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp" />
+            android:layout_marginTop="30.0dp" />
     </RelativeLayout>
 </LinearLayout>
