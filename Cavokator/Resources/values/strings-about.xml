@@ -8,7 +8,7 @@
   <string name="about_textContribute">Contribute:</string>
   <string name="about_textContribute2">cavokator.com</string>
   <string name="about_textChangelog">Changelog:</string>
-  <string name="about_textChangelog2">Click to view</string>
+  <string name="about_textChangelog2">click here to view</string>
   <string name="about_textWarning">WARNING</string>
   <string name="about_textWarningLong">Cavokator was not certified for in-flight use, as the information shown could contain mistakes or be misleading. Please do not use it for real flight operations, or alternatively do so under your own responsability and with another information source as backup.</string>
   <string name="about_noChangelog">No changelog available for this version!</string>

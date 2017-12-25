@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -19,6 +20,7 @@ namespace Cavokator
 
 
         // Configuration header
+        private LinearLayout _wx_mainbackground;
         private TextView _configurationText;
 
         // Type of weather group
@@ -92,29 +94,8 @@ namespace Cavokator
             // Inflate view
             var view = inflater.Inflate(Resource.Layout.wx_options_dialog, container, false);
 
-            // Find view IDs
-            _metarOrTaforSpinner = view.FindViewById<Spinner>(Resource.Id.wx_options_metarORtafor_spinner);
-            _configurationText = view.FindViewById<TextView>(Resource.Id.wx_options_configuration_text);
-            _metarOrTaforText = view.FindViewById<TextView>(Resource.Id.wx_options_metarORtafor_text);
-            _metarHoursText = view.FindViewById<TextView>(Resource.Id.wx_options_metarHours);
-            _metarHoursSeekBar = view.FindViewById<SeekBar>(Resource.Id.wx_options_metarHours_seekbar);
-            _metarHoursSeekBarText = view.FindViewById<TextView>(Resource.Id.wx_option_metarHours_seekbarText);
-            _dismissBialogButton = view.FindViewById<Button>(Resource.Id.wx_option_closeButton);
-            _saveDataText = view.FindViewById<TextView>(Resource.Id.wx_options_saveDataText);
-            _saveDataSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_saveDataSwitch);
-            _colorWeatherText = view.FindViewById<TextView>(Resource.Id.wx_options_colorWeatherText);
-            _colorWeatherSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_colorWeatherSwitch);
-            _divideTaforText = view.FindViewById<TextView>(Resource.Id.wx_options_divideTaforText);
-            _divideTaforSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_divideTaforSwitch);
-
-
-            // Assign text fields
-            _configurationText.Text = Resources.GetString(Resource.String.Option_ConfigurationText);
-            _metarOrTaforText.Text = Resources.GetString(Resource.String.Option_ChooseMetarOrTaforText);
-            _metarHoursText.Text = Resources.GetString(Resource.String.Option_MetarHoursText);
-            _saveDataText.Text = Resources.GetString(Resource.String.Option_SaveDataText);
-            _colorWeatherText.Text = Resources.GetString(Resource.String.Option_ColorWeatherText);
-            _divideTaforText.Text = Resources.GetString(Resource.String.Option_DivideTaforText);
+            // Styling
+            StyleViews(view);
 
 
             // SPINNER ADAPTER CONFIG
@@ -161,7 +142,7 @@ namespace Cavokator
             }
             else if (_metarHoursSeekBar.Progress == 1)
             {
-                _metarHoursSeekBarText.Text = _metarHoursSeekBar.Progress.ToString() 
+                _metarHoursSeekBarText.Text = _metarHoursSeekBar.Progress.ToString()
                     + " " + GetString(Resource.String.Option_Hour);
             }
             else
@@ -212,7 +193,7 @@ namespace Cavokator
 
             _saveDataSwitch.CheckedChange += delegate
             {
-                
+
                 // Call event raiser with parameters
                 if (_saveDataSwitch.Checked)
                 {
@@ -226,7 +207,7 @@ namespace Cavokator
 
                     SetSaveDataPreferences(false);
                 }
-                
+
 
             };
 
@@ -304,7 +285,47 @@ namespace Cavokator
             return view;
         }
 
+        private void StyleViews(View view)
+        {
+            // Find view IDs
+            _wx_mainbackground = view.FindViewById<LinearLayout>(Resource.Id.wx_options_linearlayoutBottom);
+            _metarOrTaforSpinner = view.FindViewById<Spinner>(Resource.Id.wx_options_metarORtafor_spinner);
+            _configurationText = view.FindViewById<TextView>(Resource.Id.wx_options_configuration_text);
+            _metarOrTaforText = view.FindViewById<TextView>(Resource.Id.wx_options_metarORtafor_text);
+            _metarHoursText = view.FindViewById<TextView>(Resource.Id.wx_options_metarHours);
+            _metarHoursSeekBar = view.FindViewById<SeekBar>(Resource.Id.wx_options_metarHours_seekbar);
+            _metarHoursSeekBarText = view.FindViewById<TextView>(Resource.Id.wx_option_metarHours_seekbarText);
+            _dismissBialogButton = view.FindViewById<Button>(Resource.Id.wx_option_closeButton);
+            _saveDataText = view.FindViewById<TextView>(Resource.Id.wx_options_saveDataText);
+            _saveDataSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_saveDataSwitch);
+            _colorWeatherText = view.FindViewById<TextView>(Resource.Id.wx_options_colorWeatherText);
+            _colorWeatherSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_colorWeatherSwitch);
+            _divideTaforText = view.FindViewById<TextView>(Resource.Id.wx_options_divideTaforText);
+            _divideTaforSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_divideTaforSwitch);
 
+
+            // TODO: SPINNER COLORING!!!!!
+
+            // Coloring
+            _wx_mainbackground.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
+            _configurationText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+            _metarOrTaforText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _metarHoursText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _metarHoursSeekBarText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _saveDataText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _colorWeatherText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _divideTaforText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _divideTaforSwitch.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+
+
+            // Assign text fields
+            _configurationText.Text = Resources.GetString(Resource.String.Option_ConfigurationText);
+            _metarOrTaforText.Text = Resources.GetString(Resource.String.Option_ChooseMetarOrTaforText);
+            _metarHoursText.Text = Resources.GetString(Resource.String.Option_MetarHoursText);
+            _saveDataText.Text = Resources.GetString(Resource.String.Option_SaveDataText);
+            _colorWeatherText.Text = Resources.GetString(Resource.String.Option_ColorWeatherText);
+            _divideTaforText.Text = Resources.GetString(Resource.String.Option_DivideTaforText);
+        }
 
         private void SetSaveDataPreferences(bool saveData)
         {
