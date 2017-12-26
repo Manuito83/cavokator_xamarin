@@ -58,7 +58,7 @@ namespace Cavokator
             OnWorkStarted();
 
 
-            // For each requested airport
+            // Process weather for each requested airport
             for (var i = 0; i < icaoIDlist.Count(); i++)
             {
                 int airportNumber = i;
@@ -307,205 +307,141 @@ namespace Cavokator
             {
                 _wxinfo.AirportErrors.Add(false);
 
-                if (_metarOrTafor == "only_metar")
+                // Iterate each airport that we find "station_id" and show on TextView
+                for (var i = 0; i < airport.Count(); i++)
                 {
-                    // Iterate each airport that we find "station_id" and show on TextView
-                    for (var i = 0; i < airport.Count(); i++)
+                    if (_metarOrTafor == "only_metar")
                     {
-                        // Group its own weather information (METAR)
-                        List<XElement> metarsGroup = (from n in metarParsedXml.Descendants("METAR")
-                                            where n.Element("station_id").Value == airport[i].Key
-                                            select n.Element("raw_text")).ToList();
-
-
-                        // METARS
-                        var metarList = new List<string>();
-                        for (var j = 0; j < metarsGroup.Count(); j++)
-                        {
-                            metarList.Add(metarsGroup[j].Value);
-                        }
-                        _wxinfo.AirportMetars.Insert(airportNumber, metarList);
-
-
-                        // TAFORS (null)
-                        var taforList = new List<string> {null};
-                        _wxinfo.AirportTafors.Insert(airportNumber, taforList);
-
-                    
-                        // DATETIME METAR
-                        var metarUtcList = new List<DateTime>();
-                        List<XElement> metarUtcGroup = (from n in metarParsedXml.Descendants("METAR")
-                                              where n.Element("station_id").Value == airport[i].Key
-                                              select n.Element("observation_time")).ToList();
-
-
-
-                        if (metarUtcGroup.Count() == 0)
-                        {
-                            metarUtcList.Add(DateTime.MinValue);
-                        }
-                        else
-                        {
-                            for (var j = 0; j < metarUtcGroup.Count(); j++)
-                            {
-                                metarUtcList.Add(Convert.ToDateTime(metarUtcGroup[j].Value).ToUniversalTime());
-                            }
-
-                        }
-                        _wxinfo.AirportMetarsUtc.Insert(airportNumber, metarUtcList);
-
-
-                        // DATETIME TAFOR (non-existant)
-                        var taforUTC_list = new List<DateTime> {DateTime.MinValue};
-                        _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUTC_list);
-
-
+                        FillValidMetar(airportNumber, metarParsedXml, airport, i);
+                        FillNullTafor(airportNumber);
+                    }
+                    else if (_metarOrTafor == "only_tafor")
+                    {
+                        FillNullMetar(airportNumber);
+                        FillValidTafor(airportNumber, taforParsedXml, airport, i);
+                    }
+                    else if (_metarOrTafor == "metar_and_tafor")
+                    {
+                        FillValidMetar(airportNumber, metarParsedXml, airport, i);
+                        FillValidTafor(airportNumber, taforParsedXml, airport, i);
                     }
 
-                }
-                else if (_metarOrTafor == "only_tafor")
-                {
-                    // Iterate each airport that we find "station_id" and show on TextView
-                    for (var i = 0; i < airport.Count(); i++)
-                    {
-
-                        // Group its own weather information (TAFOR)
-                        List<XElement> taforsGroup = (from n in taforParsedXml.Descendants("TAF")
-                                            where n.Element("station_id").Value == airport[i].Key
-                                            select n.Element("raw_text")).ToList();
-
-
-                        // METAR (null)
-                        var metarList = new List<string> {null};
-                        _wxinfo.AirportMetars.Insert(airportNumber, metarList);
-
-                    
-                        // TAFORS
-                        var taforList = new List<string>();
-                        for (var j = 0; j < taforsGroup.Count(); j++)
-                        {
-                            taforList.Add(taforsGroup[j].Value);
-                        }
-                        _wxinfo.AirportTafors.Insert(airportNumber, taforList);
-
-
-
-                        // DATETIME METAR (non-existant)
-                        var metarUtcList = new List<DateTime> {DateTime.MinValue};
-                        _wxinfo.AirportMetarsUtc.Insert(airportNumber, metarUtcList);
-
-
-
-                        // DATETIME TAFOR
-                        var taforUtcList = new List<DateTime>();
-                        List<XElement> taforUtcGroup = (from n in taforParsedXml.Descendants("TAF")
-                                              where n.Element("station_id").Value == airport[i].Key
-                                              select n.Element("issue_time")).ToList();
-
-
-                        if (taforUtcGroup.Count() == 0)
-                        {
-                            taforUtcList.Add(DateTime.MinValue);
-                        }
-                        else
-                        {
-                            for (var j = 0; j < taforUtcGroup.Count(); j++)
-                            {
-                                taforUtcList.Add(Convert.ToDateTime(taforUtcGroup[j].Value).ToUniversalTime());
-                            }
-
-                        }
-
-                        _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUtcList);
-
-
-                    }
-                }
-                else if (_metarOrTafor == "metar_and_tafor")
-                {
-                    // Iterate each airport that we find "station_id" and show on TextView
-                    for (var i = 0; i < airport.Count(); i++)
-                    {
-
-                        // Group its own weather information (METAR)
-                        List<XElement> metarsGroup = (from n in metarParsedXml.Descendants("METAR")
-                                            where n.Element("station_id").Value == airport[i].Key
-                                            select n.Element("raw_text")).ToList();
-
-
-                        // Group its own weather information (TAFOR)
-                        List<XElement> taforsGroup = (from n in taforParsedXml.Descendants("TAF")
-                                            where n.Element("station_id").Value == airport[i].Key
-                                            select n.Element("raw_text")).ToList();
-
-
-                        // METARS
-                        var metarList = new List<string>();
-                        for (var j = 0; j < metarsGroup.Count(); j++)
-                        {
-                            metarList.Add(metarsGroup[j].Value);
-                        }
-                        _wxinfo.AirportMetars.Insert(airportNumber, metarList);
-
-
-                        // TAFORS
-                        var taforList = new List<string>();
-                        for (var j = 0; j < taforsGroup.Count(); j++)
-                        {
-                            taforList.Add(taforsGroup[j].Value);
-                        }
-                        _wxinfo.AirportTafors.Insert(airportNumber, taforList);
-
-
-
-                        // DATETIME METAR
-                        var metarUtcList = new List<DateTime>();
-                        List<XElement> metarUtcGroup = (from n in metarParsedXml.Descendants("METAR")
-                                              where n.Element("station_id").Value == airport[i].Key
-                                              select n.Element("observation_time")).ToList();
-
-                        if (metarUtcGroup.Count() == 0)
-                        {
-                            metarUtcList.Add(DateTime.MinValue);
-                        }
-                        else
-                        {
-                            for (var j = 0; j < metarUtcGroup.Count(); j++)
-                            {
-                                metarUtcList.Add(Convert.ToDateTime(metarUtcGroup[j].Value).ToUniversalTime());
-                            }
-
-                        }
-                        _wxinfo.AirportMetarsUtc.Insert(airportNumber, metarUtcList);
-
-
-
-                        // DATETIME TAFOR
-                        var taforUtcList = new List<DateTime>();
-                        List<XElement> taforUtcGroup = (from n in taforParsedXml.Descendants("TAF")
-                                              where n.Element("station_id").Value == airport[i].Key
-                                              select n.Element("issue_time")).ToList();
-
-
-                        if (taforUtcGroup.Count() == 0)
-                        {
-                            taforUtcList.Add(DateTime.MinValue);
-                        }
-                        else
-                        {
-                            for (var j = 0; j < taforUtcGroup.Count(); j++)
-                            {
-                                taforUtcList.Add(Convert.ToDateTime(taforUtcGroup[j].Value).ToUniversalTime());
-                            }
-
-                        }
-
-                        _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUtcList);
-                    }
                 }
             }
         }
 
+
+        private void FillValidMetar(int airportNumber, XContainer metarParsedXml, List<IGrouping<string, XElement>> airport, int i)
+        {
+            // Group its own weather information (METAR)
+            List<XElement> metarsGroup = (from n in metarParsedXml.Descendants("METAR")
+                                          where n.Element("station_id").Value == airport[i].Key
+                                          select n.Element("raw_text")).ToList();
+
+
+            // METARS
+            var metarList = new List<string>();
+            for (var j = 0; j < metarsGroup.Count(); j++)
+            {
+                metarList.Add(metarsGroup[j].Value);
+            }
+            _wxinfo.AirportMetars.Insert(airportNumber, metarList);
+
+            // DATETIME METAR
+            var metarUtcList = new List<DateTime>();
+            List<XElement> metarUtcGroup = (from n in metarParsedXml.Descendants("METAR")
+                                            where n.Element("station_id").Value == airport[i].Key
+                                            select n.Element("observation_time")).ToList();
+
+
+
+            if (metarUtcGroup.Count() == 0)
+            {
+                metarUtcList.Add(DateTime.MinValue);
+            }
+            else
+            {
+                for (var j = 0; j < metarUtcGroup.Count(); j++)
+                {
+                    metarUtcList.Add(Convert.ToDateTime(metarUtcGroup[j].Value).ToUniversalTime());
+                }
+
+            }
+            _wxinfo.AirportMetarsUtc.Insert(airportNumber, metarUtcList);
+        }
+
+        private void FillValidTafor(int airportNumber, XContainer taforParsedXml, List<IGrouping<string, XElement>> airport, int i)
+        {
+            // Group its own weather information (TAFOR)
+            List<XElement> taforsGroup = (from n in taforParsedXml.Descendants("TAF")
+                                          where n.Element("station_id").Value == airport[i].Key
+                                          select n.Element("raw_text")).ToList();
+            
+            // TAFORS
+            var taforList = new List<string>();
+            for (var j = 0; j < taforsGroup.Count(); j++)
+            {
+                taforList.Add(taforsGroup[j].Value);
+
+            }
+
+
+
+            if (taforsGroup.Count() == 0)
+            {
+                // TODO: ALTERNATIVE TAFOR CALL!
+            }
+
+
+
+            _wxinfo.AirportTafors.Insert(airportNumber, taforList);
+            
+            // DATETIME TAFOR
+            var taforUtcList = new List<DateTime>();
+            List<XElement> taforUtcGroup = (from n in taforParsedXml.Descendants("TAF")
+                                            where n.Element("station_id").Value == airport[i].Key
+                                            select n.Element("issue_time")).ToList();
+
+
+            if (taforUtcGroup.Count() == 0)
+            {
+                taforUtcList.Add(DateTime.MinValue);
+            }
+            else
+            {
+                for (var j = 0; j < taforUtcGroup.Count(); j++)
+                {
+                    taforUtcList.Add(Convert.ToDateTime(taforUtcGroup[j].Value).ToUniversalTime());
+                }
+
+            }
+
+            _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUtcList);
+        }
+
+        private void FillNullMetar(int airportNumber)
+        {
+            // METAR (null)
+            var metarList = new List<string> { null };
+            _wxinfo.AirportMetars.Insert(airportNumber, metarList);
+
+            // DATETIME METAR (non-existant)
+            var metarUtcList = new List<DateTime> { DateTime.MinValue };
+            _wxinfo.AirportMetarsUtc.Insert(airportNumber, metarUtcList);
+        }
+
+        private void FillNullTafor(int airportNumber)
+        {
+            // TAFORS (null)
+            var taforList = new List<string> { null };
+            _wxinfo.AirportTafors.Insert(airportNumber, taforList);
+
+            // DATETIME TAFOR (non-existant)
+            var taforUTC_list = new List<DateTime> { DateTime.MinValue };
+            _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUTC_list);
+        }
+
+        
 
         /// <summary>
         /// Returns string with Metar URL
