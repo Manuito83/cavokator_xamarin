@@ -45,8 +45,21 @@ namespace Cavokator
                 this.Dismiss();
             };
 
+            // Slide in/out animation
+            SlideAnimation(savedInstanceState);
 
             return thisView;
+        }
+
+        private void SlideAnimation(Bundle savedInstanceState)
+        {
+            // Sets the title bar to invisible
+            Dialog.Window.RequestFeature(WindowFeatures.NoTitle);
+
+            base.OnActivityCreated(savedInstanceState);
+
+            // Sets the animation
+            Dialog.Window.Attributes.WindowAnimations = Resource.Style.dialog_animation;
         }
 
         private void StyleViews()

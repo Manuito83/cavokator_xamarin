@@ -38,10 +38,33 @@ namespace Cavokator
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             base.OnCreateView(inflater, container, savedInstanceState);
-            
+
             // Inflate view
             var view = inflater.Inflate(Resource.Layout.wx_rwycond_dialog, container, false);
 
+            // FindviewById and styling
+            StyleViews(view);
+            
+            // Assign title from actual condition clicked
+            _conditionTitle.Text = _entered_condition;
+
+            // CLOSE BUTTON (dismiss dialog)
+            _dismissDialogButton.Click += delegate
+            {
+                this.Dismiss();
+            };
+
+            // Slide in/out animation
+            SlideAnimation(savedInstanceState);
+
+            // PASS INFORMATION FOR DECODING
+            ShowCondition();
+
+            return view;
+        }
+
+        private void StyleViews(View view)
+        {
             // Find view IDs
             _conditionBackground = view.FindViewById<LinearLayout>(Resource.Id.wx_rwycond_titleLinearLayout);
             _conditionTitle = view.FindViewById<TextView>(Resource.Id.wx_rwycond_title);
@@ -56,6 +79,7 @@ namespace Cavokator
             _rwyDepthTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_depthText);
             _rwyFrictionCodeTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_frictionCode);
             _rwyFrictionTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_frictionText);
+            _dismissDialogButton = view.FindViewById<Button>(Resource.Id.wx_rwycond_closeButton);
 
             _conditionBackground.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
             _conditionTitle.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
@@ -70,24 +94,17 @@ namespace Cavokator
             _rwyDepthTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _rwyFrictionCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             _rwyFrictionTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+        }
 
+        private void SlideAnimation(Bundle savedInstanceState)
+        {
+            // Sets the title bar to invisible
+            Dialog.Window.RequestFeature(WindowFeatures.NoTitle);
 
-            _dismissDialogButton = view.FindViewById<Button>(Resource.Id.wx_rwycond_closeButton);
+            base.OnActivityCreated(savedInstanceState);
 
-            // Assign title from actual condition clicked
-            _conditionTitle.Text = _entered_condition;
-
-            // CLOSE BUTTON (dismiss dialog)
-            _dismissDialogButton.Click += delegate
-            {
-                this.Dismiss();
-            };
-
-
-            // PASS INFORMATION FOR DECODING
-            ShowCondition();
-            
-            return view;
+            // Sets the animation
+            Dialog.Window.Attributes.WindowAnimations = Resource.Style.dialog_animation;
         }
 
 

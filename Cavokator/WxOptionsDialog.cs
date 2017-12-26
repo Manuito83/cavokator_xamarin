@@ -304,8 +304,6 @@ namespace Cavokator
             _divideTaforSwitch = view.FindViewById<Switch>(Resource.Id.wx_options_divideTaforSwitch);
 
 
-            // TODO: SPINNER COLORING!!!!!
-
             // Coloring
             _wx_mainbackground.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
             _configurationText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
