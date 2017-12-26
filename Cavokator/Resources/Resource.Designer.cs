@@ -111,22 +111,6 @@ namespace Cavokator
 			}
 		}
 		
-		public partial class Array
-		{
-			
-			// aapt resource value: 0x7f0d0000
-			public const int wx_option = 2131558400;
-			
-			static Array()
-			{
-				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
-			}
-			
-			private Array()
-			{
-			}
-		}
-		
 		public partial class Attribute
 		{
 			
@@ -751,6 +735,60 @@ namespace Cavokator
 			// aapt resource value: 0x7f01012a
 			public const int menu = 2130772266;
 			
+			// aapt resource value: 0x7f010165
+			public const int ms_alignLabels = 2130772325;
+			
+			// aapt resource value: 0x7f010169
+			public const int ms_arrowColor = 2130772329;
+			
+			// aapt resource value: 0x7f010168
+			public const int ms_arrowSize = 2130772328;
+			
+			// aapt resource value: 0x7f01015a
+			public const int ms_baseColor = 2130772314;
+			
+			// aapt resource value: 0x7f01016b
+			public const int ms_enableErrorLabel = 2130772331;
+			
+			// aapt resource value: 0x7f01016a
+			public const int ms_enableFloatingLabel = 2130772330;
+			
+			// aapt resource value: 0x7f01015d
+			public const int ms_error = 2130772317;
+			
+			// aapt resource value: 0x7f01015c
+			public const int ms_errorColor = 2130772316;
+			
+			// aapt resource value: 0x7f010161
+			public const int ms_floatingLabelColor = 2130772321;
+			
+			// aapt resource value: 0x7f010160
+			public const int ms_floatingLabelText = 2130772320;
+			
+			// aapt resource value: 0x7f01015b
+			public const int ms_highlightColor = 2130772315;
+			
+			// aapt resource value: 0x7f01015e
+			public const int ms_hint = 2130772318;
+			
+			// aapt resource value: 0x7f01015f
+			public const int ms_hintColor = 2130772319;
+			
+			// aapt resource value: 0x7f010162
+			public const int ms_multiline = 2130772322;
+			
+			// aapt resource value: 0x7f010163
+			public const int ms_nbErrorLines = 2130772323;
+			
+			// aapt resource value: 0x7f010166
+			public const int ms_thickness = 2130772326;
+			
+			// aapt resource value: 0x7f010167
+			public const int ms_thickness_error = 2130772327;
+			
+			// aapt resource value: 0x7f010164
+			public const int ms_typeface = 2130772324;
+			
 			// aapt resource value: 0x7f01002c
 			public const int multiChoiceItemLayout = 2130772012;
 			
@@ -1209,44 +1247,44 @@ namespace Cavokator
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f0b0047
-			public const int abc_background_cache_hint_selector_material_dark = 2131427399;
-			
-			// aapt resource value: 0x7f0b0048
-			public const int abc_background_cache_hint_selector_material_light = 2131427400;
-			
-			// aapt resource value: 0x7f0b0049
-			public const int abc_btn_colored_borderless_text_material = 2131427401;
-			
 			// aapt resource value: 0x7f0b004a
-			public const int abc_btn_colored_text_material = 2131427402;
+			public const int abc_background_cache_hint_selector_material_dark = 2131427402;
 			
 			// aapt resource value: 0x7f0b004b
-			public const int abc_color_highlight_material = 2131427403;
+			public const int abc_background_cache_hint_selector_material_light = 2131427403;
 			
 			// aapt resource value: 0x7f0b004c
-			public const int abc_hint_foreground_material_dark = 2131427404;
+			public const int abc_btn_colored_borderless_text_material = 2131427404;
 			
 			// aapt resource value: 0x7f0b004d
-			public const int abc_hint_foreground_material_light = 2131427405;
+			public const int abc_btn_colored_text_material = 2131427405;
+			
+			// aapt resource value: 0x7f0b004e
+			public const int abc_color_highlight_material = 2131427406;
+			
+			// aapt resource value: 0x7f0b004f
+			public const int abc_hint_foreground_material_dark = 2131427407;
+			
+			// aapt resource value: 0x7f0b0050
+			public const int abc_hint_foreground_material_light = 2131427408;
 			
 			// aapt resource value: 0x7f0b0000
 			public const int abc_input_method_navigation_guard = 2131427328;
 			
-			// aapt resource value: 0x7f0b004e
-			public const int abc_primary_text_disable_only_material_dark = 2131427406;
-			
-			// aapt resource value: 0x7f0b004f
-			public const int abc_primary_text_disable_only_material_light = 2131427407;
-			
-			// aapt resource value: 0x7f0b0050
-			public const int abc_primary_text_material_dark = 2131427408;
-			
 			// aapt resource value: 0x7f0b0051
-			public const int abc_primary_text_material_light = 2131427409;
+			public const int abc_primary_text_disable_only_material_dark = 2131427409;
 			
 			// aapt resource value: 0x7f0b0052
-			public const int abc_search_url_text = 2131427410;
+			public const int abc_primary_text_disable_only_material_light = 2131427410;
+			
+			// aapt resource value: 0x7f0b0053
+			public const int abc_primary_text_material_dark = 2131427411;
+			
+			// aapt resource value: 0x7f0b0054
+			public const int abc_primary_text_material_light = 2131427412;
+			
+			// aapt resource value: 0x7f0b0055
+			public const int abc_search_url_text = 2131427413;
 			
 			// aapt resource value: 0x7f0b0001
 			public const int abc_search_url_text_normal = 2131427329;
@@ -1257,29 +1295,29 @@ namespace Cavokator
 			// aapt resource value: 0x7f0b0003
 			public const int abc_search_url_text_selected = 2131427331;
 			
-			// aapt resource value: 0x7f0b0053
-			public const int abc_secondary_text_material_dark = 2131427411;
-			
-			// aapt resource value: 0x7f0b0054
-			public const int abc_secondary_text_material_light = 2131427412;
-			
-			// aapt resource value: 0x7f0b0055
-			public const int abc_tint_btn_checkable = 2131427413;
-			
 			// aapt resource value: 0x7f0b0056
-			public const int abc_tint_default = 2131427414;
+			public const int abc_secondary_text_material_dark = 2131427414;
 			
 			// aapt resource value: 0x7f0b0057
-			public const int abc_tint_edittext = 2131427415;
+			public const int abc_secondary_text_material_light = 2131427415;
 			
 			// aapt resource value: 0x7f0b0058
-			public const int abc_tint_seek_thumb = 2131427416;
+			public const int abc_tint_btn_checkable = 2131427416;
 			
 			// aapt resource value: 0x7f0b0059
-			public const int abc_tint_spinner = 2131427417;
+			public const int abc_tint_default = 2131427417;
 			
 			// aapt resource value: 0x7f0b005a
-			public const int abc_tint_switch_track = 2131427418;
+			public const int abc_tint_edittext = 2131427418;
+			
+			// aapt resource value: 0x7f0b005b
+			public const int abc_tint_seek_thumb = 2131427419;
+			
+			// aapt resource value: 0x7f0b005c
+			public const int abc_tint_spinner = 2131427420;
+			
+			// aapt resource value: 0x7f0b005d
+			public const int abc_tint_switch_track = 2131427421;
 			
 			// aapt resource value: 0x7f0b0004
 			public const int accent_material_dark = 2131427332;
@@ -1326,8 +1364,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f0b003c
 			public const int design_bottom_navigation_shadow_color = 2131427388;
 			
-			// aapt resource value: 0x7f0b005b
-			public const int design_error = 2131427419;
+			// aapt resource value: 0x7f0b005e
+			public const int design_error = 2131427422;
 			
 			// aapt resource value: 0x7f0b003d
 			public const int design_fab_shadow_end_color = 2131427389;
@@ -1353,8 +1391,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f0b0044
 			public const int design_snackbar_background_color = 2131427396;
 			
-			// aapt resource value: 0x7f0b005c
-			public const int design_tint_password_toggle = 2131427420;
+			// aapt resource value: 0x7f0b005f
+			public const int design_tint_password_toggle = 2131427423;
 			
 			// aapt resource value: 0x7f0b0012
 			public const int dim_foreground_disabled_material_dark = 2131427346;
@@ -1367,6 +1405,12 @@ namespace Cavokator
 			
 			// aapt resource value: 0x7f0b0015
 			public const int dim_foreground_material_light = 2131427349;
+			
+			// aapt resource value: 0x7f0b0047
+			public const int disabled_color = 2131427399;
+			
+			// aapt resource value: 0x7f0b0048
+			public const int error_color = 2131427400;
 			
 			// aapt resource value: 0x7f0b0016
 			public const int error_color_material = 2131427350;
@@ -1470,17 +1514,20 @@ namespace Cavokator
 			// aapt resource value: 0x7f0b0034
 			public const int secondary_text_disabled_material_light = 2131427380;
 			
+			// aapt resource value: 0x7f0b0049
+			public const int spinnerBaseColor = 2131427401;
+			
 			// aapt resource value: 0x7f0b0035
 			public const int switch_thumb_disabled_material_dark = 2131427381;
 			
 			// aapt resource value: 0x7f0b0036
 			public const int switch_thumb_disabled_material_light = 2131427382;
 			
-			// aapt resource value: 0x7f0b005d
-			public const int switch_thumb_material_dark = 2131427421;
+			// aapt resource value: 0x7f0b0060
+			public const int switch_thumb_material_dark = 2131427424;
 			
-			// aapt resource value: 0x7f0b005e
-			public const int switch_thumb_material_light = 2131427422;
+			// aapt resource value: 0x7f0b0061
+			public const int switch_thumb_material_light = 2131427425;
 			
 			// aapt resource value: 0x7f0b0037
 			public const int switch_thumb_normal_material_dark = 2131427383;
@@ -1864,6 +1911,9 @@ namespace Cavokator
 			// aapt resource value: 0x7f060051
 			public const int disabled_alpha_material_light = 2131099729;
 			
+			// aapt resource value: 0x7f06009b
+			public const int error_label_spacing = 2131099803;
+			
 			// aapt resource value: 0x7f060000
 			public const int fastscroll_default_thickness = 2131099648;
 			
@@ -1872,6 +1922,15 @@ namespace Cavokator
 			
 			// aapt resource value: 0x7f060002
 			public const int fastscroll_minimum_range = 2131099650;
+			
+			// aapt resource value: 0x7f06009c
+			public const int floating_label_bottom_spacing = 2131099804;
+			
+			// aapt resource value: 0x7f06009d
+			public const int floating_label_inside_spacing = 2131099805;
+			
+			// aapt resource value: 0x7f06009e
+			public const int floating_label_top_spacing = 2131099806;
 			
 			// aapt resource value: 0x7f060052
 			public const int highlight_alpha_material_colored = 2131099730;
@@ -1902,6 +1961,12 @@ namespace Cavokator
 			
 			// aapt resource value: 0x7f060005
 			public const int item_touch_helper_swipe_escape_velocity = 2131099653;
+			
+			// aapt resource value: 0x7f06009f
+			public const int label_text_size = 2131099807;
+			
+			// aapt resource value: 0x7f0600a0
+			public const int min_content_height = 2131099808;
 			
 			// aapt resource value: 0x7f060090
 			public const int notification_action_icon_size = 2131099792;
@@ -1948,6 +2013,9 @@ namespace Cavokator
 			// aapt resource value: 0x7f06009a
 			public const int notification_top_pad_large_text = 2131099802;
 			
+			// aapt resource value: 0x7f0600a1
+			public const int right_left_spinner_padding = 2131099809;
+			
 			// aapt resource value: 0x7f060059
 			public const int tooltip_corner_radius = 2131099737;
 			
@@ -1971,6 +2039,12 @@ namespace Cavokator
 			
 			// aapt resource value: 0x7f060060
 			public const int tooltip_y_offset_touch = 2131099744;
+			
+			// aapt resource value: 0x7f0600a2
+			public const int underline_bottom_spacing = 2131099810;
+			
+			// aapt resource value: 0x7f0600a3
+			public const int underline_top_spacing = 2131099811;
 			
 			static Dimension()
 			{
@@ -2280,52 +2354,55 @@ namespace Cavokator
 			public const int ic_snowflake_black_48dp = 2130837601;
 			
 			// aapt resource value: 0x7f020062
-			public const int navigation_empty_icon = 2130837602;
+			public const int my_background = 2130837602;
 			
 			// aapt resource value: 0x7f020063
-			public const int notification_action_background = 2130837603;
+			public const int navigation_empty_icon = 2130837603;
 			
 			// aapt resource value: 0x7f020064
-			public const int notification_bg = 2130837604;
+			public const int notification_action_background = 2130837604;
 			
 			// aapt resource value: 0x7f020065
-			public const int notification_bg_low = 2130837605;
+			public const int notification_bg = 2130837605;
 			
 			// aapt resource value: 0x7f020066
-			public const int notification_bg_low_normal = 2130837606;
+			public const int notification_bg_low = 2130837606;
 			
 			// aapt resource value: 0x7f020067
-			public const int notification_bg_low_pressed = 2130837607;
+			public const int notification_bg_low_normal = 2130837607;
 			
 			// aapt resource value: 0x7f020068
-			public const int notification_bg_normal = 2130837608;
+			public const int notification_bg_low_pressed = 2130837608;
 			
 			// aapt resource value: 0x7f020069
-			public const int notification_bg_normal_pressed = 2130837609;
+			public const int notification_bg_normal = 2130837609;
 			
 			// aapt resource value: 0x7f02006a
-			public const int notification_icon_background = 2130837610;
-			
-			// aapt resource value: 0x7f020070
-			public const int notification_template_icon_bg = 2130837616;
-			
-			// aapt resource value: 0x7f020071
-			public const int notification_template_icon_low_bg = 2130837617;
+			public const int notification_bg_normal_pressed = 2130837610;
 			
 			// aapt resource value: 0x7f02006b
-			public const int notification_tile_bg = 2130837611;
+			public const int notification_icon_background = 2130837611;
+			
+			// aapt resource value: 0x7f020071
+			public const int notification_template_icon_bg = 2130837617;
+			
+			// aapt resource value: 0x7f020072
+			public const int notification_template_icon_low_bg = 2130837618;
 			
 			// aapt resource value: 0x7f02006c
-			public const int notify_panel_notification_icon_bg = 2130837612;
+			public const int notification_tile_bg = 2130837612;
 			
 			// aapt resource value: 0x7f02006d
-			public const int options_button = 2130837613;
+			public const int notify_panel_notification_icon_bg = 2130837613;
 			
 			// aapt resource value: 0x7f02006e
-			public const int tooltip_frame_dark = 2130837614;
+			public const int options_button = 2130837614;
 			
 			// aapt resource value: 0x7f02006f
-			public const int tooltip_frame_light = 2130837615;
+			public const int tooltip_frame_dark = 2130837615;
+			
+			// aapt resource value: 0x7f020070
+			public const int tooltip_frame_light = 2130837616;
 			
 			static Drawable()
 			{
@@ -6283,6 +6360,80 @@ namespace Cavokator
 			
 			// aapt resource value: 1
 			public const int ListPopupWindow_android_dropDownVerticalOffset = 1;
+			
+			public static int[] MaterialSpinner = new int[] {
+					2130772314,
+					2130772315,
+					2130772316,
+					2130772317,
+					2130772318,
+					2130772319,
+					2130772320,
+					2130772321,
+					2130772322,
+					2130772323,
+					2130772324,
+					2130772325,
+					2130772326,
+					2130772327,
+					2130772328,
+					2130772329,
+					2130772330,
+					2130772331};
+			
+			// aapt resource value: 11
+			public const int MaterialSpinner_ms_alignLabels = 11;
+			
+			// aapt resource value: 15
+			public const int MaterialSpinner_ms_arrowColor = 15;
+			
+			// aapt resource value: 14
+			public const int MaterialSpinner_ms_arrowSize = 14;
+			
+			// aapt resource value: 0
+			public const int MaterialSpinner_ms_baseColor = 0;
+			
+			// aapt resource value: 17
+			public const int MaterialSpinner_ms_enableErrorLabel = 17;
+			
+			// aapt resource value: 16
+			public const int MaterialSpinner_ms_enableFloatingLabel = 16;
+			
+			// aapt resource value: 3
+			public const int MaterialSpinner_ms_error = 3;
+			
+			// aapt resource value: 2
+			public const int MaterialSpinner_ms_errorColor = 2;
+			
+			// aapt resource value: 7
+			public const int MaterialSpinner_ms_floatingLabelColor = 7;
+			
+			// aapt resource value: 6
+			public const int MaterialSpinner_ms_floatingLabelText = 6;
+			
+			// aapt resource value: 1
+			public const int MaterialSpinner_ms_highlightColor = 1;
+			
+			// aapt resource value: 4
+			public const int MaterialSpinner_ms_hint = 4;
+			
+			// aapt resource value: 5
+			public const int MaterialSpinner_ms_hintColor = 5;
+			
+			// aapt resource value: 8
+			public const int MaterialSpinner_ms_multiline = 8;
+			
+			// aapt resource value: 9
+			public const int MaterialSpinner_ms_nbErrorLines = 9;
+			
+			// aapt resource value: 12
+			public const int MaterialSpinner_ms_thickness = 12;
+			
+			// aapt resource value: 13
+			public const int MaterialSpinner_ms_thickness_error = 13;
+			
+			// aapt resource value: 10
+			public const int MaterialSpinner_ms_typeface = 10;
 			
 			public static int[] MenuGroup = new int[] {
 					16842766,

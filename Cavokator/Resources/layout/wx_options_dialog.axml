@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -28,13 +30,18 @@
             android:layout_marginTop="50dp"
             android:layout_alignParentLeft="true"
             android:textSize="13dp" />
-        <Spinner
-            android:id="@+id/wx_options_metarORtafor_spinner"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/wx_options_metarORtafor_text"
+        <fr.ganfra.materialspinner.MaterialSpinner
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wx_options_metarORtafor_spinner"
+            app:ms_arrowColor="#bc477b"
+            app:ms_baseColor="@color/spinnerBaseColor"
+            app:ms_highlightColor="@color/spinnerBaseColor"
+            app:ms_hintColor="@color/spinnerBaseColor"
+            app:ms_arrowSize="16dp"
+            app:ms_multiline="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/wx_options_metarORtafor_text" />
+            android:layout_alignBaseline="@id/wx_options_metarORtafor_text" />
         <TextView
             android:text="METAR delay"
             android:layout_width="wrap_content"

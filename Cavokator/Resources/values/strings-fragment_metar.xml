@@ -31,11 +31,4 @@
     <string name="Fetching">Fetching...</string>
     <string name="TaforNotAvailable">TAFOR not available</string>
   
-
-  <string-array name="wx_option">
-    <item>METAR + TAFOR</item>
-    <item>METAR</item>
-    <item>TAFOR</item>
-  </string-array>
-
 </resources>

@@ -5,7 +5,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-
+using FR.Ganfra.Materialspinner;
 
 namespace Cavokator
 {
@@ -24,7 +24,7 @@ namespace Cavokator
         private TextView _configurationText;
 
         // Type of weather group
-        private Spinner _metarOrTaforSpinner;
+        private MaterialSpinner _metarOrTaforSpinner;
         private TextView _metarOrTaforText;
 
         // Metar delay group
@@ -99,8 +99,8 @@ namespace Cavokator
 
 
             // SPINNER ADAPTER CONFIG
-            var adapter = ArrayAdapter.CreateFromResource
-                (this.Activity, Resource.Array.wx_option, Resource.Layout.wx_options_spinner);
+            string[] ITEMS = { "METAR + TAFOR ", "METAR", "TAFOR" };
+            var adapter = new ArrayAdapter<String>(Activity, Resource.Layout.wx_options_spinner, ITEMS);
             adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             _metarOrTaforSpinner.Adapter = adapter;
 
@@ -289,7 +289,7 @@ namespace Cavokator
         {
             // Find view IDs
             _wx_mainbackground = view.FindViewById<LinearLayout>(Resource.Id.wx_options_linearlayoutBottom);
-            _metarOrTaforSpinner = view.FindViewById<Spinner>(Resource.Id.wx_options_metarORtafor_spinner);
+            _metarOrTaforSpinner = view.FindViewById<MaterialSpinner>(Resource.Id.wx_options_metarORtafor_spinner);
             _configurationText = view.FindViewById<TextView>(Resource.Id.wx_options_configuration_text);
             _metarOrTaforText = view.FindViewById<TextView>(Resource.Id.wx_options_metarORtafor_text);
             _metarHoursText = view.FindViewById<TextView>(Resource.Id.wx_options_metarHours);
