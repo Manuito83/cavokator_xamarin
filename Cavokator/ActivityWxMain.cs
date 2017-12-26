@@ -19,9 +19,6 @@ namespace Cavokator
     public class ActivityWxMain : AppCompatActivity
     {
 
-        // TODO: UPDATE AIRPORTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
         // TODO: Did we create a changelog for this version?
         public static bool versionWithChangelog = true;
         // TODO: "true" only for testing!
