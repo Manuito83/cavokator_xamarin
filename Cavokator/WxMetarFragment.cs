@@ -546,6 +546,7 @@ namespace Cavokator
                     var airportName = new TextView(Activity);
 
                     // Try to get the airport's name from existing _myAirportDefinition List
+                    bool foundAirportICAO = false;
                     try
                     {
                         for (int j = 0; j < _myAirportDefinitions.Count; j++)
@@ -553,14 +554,15 @@ namespace Cavokator
                             if (_myAirportDefinitions[j].icao == _wxInfo.AirportIDs[i].ToUpper())
                             {
                                 airportName.Text = _myAirportsList[i].ToUpper() + " - " + _myAirportDefinitions[j].description;
+                                foundAirportICAO = true;
                                 break;
                             }
-
                         }
                     }
-                    catch
+                    finally
                     {
-                        airportName.Text = _myAirportsList[i].ToUpper();
+                        if (!foundAirportICAO)
+                            airportName.Text = _myAirportsList[i].ToUpper();
                     }
 
 
