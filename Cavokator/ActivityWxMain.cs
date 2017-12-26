@@ -19,10 +19,11 @@ namespace Cavokator
     public class ActivityWxMain : AppCompatActivity
     {
 
-        // TODO: Did we create a changelog for this version?
+        #warning Did we create a changelog for this version?
         public static bool versionWithChangelog = true;
-        // TODO: "true" only for testing!
-        bool overrideShowChangelog = true; 
+        
+        // Set "true" only for testing!
+        bool overrideShowChangelog = false; 
 
         DrawerLayout drawerLayout;
 

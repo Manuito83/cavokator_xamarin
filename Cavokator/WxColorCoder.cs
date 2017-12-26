@@ -122,7 +122,6 @@ namespace Cavokator
         public SpannableString ColorCodeMetar(string rawMetar)
         {
 
-            // TODO: TESTING!! DO NOT DELETE AFTERWARDS
             // ** CAUTION: USE ONLY FOR TESTING, COMMENT AFTERWARDS **
             //rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 R99/421594 R14L/349992 " +
             //          "R14L/1234// R88L/123456 R/SNOCLO R14L/CLRD// R11/CLRD// R16/349995 " +

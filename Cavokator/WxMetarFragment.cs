@@ -53,7 +53,7 @@ namespace Cavokator
 
 
         // Instantiate WXInfo object
-        private WxInfo _wxInfo = new WxInfo();
+        private WxInfoContainer _wxInfo = new WxInfoContainer();
 
 
         // Dictionary of UTC fields IDS, used to update the time difference of METARS/TAFORS with a timer
