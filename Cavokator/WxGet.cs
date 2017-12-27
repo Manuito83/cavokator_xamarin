@@ -21,7 +21,7 @@ namespace Cavokator
         private const int TaforHours = 24;
         private const bool TaforLast = true;
 
-
+        // WxInfoContainer to pass the result of the job
         private readonly WxInfoContainer _wxinfo = new WxInfoContainer();
 
         public event EventHandler<WxGetEventArgs> WorkRunning;
@@ -350,9 +350,7 @@ namespace Cavokator
             List<XElement> metarUtcGroup = (from n in metarParsedXml.Descendants("METAR")
                                             where n.Element("station_id").Value == airport[i].Key
                                             select n.Element("observation_time")).ToList();
-
-
-
+            
             if (metarUtcGroup.Count() == 0)
             {
                 metarUtcList.Add(DateTime.MinValue);
@@ -393,8 +391,9 @@ namespace Cavokator
             }
 
 
-            // If the TAFOR could not be found, we'll try an alternate way
-            if (taforsGroup.Count() == 0)  // TODO: (NEW TAFOR) add condition in case METAR was not found
+            // If the TAFOR could not be found, we'll try an alternate website
+            // This could happen as the AviationWeather TextServer is not always updating correctly
+            if (taforsGroup.Count() == 0)
             {
                 string alternateTaforString = String.Empty;
                 DateTime alternateTaforUtc = DateTime.MinValue;
@@ -412,10 +411,6 @@ namespace Cavokator
                 {
                     taforUtcList.Add(DateTime.MinValue);
                 }
-                    
-                
-                // TODO: (NEW TAFOR) TRY WITH "DSS"/"GOBD"!
-                // TODO: (NEW TAFOR) RETHINK HOW TO CAPTURE TIME AS WELL
                 
             }
 
@@ -447,7 +442,6 @@ namespace Cavokator
                 // Split and get the string
                 string alternateTaforString = alternateTaforRaw[1];
 
-                // TODO: Split and get the time
                 string utcRaw = String.Empty;
                 
                 var utcRegex = new Regex(@"(\b)+[0-3][0-9][0-2][0-9][0-5][0-9]Z+(?=\b)");
@@ -457,25 +451,15 @@ namespace Cavokator
 
                 inputDateTime = DateTime.ParseExact(utcRaw, "ddHHmm", null);
 
-                Console.WriteLine("\n\t******* DATETIME INIT ********: " + inputDateTime + "\n\n");
-
                 var monthDiff = DateTime.UtcNow.Month - inputDateTime.Month;
 
+                // Return DateTime by reference
                 if (inputDateTime.Day > DateTime.UtcNow.Day)
                     inputDateTime = inputDateTime.AddMonths(monthDiff - 1);
                 else
                     inputDateTime = inputDateTime.AddMonths(monthDiff);
 
-                Console.WriteLine("\n\t******* DATETIME END ********: " + inputDateTime + "\n\n");
-
-
-
-
-
-                
-                                
-                // Return variables by reference
-                //inputDateTime = DateTime.MinValue; // TODO: Change to pass UTC
+                // Return TAFOR string by reference
                 inputString = alternateTaforString;
             }
             catch (OperationCanceledException)
@@ -486,8 +470,6 @@ namespace Cavokator
                 // Connection error var in order to stop the work
                 _connectionErrorException = true;
             }
-
-
 
         }
 
