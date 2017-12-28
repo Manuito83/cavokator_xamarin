@@ -76,9 +76,12 @@ namespace Cavokator
         // View that will be used for FindViewById
         private View thisView;
         
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            HasOptionsMenu = true;
         }
 
 
@@ -87,23 +90,12 @@ namespace Cavokator
             // In order to return the view for this Fragment
             thisView = inflater.Inflate(Resource.Layout.wx_metar_fragment, container, false);
 
-
             // Get ISharedPreferences
             GetPreferences();
 
-            _linearlayoutWxBottom = thisView.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_bottom);
-            _airportEntryEditText = thisView.FindViewById<EditText>(Resource.Id.airport_entry);
-            _chooseIDtextview = thisView.FindViewById<TextView>(Resource.Id.choose_id_textview);
-            _wxRequestButton = thisView.FindViewById<Button>(Resource.Id.wx_request_button);
-            _wxClearButton = thisView.FindViewById<Button>(Resource.Id.wx_clear_button);
-            _wxOptionsButton = thisView.FindViewById<ImageButton>(Resource.Id.wx_options_button);
+            // Get views id's and set strings
+            StyleViews();
 
-            _wxRequestButton.Text = Resources.GetString(Resource.String.Send_button);
-            _wxClearButton.Text = Resources.GetString(Resource.String.Clear_button);
-            _chooseIDtextview.Text = Resources.GetString(Resource.String.Airport_ID_TextView);
-            _airportEntryEditText.Hint = Resources.GetString(Resource.String.Icao_Or_Iata);
-
-            
             // Subscribe events
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
@@ -125,75 +117,13 @@ namespace Cavokator
             }
 
 
-
             // If persistence data option is selected, we get the last values from SharedPreferences
             // and then call ShowWeather again, so that the information is re-generated
             if (_saveData)
             {
-                ISharedPreferences wxprefs = Application.Context.GetSharedPreferences("WX_OnPause",
-                    FileCreationMode.Private);
-
-                // Airport Text
-                var storedAirportIdText = wxprefs.GetString("_airportEntryEditText.Text", String.Empty);
-
-                // We will only get saved data if it exists at all, otherwise we could trigger
-                // the event "aftertextchanged" for _airportEntryEditText and we would like to avoid that
-                if (storedAirportIdText != string.Empty)
-                {
-                    _airportEntryEditText.Text = storedAirportIdText;
-                }
-
-
-                try
-                {
-                    // Airport IDs
-                    var deserializeIds =
-                        JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("airportIDs", string.Empty));
-                    _wxInfo.AirportIDs = deserializeIds;
-
-                    // My Airports
-                    var myAirportsIDs =
-                        JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("myAirportIDs", string.Empty));
-                    _myAirportsList = myAirportsIDs;
-
-                    // Airport Errors
-                    var deserializeErrors =
-                        JsonConvert.DeserializeObject<List<bool>>(wxprefs.GetString("airportErrors", string.Empty));
-                    _wxInfo.AirportErrors = deserializeErrors;
-
-                    // Airport Metars UTC
-                    var deserializeMetarsUtc =
-                        JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportMetarsUTC",
-                            string.Empty));
-                    _wxInfo.AirportMetarsUtc = deserializeMetarsUtc;
-
-                    // Airport Metars
-                    var deserializeMetars =
-                        JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportMetars",
-                            string.Empty));
-                    _wxInfo.AirportMetars = deserializeMetars;
-
-                    // Airport Tafors UTC
-                    var deserializeTaforsUtc =
-                        JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportTaforsUTC",
-                            string.Empty));
-                    _wxInfo.AirportTaforsUtc = deserializeTaforsUtc;
-
-                    // Airport Tafors
-                    var deserializeTafors =
-                        JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportTafors",
-                            string.Empty));
-                    _wxInfo.AirportTafors = deserializeTafors;
-
-                    ShowWeather();
-                }
-                catch (Exception)
-                {
-                    // Just do nothing, as values are possibly null (first initialization)
-                }
-
+                GetAndShowSavedValues();
             }
-            
+
 
             // Sets up timer to update METAR UTC
             UtcTimerTick();
@@ -248,12 +178,113 @@ namespace Cavokator
                 wxOptionsDialog.ColorWeatherChanged += OnColorWeatherChanged;
                 wxOptionsDialog.DivideTaforChanged += OnDivideTaforChanged;
             };
-
-
+            
             return thisView;
-
         }
 
+
+
+
+
+
+        // TODO:
+
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            inflater.Inflate(Resource.Menu.menu_share, menu);
+            base.OnCreateOptionsMenu(menu, inflater);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            return base.OnOptionsItemSelected(item);
+        }
+
+
+
+
+
+
+        private void StyleViews()
+        {
+            _linearlayoutWxBottom = thisView.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_bottom);
+            _airportEntryEditText = thisView.FindViewById<EditText>(Resource.Id.airport_entry);
+            _chooseIDtextview = thisView.FindViewById<TextView>(Resource.Id.choose_id_textview);
+            _wxRequestButton = thisView.FindViewById<Button>(Resource.Id.wx_request_button);
+            _wxClearButton = thisView.FindViewById<Button>(Resource.Id.wx_clear_button);
+            _wxOptionsButton = thisView.FindViewById<ImageButton>(Resource.Id.wx_options_button);
+
+            _wxRequestButton.Text = Resources.GetString(Resource.String.Send_button);
+            _wxClearButton.Text = Resources.GetString(Resource.String.Clear_button);
+            _chooseIDtextview.Text = Resources.GetString(Resource.String.Airport_ID_TextView);
+            _airportEntryEditText.Hint = Resources.GetString(Resource.String.Icao_Or_Iata);
+        }
+
+
+        private void GetAndShowSavedValues()
+        {
+            ISharedPreferences wxprefs = Application.Context.GetSharedPreferences("WX_OnPause",
+                FileCreationMode.Private);
+
+            // Airport Text
+            var storedAirportIdText = wxprefs.GetString("_airportEntryEditText.Text", String.Empty);
+
+            // We will only get saved data if it exists at all, otherwise we could trigger
+            // the event "aftertextchanged" for _airportEntryEditText and we would like to avoid that
+            if (storedAirportIdText != string.Empty)
+            {
+                _airportEntryEditText.Text = storedAirportIdText;
+            }
+
+
+            try
+            {
+                // Airport IDs
+                var deserializeIds =
+                    JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("airportIDs", string.Empty));
+                _wxInfo.AirportIDs = deserializeIds;
+
+                // My Airports
+                var myAirportsIDs =
+                    JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("myAirportIDs", string.Empty));
+                _myAirportsList = myAirportsIDs;
+
+                // Airport Errors
+                var deserializeErrors =
+                    JsonConvert.DeserializeObject<List<bool>>(wxprefs.GetString("airportErrors", string.Empty));
+                _wxInfo.AirportErrors = deserializeErrors;
+
+                // Airport Metars UTC
+                var deserializeMetarsUtc =
+                    JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportMetarsUTC",
+                        string.Empty));
+                _wxInfo.AirportMetarsUtc = deserializeMetarsUtc;
+
+                // Airport Metars
+                var deserializeMetars =
+                    JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportMetars",
+                        string.Empty));
+                _wxInfo.AirportMetars = deserializeMetars;
+
+                // Airport Tafors UTC
+                var deserializeTaforsUtc =
+                    JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportTaforsUTC",
+                        string.Empty));
+                _wxInfo.AirportTaforsUtc = deserializeTaforsUtc;
+
+                // Airport Tafors
+                var deserializeTafors =
+                    JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportTafors",
+                        string.Empty));
+                _wxInfo.AirportTafors = deserializeTafors;
+
+                ShowWeather();
+            }
+            catch (Exception)
+            {
+                // Just do nothing, as values are possibly null (first initialization)
+            }
+        }
 
 
         // Action when wx request button is clicked
@@ -298,6 +329,7 @@ namespace Cavokator
                 _wxAlertDialog.Dismiss();
             }
         }
+
 
         private void SanitizeAirportIds()
         {
@@ -930,7 +962,6 @@ namespace Cavokator
             return utcLine;
         }
 
-        
 
         // Configuration for metar lines
         private TextView ApplyMetarLineStyle(TextView metarLines)
@@ -1014,8 +1045,6 @@ namespace Cavokator
         }
 
 
-
-
         // Eventhandler to show Toast
         private void OnConnectionTimeOut(object source, EventArgs e)
         {
@@ -1081,7 +1110,6 @@ namespace Cavokator
         }
 
 
-
         // Eventhandler to update UTC Times every minute
         private void OnTimedUtcEvent(object state)
         {
@@ -1119,7 +1147,6 @@ namespace Cavokator
             }
 
         }
-
 
 
         private void UpdateMetarUtcLine()

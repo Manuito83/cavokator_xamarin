@@ -30,6 +30,7 @@ namespace Cavokator
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -52,7 +53,6 @@ namespace Cavokator
                 var imm = (InputMethodManager)Application.Context.GetSystemService(Context.InputMethodService);
                 imm.HideSoftInputFromWindow(_conditionEntryEditText.WindowToken, 0);
             };
-
 
 
             return thisView;
@@ -78,7 +78,7 @@ namespace Cavokator
 
         }
 
-        
+                
         // Action when wx request button is clicked
         private void OnClearButtonClicked(object sender, EventArgs e)
         {

@@ -5,6 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fillViewport="true">
+    
     <LinearLayout
         android:id="@+id/linearlayout_wx_bottom"
         android:layout_width="fill_parent"
@@ -68,4 +69,5 @@
             android:minHeight="20dp"
             android:minWidth="20dp" />
     </LinearLayout>
+  
 </ScrollView>
