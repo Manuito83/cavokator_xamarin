@@ -62,7 +62,7 @@ namespace Cavokator
 
 
         // String we build and prepare for sharing
-        private string shareString;
+        private string shareString = String.Empty;
 
 
         // Options
@@ -184,7 +184,7 @@ namespace Cavokator
                 wxOptionsDialog.ColorWeatherChanged += OnColorWeatherChanged;
                 wxOptionsDialog.DivideTaforChanged += OnDivideTaforChanged;
             };
-            
+
             return thisView;
         }
 
@@ -213,11 +213,14 @@ namespace Cavokator
 
         private void ShareWeatherString()
         {
-            var intent = new Intent(Intent.ActionSend);
-            intent.SetType("text/plain");
-            intent.PutExtra(Intent.ExtraText, shareString);
+            if (shareString != String.Empty)
+            {
+                var intent = new Intent(Intent.ActionSend);
+                intent.SetType("text/plain");
+                intent.PutExtra(Intent.ExtraText, shareString);
 
-            StartActivity(Intent.CreateChooser(intent, "Cavokator"));
+                StartActivity(Intent.CreateChooser(intent, "Cavokator"));
+            }
         }
 
 
@@ -558,12 +561,6 @@ namespace Cavokator
                     // Call function to show the weather
                     ShowWeather();
                 });
-
-                // TODO: SHARE-STRING SAVE PREFERENCES AND IMPLEMENT!
-                DateTime utcNow = DateTime.UtcNow;
-                string utcString = utcNow.ToString("dd-MMM-yyyy, HH:mm");
-                shareString = "Cavokator " + Resources.GetString(Resource.String.weather) + " @ " + utcString + " UTC";
-
             }
             else
             {
@@ -577,6 +574,13 @@ namespace Cavokator
         {
             var linearlayoutWXmetarsTafors = thisView.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
 
+            if (_wxInfo.AirportIDs.Count > 0)
+            {
+                DateTime utcNow = DateTime.UtcNow;
+                string utcString = utcNow.ToString("dd-MMM-yyyy, HH:mm");
+                shareString = "Cavokator " + Resources.GetString(Resource.String.weather) + " @ " + utcString + " UTC";
+            }
+            
             // Get and show weather information
             for (var i = 0; i < _wxInfo.AirportIDs.Count; i++)
             {
@@ -653,6 +657,8 @@ namespace Cavokator
                         // Apply common style
                         metarUtcLine = ApplyUTCLineStyle(metarUtcLine, timeComparison, "metar");
 
+                        shareString = shareString + "\n\n" + metarUtcLine.Text;
+
                         Activity.RunOnUiThread(() =>
                         {
                             linearlayoutWXmetarsTafors.AddView(metarUtcLine);
@@ -692,6 +698,7 @@ namespace Cavokator
                             metarLines.Text = m;
                         }
 
+                        shareString = shareString + "\n\n" + m;
 
 
                         // Apply common style
@@ -711,10 +718,12 @@ namespace Cavokator
                     // instead of no showing the TAFOR at all
                     if (_metarOrTafor == "metar_and_tafor" && _wxInfo.AirportTafors[i].Count == 0)
                     {
-                        var taforUtcLine = new TextView(Activity)
-                        {
-                            Text = "* " + Resources.GetString(Resource.String.TaforNotAvailable)
-                        };
+                        var taforUtcLine = new TextView(Activity);
+
+                        taforUtcLine.Text = "* " + Resources.GetString(Resource.String.TaforNotAvailable);
+
+                        shareString = shareString + "\n\n" + taforUtcLine.Text;
+                    
 
                         // Convert to readable time comparison
                         taforUtcLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
@@ -738,12 +747,13 @@ namespace Cavokator
                     {
                         var taforUtcLine = new TextView(Activity);
 
-
                         var timeComparison = DateTime.UtcNow - _wxInfo.AirportTaforsUtc[i][0];
 
                         // Convert to readable time comparison
                         taforUtcLine.Text = ParseToReadableUtc(timeComparison.Duration(), "tafor");
 
+                        shareString = shareString + "\n\n" + taforUtcLine.Text;
+                        
                         // Apply common style
                         taforUtcLine = ApplyUTCLineStyle(taforUtcLine, timeComparison, "tafor");
 
@@ -766,7 +776,7 @@ namespace Cavokator
                         // If we don't request TAFORS, we don't want to add an empty line
                         if (f == null) continue;
 
-
+                        
 
                         // Tafor divider
                         var taforList = new List<string>();
@@ -808,7 +818,6 @@ namespace Cavokator
                         }
 
 
-
                         // If we divided, we split here to apply own style
                         for (int j = 0; j < spanTaforList.Count(); j++)
                         {
@@ -824,6 +833,8 @@ namespace Cavokator
                                 myTextView = ApplyTaforLineStyle(myTextView);
 
                                 myTextView.TextFormatted = spanTaforList[j];
+
+                                shareString = shareString + "\n\n" + myTextView.TextFormatted;
                             }
                             else
                             {
@@ -832,9 +843,9 @@ namespace Cavokator
 
                                 myTextView = ApplyTaforSplittedLineStyle(myTextView);
                                 myTextView.Append(spanTaforList[j]);
+
+                                shareString = shareString + "\n\t > " + spanTaforList[j];
                             }
-
-
 
                             Activity.RunOnUiThread(() =>
                             {
@@ -932,7 +943,7 @@ namespace Cavokator
             errorAirportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
             errorAirportName.SetTextSize(ComplexUnitType.Dip, 16);
             LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            airportTextViewParams.SetMargins(0, 40, 0, 0);
+            airportTextViewParams.SetMargins(0, 70, 0, 0);
             errorAirportName.LayoutParameters = airportTextViewParams;
             return errorAirportName;
         }
