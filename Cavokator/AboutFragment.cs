@@ -3,6 +3,7 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 
+
 namespace Cavokator
 {
     class AboutFragment : Android.Support.V4.App.Fragment
@@ -26,8 +27,11 @@ namespace Cavokator
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            HasOptionsMenu = true;
         }
 
+        
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // In order to return the view for this Fragment

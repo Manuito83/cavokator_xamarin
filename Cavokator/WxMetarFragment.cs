@@ -182,27 +182,37 @@ namespace Cavokator
             return thisView;
         }
 
-
-
-
-
-
-        // TODO:
-
+                
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
+            // Create menu icon for sharing
             inflater.Inflate(Resource.Menu.menu_share, menu);
             base.OnCreateOptionsMenu(menu, inflater);
         }
 
+
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            return base.OnOptionsItemSelected(item);
+            switch (item.ItemId)
+            {
+                // Sharing icon was selected
+                case Resource.Id.menu_share_icon:
+                    ShareWeather();
+                    break;
+            }
+
+            return true;
         }
 
 
+        private void ShareWeather()
+        {
+            var intent = new Intent(Intent.ActionSend);
+            intent.SetType("text/plain");
+            intent.PutExtra(Intent.ExtraText, "ActionBarCompat is Awesome! \n\n\n Support Lib v7 #Xamarin");
 
-
+            StartActivity(intent);
+        }
 
 
         private void StyleViews()

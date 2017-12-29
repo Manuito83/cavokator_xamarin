@@ -57,7 +57,6 @@ namespace Cavokator
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_menu);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
 
-
             // Attach item selected handler to navigation view
             var navigationView = FindViewById<NavigationView>(Resource.Id.my_navigation_view);
             navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;
@@ -111,35 +110,22 @@ namespace Cavokator
         }
 
 
-
-
-
-
-        // TODO:
-
-        // Assess button pressed
+        // Assess which button was pressed in toolbar
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            // Hamburger button (open drawer)
-            if (item.ItemId == Android.Resource.Id.Home)
-                drawerLayout.OpenDrawer((int)GravityFlags.Start);
-
-            if (item.ItemId == Resource.Id.menu_share_icon)
+            switch (item.ItemId)
             {
-                //Intent sendIntent = new Intent();
-                //sendIntent.SetAction(Intent.ActionSend);
-                //sendIntent.PutExtra(Intent.ExtraText, "This is my text to send.\n lala \t lala");
-                //sendIntent.SetType("text/plain");
-                //StartActivity(sendIntent);
-                return false;
+                // Hamburger button (open drawer)
+                case Android.Resource.Id.Home:
+                    drawerLayout.OpenDrawer((int)GravityFlags.Start);
+                    break;
+                // Pass and let the fragment handle the event
+                case Resource.Id.menu_share_icon:
+                    return false;
             }
 
             return true;
         }
-
-
-
-
 
 
         void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
@@ -163,7 +149,7 @@ namespace Cavokator
             // Close drawer
             drawerLayout.CloseDrawers();
         }
-
+        
 
         public void ReplaceFragment (SupportFragment fragment)
         {
