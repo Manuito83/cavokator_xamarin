@@ -61,6 +61,10 @@ namespace Cavokator
         private readonly Dictionary<string, DateTime> _taforUtcFieldsIds = new Dictionary<string, DateTime>();
 
 
+        // String we build and prepare for sharing
+        private string shareString;
+
+
         // Options
         private string _metarOrTafor;
         private int _hoursBefore;
@@ -161,6 +165,8 @@ namespace Cavokator
                 _airportEntryEditText.SetBackgroundColor(Color.ParseColor("#aaaaaa"));
                 _airportEntryEditText.SetTypeface(null, TypefaceStyle.Italic);
 
+                shareString = String.Empty;
+
             };
 
 
@@ -197,7 +203,7 @@ namespace Cavokator
             {
                 // Sharing icon was selected
                 case Resource.Id.menu_share_icon:
-                    ShareWeather();
+                    ShareWeatherString();
                     break;
             }
 
@@ -205,13 +211,13 @@ namespace Cavokator
         }
 
 
-        private void ShareWeather()
+        private void ShareWeatherString()
         {
             var intent = new Intent(Intent.ActionSend);
             intent.SetType("text/plain");
-            intent.PutExtra(Intent.ExtraText, "ActionBarCompat is Awesome! \n\n\n Support Lib v7 #Xamarin");
+            intent.PutExtra(Intent.ExtraText, shareString);
 
-            StartActivity(intent);
+            StartActivity(Intent.CreateChooser(intent, "Cavokator"));
         }
 
 
@@ -311,6 +317,8 @@ namespace Cavokator
             _wxInfo.AirportMetars = null;
             _wxInfo.AirportTaforsUtc = null;
             _wxInfo.AirportTafors = null;
+
+            shareString = String.Empty;
 
             // Clear focus of airport_entry
             var airportEntry = thisView.FindViewById<EditText>(Resource.Id.airport_entry);
@@ -550,6 +558,12 @@ namespace Cavokator
                     // Call function to show the weather
                     ShowWeather();
                 });
+
+                // TODO: SHARE-STRING SAVE PREFERENCES AND IMPLEMENT!
+                DateTime utcNow = DateTime.UtcNow;
+                string utcString = utcNow.ToString("dd-MMM-yyyy, HH:mm");
+                shareString = "Cavokator " + Resources.GetString(Resource.String.weather) + " @ " + utcString + " UTC";
+
             }
             else
             {
@@ -568,10 +582,12 @@ namespace Cavokator
             {
                 if (_wxInfo.AirportErrors[i])
                 {
-                    var errorAirportName = new TextView(Activity)
-                    {
-                        Text = _myAirportsList[i] + " " + Resources.GetString(Resource.String.Error_fetching_airport)
-                    };
+                    var errorAirportName = new TextView(Activity);
+
+                    errorAirportName.Text = _myAirportsList[i] + " " + Resources.GetString(Resource.String.Error_fetching_airport);
+
+                    shareString = shareString + "\n\n*****\n\n" + errorAirportName.Text;
+                   
 
                     // Apply common style
                     errorAirportName = ApplyErrorLineStyle(errorAirportName);
@@ -597,6 +613,9 @@ namespace Cavokator
                             {
                                 airportName.Text = _myAirportsList[i].ToUpper() + " - " + _myAirportDefinitions[j].description;
                                 foundAirportICAO = true;
+
+                                shareString = shareString + "\n\n*****\n\n" + airportName.Text;
+
                                 break;
                             }
                         }
@@ -604,17 +623,21 @@ namespace Cavokator
                     finally
                     {
                         if (!foundAirportICAO)
+                        {
                             airportName.Text = _myAirportsList[i].ToUpper();
+                            shareString = shareString + "\n\n" + airportName.Text;
+                        }
+
                     }
 
 
                     airportName = ApplyAirportIDLineStyle(airportName);
 
-
                     Activity.RunOnUiThread(() =>
                     {
                         linearlayoutWXmetarsTafors.AddView(airportName);
                     });
+                    
 
 
                     // METAR DATETIME LINE
