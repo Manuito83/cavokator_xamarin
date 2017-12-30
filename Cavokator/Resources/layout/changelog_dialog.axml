@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#e0e0e0"
+    android:id="@+id/changelog_mainBackground">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:text="CAVOKATOR version 1.3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/changelog_titleText"
+                android:layout_marginTop="15.0dp"
+                android:layout_marginLeft="24.0dp"
+                android:layout_marginRight="24.0dp"
+                android:textColor="?attr/colorAccent"
+                android:textSize="22dp" />
+            <TextView
+                android:text="What's new...?"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/changelog_whatIsNew"
+                android:layout_marginTop="20.0dp"
+                android:layout_marginLeft="24.0dp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.5dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/changelog_bullet1"
+                    android:text="▶"
+                    android:layout_marginLeft="0.0dp" />
+                <TextView
+                    android:text="You can now click in the highlighted runway conditions strings to decode them automatically!"
+                    android:id="@+id/changelog_item1Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5.0dp"
+                    android:layout_marginRight="0.0dp" />
+            </LinearLayout>
+            <ImageView
+                android:src="@drawable/changelog_13img1"
+                android:layout_width="wrap_content"
+                android:layout_height="115.7dp"
+                android:id="@+id/changelog_image1"
+                android:layout_marginLeft="45.0dp"
+                android:layout_marginTop="15.0dp"
+                android:layout_marginBottom="19.0dp"
+                android:layout_marginRight="14.0dp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.5dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/changelog_bullet2"
+                    android:text="▶"
+                    android:layout_marginLeft="0.0dp" />
+                <TextView
+                    android:text="New section for runway condition decoding!"
+                    android:id="@+id/changelog_item2Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5.0dp"
+                    android:layout_marginRight="0.0dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.5dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/changelog_bullet3"
+                    android:text="▶"
+                    android:layout_marginLeft="0.0dp" />
+                <TextView
+                    android:text="You can now change between Light and Dark themes in the settings menu!"
+                    android:id="@+id/changelog_item3Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5.0dp"
+                    android:layout_marginRight="0.0dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.5dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/changelog_bullet4"
+                    android:text="▶"
+                    android:layout_marginLeft="0.0dp" />
+                <TextView
+                    android:text="General bug fixes. Also added a new contact section, so that you can suggest new improvements!"
+                    android:id="@+id/changelog_item4Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5.0dp"
+                    android:layout_marginRight="0.0dp" />
+            </LinearLayout>
+            <TextView
+                android:text="WARNING"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/changelog_warningText"
+                android:layout_marginTop="25.0dp"
+                android:layout_marginLeft="22.0dp" />
+            <TextView
+                android:text="Cavokator was not certified for in-flight use, please do not use it for real flight operations or do so under your own responsability. There might be errors."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/changelog_warningLongText"
+                android:layout_marginLeft="22.0dp"
+                android:layout_marginRight="22.0dp"
+                android:layout_marginTop="4.5dp"
+                android:layout_marginBottom="20dp" />
+        </LinearLayout>
+    </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="0.0dp">
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#c0c0c0" />
+        <Button
+            android:text="OK!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/changelog_closeButton"
+            android:layout_marginTop="6.0dp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+</LinearLayout>

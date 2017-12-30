@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/settings_backgroundLayout">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:id="@+id/settings_mainRelativeLayout"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:id="@+id/settings_mainTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Application Settings"
+            android:textColor="?attr/colorAccent"
+            android:textSize="22dp" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/settings_mainTitle"
+            android:id="@+id/settings_themeLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="78.5dp"
+            android:layout_marginTop="33.5dp">
+            <TextView
+                android:text="Theme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settings_textTheme"
+                android:layout_marginTop="0.0dp"
+                android:textSize="18dp" />
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settings_themeSwitch"
+                android:layout_marginTop="0.0dp"
+                android:layout_toRightOf="@id/settings_textTheme"
+                android:layout_marginLeft="72.0dp"
+                android:layout_marginBottom="0.0dp"
+                android:theme="@style/SettingsThemeSwitch" />
+            <TextView
+                android:text="Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settings_themeSwitchText"
+                android:layout_marginLeft="9.0dp"
+                android:textSize="15dp"
+                android:layout_toRightOf="@id/settings_themeSwitch"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

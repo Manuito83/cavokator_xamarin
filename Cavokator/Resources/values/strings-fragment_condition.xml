@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="condition_Intro">ENTER RUNWAY CONDITION</string>
+  <string name="condition_Decode">Decode!</string>
+  <string name="condition_Clear">Clear</string>
+  <string name="condition_Example">Example:</string>
+
+</resources>

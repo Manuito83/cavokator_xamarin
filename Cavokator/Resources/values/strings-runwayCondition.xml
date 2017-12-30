@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  
+  <string name="Main_Error">Condition string not valid!</string>
+  
+  <string name="Runway_Indicator">Runway</string>
+  <string name="Runway_AllRunways">All runways</string>
+  <string name="Runway_ReportRepeated">Previous report is being repeated</string>
+  <string name="Runway_Error">Error! Runway code not valid</string>
+  
+  <string name="Deposit0">Clear and dry</string>
+  <string name="Deposit1">Damp</string>
+  <string name="Deposit2">Wet and water patches</string>
+  <string name="Deposit3">Rime and frost covered (depth normally less than 1 mm)</string>
+  <string name="Deposit4">Dry snow</string>
+  <string name="Deposit5">Wt snow</string>
+  <string name="Deposit6">Slush</string>
+  <string name="Deposit7">Ice</string>
+  <string name="Deposit8">Compacted or rolled snow</string>
+  <string name="Deposit9">Frozen ruts or ridges</string>
+  <string name="DepositNO">Type of deposit not reported</string>
+  <string name="Deposit_Error">Error! Deposit code not valid</string>
+  
+  <string name="Extent1">Less than 10% of runway contaminated (covered)</string>
+  <string name="Extent2" formatted="false">11% to 25% of runway contaminated (covered)</string>
+  <string name="Extent5" formatted="false">26% to 50% of runway contaminated (covered)</string>
+  <string name="Extent9" formatted="false">51% to 100% of runway contaminated (covered)</string>
+  <string name="ExtentNO">Contamination extent not reported</string>
+  <string name="Extent_Error">Error! Extent code not valid</string>
+  
+  <string name="Depth00">Depth less than 1 mm</string>
+  <string name="Depth99">Runway or runways non-operational due to snow, slush, ice, large drifts or runway clearance, but depth not reported</string>
+  <string name="Depth">Depth</string>
+  <string name="DepthMORE">or more</string>
+  <string name="Depth_Error">Error! Depth code not valid</string>
+  <string name="DepthNO">Depth of deposit operationally not significant or not measurable</string>
+  
+  <string name="FrictionCoefficient">Friction coefficient</string>
+  <string name="FrictionBA91">Braking action poor</string>
+  <string name="FrictionBA92">Braking action medium/poor</string>
+  <string name="FrictionBA93">Braking action medium</string>
+  <string name="FrictionBA94">Braking action medium/good</string>
+  <string name="FrictionBA95">Braking action good</string>
+  <string name="Friction99">Friction coefficient unreliable</string>
+  <string name="FrictionNO">Braking conditions not reported and/or runway not operational</string>
+  <string name="Friction_Error">Error! Friction code not valid</string>
+
+  <string name="SNOCLO">Aerodrome is closed due to extreme deposit of snow</string>
+
+  <string name="CLRD">Contaminations have ceased to exist (CLEARED)</string>
+
+</resources>

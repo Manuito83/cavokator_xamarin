@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/action_fragment_metar"
+        android:title="@string/drawer_weather" 
+        android:icon="@drawable/ic_cloud_print_outline_black_48dp" />
+    <item
+        android:id="@+id/action_fragment_condition"
+        android:title="@string/drawer_runway" 
+        android:icon="@drawable/ic_snowflake_black_48dp" />
+    <item
+        android:id="@+id/action_fragment_settings"
+        android:title="@string/drawer_settings"
+        android:icon="@drawable/ic_settings_black_48dp" />
+    <item
+        android:id="@+id/action_fragment_about"
+        android:title="@string/drawer_about"
+        android:icon="@drawable/ic_help_circle_black_48dp" />
+  </group>
+
+<!--  
+  <item android:title="">
+    <menu>
+     <item
+      android:id="@+id/action_fragment_settings"
+      android:title="@string/drawer_settings" 
+      android:icon="@drawable/ic_settings_black_48dp" />
+     <item
+      android:id="@+id/action_fragment_settings"
+      android:title="@string/drawer_about"
+      android:icon="@drawable/ic_help_circle_black_48dp" />
+    </menu>
+  </item>
+-->
+
+</menu>
