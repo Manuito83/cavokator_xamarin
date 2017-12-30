@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
+﻿using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Android.Graphics;
 
 namespace Cavokator
 {
-    class WxRwyCondDialog : DialogFragment
+    class ConditionDialog : Android.Support.V4.App.DialogFragment
     {
 
         // Dialog fields
+        private LinearLayout _conditionBackground;
         private TextView _conditionTitle;
         private TextView _mainErrorTextView;
         private TextView _rwyCodeTextView;
@@ -38,9 +30,7 @@ namespace Cavokator
         private string _entered_condition;
         
         
-        
-
-        public WxRwyCondDialog(string condition_input)
+        public ConditionDialog(string condition_input)
         {
             this._entered_condition = condition_input;
         }
@@ -48,14 +38,35 @@ namespace Cavokator
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             base.OnCreateView(inflater, container, savedInstanceState);
-            
 
             // Inflate view
             var view = inflater.Inflate(Resource.Layout.wx_rwycond_dialog, container, false);
 
-            SetStyle(DialogFragmentStyle.NoTitle, 0);
+            // FindviewById and styling
+            StyleViews(view);
+            
+            // Assign title from actual condition clicked
+            _conditionTitle.Text = _entered_condition;
 
+            // CLOSE BUTTON (dismiss dialog)
+            _dismissDialogButton.Click += delegate
+            {
+                this.Dismiss();
+            };
+
+            // Slide in/out animation
+            SlideAnimation(savedInstanceState);
+
+            // PASS INFORMATION FOR DECODING
+            ShowCondition();
+
+            return view;
+        }
+
+        private void StyleViews(View view)
+        {
             // Find view IDs
+            _conditionBackground = view.FindViewById<LinearLayout>(Resource.Id.wx_rwycond_titleLinearLayout);
             _conditionTitle = view.FindViewById<TextView>(Resource.Id.wx_rwycond_title);
             _mainErrorTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_main_error);
             _rwyCodeTextView = view.FindViewById<TextView>(Resource.Id.wx_rwycond_rwycode);
@@ -68,30 +79,40 @@ namespace Cavokator
             _rwyDepthTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_depthText);
             _rwyFrictionCodeTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_frictionCode);
             _rwyFrictionTextTextview = view.FindViewById<TextView>(Resource.Id.wx_rwycond_frictionText);
-
             _dismissDialogButton = view.FindViewById<Button>(Resource.Id.wx_rwycond_closeButton);
 
-            // Assign title from actual condition clicked
-            _conditionTitle.Text = _entered_condition;
+            _conditionBackground.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
+            _conditionTitle.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+            _mainErrorTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
+            _rwyCodeTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+            _rwyTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _rwyDepositCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+            _rwyDepositTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _rwyExtentCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+            _rwyExtentTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _rwyDepthCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+            _rwyDepthTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _rwyFrictionCodeTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+            _rwyFrictionTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+        }
 
-            // CLOSE BUTTON (dismiss dialog)
-            _dismissDialogButton.Click += delegate
-            {
-                this.Dismiss();
-            };
+        private void SlideAnimation(Bundle savedInstanceState)
+        {
+            // Sets the title bar to invisible
+            Dialog.Window.RequestFeature(WindowFeatures.NoTitle);
 
+            base.OnActivityCreated(savedInstanceState);
 
-            // PASS INFORMATION FOR DECODING
-            ShowCondition();
-            
-            return view;
+            // Sets the animation
+            Dialog.Window.Attributes.WindowAnimations = Resource.Style.dialog_animation;
         }
 
 
         private void ShowCondition()
         {
-            var decoder = new WxRwyCondDecoder();
-            var decodedCondition = decoder.DecodeCondition(_entered_condition);
+            ConditionDecoder decoder = new ConditionDecoder();
+
+            ConditionContainer decodedCondition = decoder.DecodeCondition(_entered_condition);
 
             // SHOW MAIN ERROR
             if (decodedCondition.MainError)
@@ -140,7 +161,7 @@ namespace Cavokator
                 }
                 else
                 {
-                    _rwyTextTextView.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_Error);
                 }
 
@@ -201,7 +222,7 @@ namespace Cavokator
                 else
                 {
                     // Probably never gonna happen, as we got all numbers covered
-                    _rwyDepositTextTextview.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyDepositTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     _rwyDepositTextTextview.Text = Resources.GetString(Resource.String.Deposit_Error);
                 }
 
@@ -237,7 +258,7 @@ namespace Cavokator
                 }
                 else
                 {
-                    _rwyExtentTextTextview.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyExtentTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     _rwyExtentTextTextview.Text = Resources.GetString(Resource.String.Extent_Error);
                 }
 
@@ -279,7 +300,7 @@ namespace Cavokator
                 }
                 else
                 {
-                    _rwyDepthTextTextview.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyDepthTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     _rwyDepthTextTextview.Text = Resources.GetString(Resource.String.Depth_Error);
                 }
 
@@ -326,7 +347,7 @@ namespace Cavokator
                 }
                 else
                 {
-                    _rwyFrictionTextTextview.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyFrictionTextTextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     _rwyFrictionTextTextview.Text = Resources.GetString(Resource.String.Friction_Error);
                 }
 
@@ -347,10 +368,10 @@ namespace Cavokator
                 // Make sure Main Error does not appear
                 _mainErrorTextView.Visibility = ViewStates.Gone;
 
-                _rwyCodeTextView.SetTextColor(Color.ParseColor("#ffff00"));
+                _rwyCodeTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
                 _rwyCodeTextView.Text = "R/SNOCLO: ";
 
-                _rwyTextTextView.SetTextColor(Color.ParseColor("#ff8c00"));
+                _rwyTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                 _rwyTextTextView.Text = Resources.GetString(Resource.String.SNOCLO);
 
             }
@@ -391,7 +412,7 @@ namespace Cavokator
                 }
                 else
                 {
-                    _rwyTextTextView.SetTextColor(Color.ParseColor("#ff0000"));
+                    _rwyTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     _rwyTextTextView.Text = Resources.GetString(Resource.String.Runway_Error);
                 }
 

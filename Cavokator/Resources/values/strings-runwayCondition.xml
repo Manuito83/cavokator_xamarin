@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
   
-  <string name="Main_Error">*decoding error*</string>
+  <string name="Main_Error">Condition string not valid!</string>
   
   <string name="Runway_Indicator">Runway</string>
   <string name="Runway_AllRunways">All runways</string>
