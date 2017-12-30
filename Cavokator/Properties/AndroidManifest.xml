@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.github.manuito83.cavokator" android:versionName="1.3" android:installLocation="auto" android:versionCode="3">
-	<uses-sdk android:minSdkVersion="16" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<application android:label="Cavokator" android:theme="@android:style/Theme.Material" android:icon="@drawable/ic_appicon"></application>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+          package="com.github.manuito83.cavokator" 
+          android:versionName="1.3" 
+          android:installLocation="auto" 
+          android:versionCode="3">
+	<uses-sdk android:minSdkVersion="16" 
+            android:targetSdkVersion="26" />
+	<uses-permission 
+      android:name="android.permission.INTERNET" />
+	<application 
+      android:label="Cavokator" 
+      android:theme="@style/Theme.CavocatorDesign" 
+      android:icon="@drawable/ic_appicon"></application>
 </manifest>
