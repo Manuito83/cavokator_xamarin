@@ -288,7 +288,7 @@ namespace Cavokator
             }
 
 
-            // If there is no airpor_group, we have no airport, ID is incorrect and we show an error
+            // If there is no airport_group, we have no airport, ID is incorrect and we show an error
             // Also, if length is below 4, we will give an empty airport, otherwise we could be getting
             // a list of airports which meet the firt 3 letters
             if (airport.Count == 0 || airportId.Length < 4)
@@ -316,12 +316,12 @@ namespace Cavokator
                     else if (_metarOrTafor == "only_tafor")
                     {
                         FillNullMetar(airportNumber);
-                        FillValidTafor(airportNumber, taforParsedXml, airport, i);
+                        FillValidTafor(airportNumber, taforParsedXml, airport, i, airportId);
                     }
                     else if (_metarOrTafor == "metar_and_tafor")
                     {
                         FillValidMetar(airportNumber, metarParsedXml, airport, i);
-                        FillValidTafor(airportNumber, taforParsedXml, airport, i);
+                        FillValidTafor(airportNumber, taforParsedXml, airport, i, airportId);
                     }
 
                 }
@@ -366,7 +366,7 @@ namespace Cavokator
             _wxinfo.AirportMetarsUtc.Insert(airportNumber, metarUtcList);
         }
 
-        private void FillValidTafor(int airportNumber, XContainer taforParsedXml, List<IGrouping<string, XElement>> airport, int i)
+        private void FillValidTafor(int airportNumber, XContainer taforParsedXml, List<IGrouping<string, XElement>> airport, int i, string airportId)
         {
             // TAFOR XML
             List<XElement> taforsGroup = (from n in taforParsedXml.Descendants("TAF")
@@ -398,7 +398,7 @@ namespace Cavokator
                 string alternateTaforString = String.Empty;
                 DateTime alternateTaforUtc = DateTime.MinValue;
                     
-                TryToGetAlternateTaforString(ref alternateTaforString, ref alternateTaforUtc);
+                TryToGetAlternateTaforString(ref alternateTaforString, ref alternateTaforUtc, airportId);
 
                 if (alternateTaforString != String.Empty 
                     && alternateTaforString != @"<html><head>" 
@@ -421,10 +421,11 @@ namespace Cavokator
 
         }
 
-        private void TryToGetAlternateTaforString(ref string inputString, ref DateTime inputDateTime)
+        private void TryToGetAlternateTaforString(ref string inputString, ref DateTime inputDateTime, string airportId)
         {
             // Form TAFOR URL
-            string taforUrl = "http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/GOBD.TXT";
+            string taforUrl = GetAlternateTaforUrl(airportId);
+
 
             // Cancellation Token to set timeout of async task (http request, mainly)
             var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(_connectionTimeOutSeconds));
@@ -439,28 +440,45 @@ namespace Cavokator
 
                 string[] alternateTaforRaw = taforRawData.Result.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
-                // Split and get the string
-                string alternateTaforString = alternateTaforRaw[1];
-
-                string utcRaw = String.Empty;
+                // Assess if the TAFOR is very old, in that case just return String.Empty
+                string firstLine = alternateTaforRaw[0];
+                DateTime originalDate;
+                DateTime.TryParseExact(firstLine, "yyyy/MM/dd HH:mm", null, DateTimeStyles.None, out originalDate);
                 
-                var utcRegex = new Regex(@"(\b)+[0-3][0-9][0-2][0-9][0-5][0-9]Z+(?=\b)");
-                var utcMatches = utcRegex.Matches(alternateTaforString);
-                foreach (var match in utcMatches.Cast<Match>())
-                    utcRaw = alternateTaforString.Substring(match.Index, 6);
+                if ((DateTime.UtcNow - originalDate).TotalDays < 30)
+                {
+                    // Split and get the tafor string (second line)
+                    string alternateTaforString = alternateTaforRaw[1];
 
-                inputDateTime = DateTime.ParseExact(utcRaw, "ddHHmm", null);
+                    string utcRaw = String.Empty;
 
-                var monthDiff = DateTime.UtcNow.Month - inputDateTime.Month;
+                    var utcRegex = new Regex(@"(\b)+[0-3][0-9][0-2][0-9][0-5][0-9]Z+(?=\b)");
+                    var utcMatches = utcRegex.Matches(alternateTaforString);
+                    foreach (var match in utcMatches.Cast<Match>())
+                        utcRaw = alternateTaforString.Substring(match.Index, 6);
 
-                // Return DateTime by reference
-                if (inputDateTime.Day > DateTime.UtcNow.Day)
-                    inputDateTime = inputDateTime.AddMonths(monthDiff - 1);
+                    DateTime tryInputDateTime;
+                    DateTime.TryParseExact(utcRaw, "ddHHmm", null, DateTimeStyles.None, out tryInputDateTime);
+                    inputDateTime = tryInputDateTime;
+
+                    var monthDiff = DateTime.UtcNow.Month - inputDateTime.Month;
+
+                    // Return DateTime by reference
+                    if (inputDateTime.Day > DateTime.UtcNow.Day)
+                        inputDateTime = inputDateTime.AddMonths(monthDiff - 1);
+                    else
+                        inputDateTime = inputDateTime.AddMonths(monthDiff);
+
+                    // Return TAFOR string by reference
+                    inputString = alternateTaforString;
+                }
                 else
-                    inputDateTime = inputDateTime.AddMonths(monthDiff);
+                {
+                    inputDateTime = DateTime.MinValue;
+                    inputString = String.Empty;
+                }
 
-                // Return TAFOR string by reference
-                inputString = alternateTaforString;
+
             }
             catch (OperationCanceledException)
             {
@@ -534,6 +552,15 @@ namespace Cavokator
                             + "&hoursBeforeNow=" + TaforHours
                             + "&mostRecent=" + TaforLast
                             + "&timeType=issue";
+
+            return url;
+        }
+
+
+
+        private string GetAlternateTaforUrl(string icaoId)
+        {
+            var url = $"http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/{icaoId}.TXT";
 
             return url;
         }
