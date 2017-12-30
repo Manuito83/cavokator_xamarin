@@ -64,6 +64,9 @@ namespace Cavokator
             @"\sIC",                                // Ice Crystals
             @"[-]PE", @"\sPE",                      // Ice Pellets
 
+            @"OVC003", @"OVC004",                   // Cloud cover
+            @"BKN003", @"BKN004",
+
             @"[-]SN", "DRSN", "DRSN",               // Snow
 
             @"[-]GR", @"\sGR",                      // Hail
@@ -75,7 +78,7 @@ namespace Cavokator
             "VCFG", "MIFG", "PRFG", "BCFG",
             "DRDU", "BLDU", "DRSA", "BLSA", "BLPY",
 
-            "RERA", "VCSH", "VCTS", "SHRA"          // Some others
+            "RERA", "VCSH", "VCTS", @"\sSHRA"          // Some others
         };
 
 
@@ -97,6 +100,9 @@ namespace Cavokator
 
             @"\sFG", @"\sVA+(\s|\b)",               // Visibility
 
+            @"OVC001", @"OVC002",                   // Cloud cover
+            @"BKN001", @"BKN002",
+
             @"\sPO", @"\sSQ", @"\sFC", @"\sSS",     // Sand/Dust Whirls, Squalls, Funnel Cloud, Sandstorm
             @"\sDS+(\s|\z)",                        // Trying to avoid american "distant" (DSNT)
             @"[+]FC",@"[+]SS",@"[+]DS",
@@ -116,15 +122,14 @@ namespace Cavokator
         public SpannableString ColorCodeMetar(string rawMetar)
         {
 
-            // TODO: TESTING!! DO NOT DELETE AFTERWARDS
             // ** CAUTION: USE ONLY FOR TESTING, COMMENT AFTERWARDS **
-            rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 R99/421594 R14L/349992 " +
-                       "R14L/1234// R88L/123456 R/SNOCLO R14L/CLRD// R11/CLRD// R16/349995 " +
-                       "R99/349995 88////78 R67/CLRD// R76L/CLRD// R88/CLRD// R99/CLRD// " +
-                       "**VARIATIONS** R99/111111 R99/222222 R99/333333 R99/444444 R99/555555" +
-                       "R99/666666 R99/777777 R99/888888 R99/999999 R99/000000 R99/////// " +
-                       "**ERROR** R55L/123456 R82/123456 " +
-                       "**MAL** R88L/1234567 333903350 R88L/12345 R88/12345678 R/SNOCLO/ R14L/CLRD/// R11/CLRD///";
+            //rawMetar = "LBBG 041600Z 12012G07MPS 0500 SHRA 8849//91 R99/421594 R14L/349992 " +
+            //          "R14L/1234// R88L/123456 R/SNOCLO R14L/CLRD// R11/CLRD// R16/349995 " +
+            //          "R99/349995 88////78 R67/CLRD// R76L/CLRD// R88/CLRD// R99/CLRD// " +
+            //          "**VARIATIONS** R99/111111 R99/222222 R99/333333 R99/444444 R99/555555" +
+            //          "R99/666666 R99/777777 R99/888888 R99/999999 R99/000000 R99/////// " +
+            //          "**ERROR** R27L/123/// R55L/123456 R82/123456 " +
+            //          "**MAL** R88L/1234567 333903350 R88L/12345 R88/12345678 R/SNOCLO/ R14L/CLRD/// R11/CLRD///";
             // ^^^ TEST ^^^ TEST ^^^ TEST ^^^
 
             var coloredMetar = new SpannableString(rawMetar);
@@ -439,21 +444,21 @@ namespace Cavokator
         // Take raw weather and apply green color
         private SpannableString SpanGoodMetar(SpannableString rawMetar, int index, int length)
         {
-            rawMetar.SetSpan(new ForegroundColorSpan(Color.Green),index, index + length, 0);
+            rawMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.GreenText)),index, index + length, 0);
             return rawMetar;
         }
 
         // Take already green-colored weather and apply yellow color
         private SpannableString SpanRegularMetar(SpannableString goodColoredMetar, int index, int length)
         {
-            goodColoredMetar.SetSpan(new ForegroundColorSpan(Color.Yellow), index, index + length, 0);
+            goodColoredMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.YellowText)), index, index + length, 0);
             return goodColoredMetar;
         }
 
         // Take alredy yellow-colored weather and apply red color
         private SpannableString SpanBadMetar(SpannableString regularColoredMetar, int index, int length)
         {
-            regularColoredMetar.SetSpan(new ForegroundColorSpan(Color.Red), index, index + length, 0);
+            regularColoredMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.RedTextWarning)), index, index + length, 0);
             return regularColoredMetar;
         }
 
@@ -461,7 +466,7 @@ namespace Cavokator
         // Apply information color
         private SpannableString SpanInfoColor(SpannableString entryColoredMetar, int index, int length)
         {
-            entryColoredMetar.SetSpan(new ForegroundColorSpan(Color.Cyan), index, index + length, 0);
+            entryColoredMetar.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), index, index + length, 0);
             return entryColoredMetar;
         }
 
@@ -483,7 +488,7 @@ namespace Cavokator
             matched_clickkable_condition = matched_text;
 
             // Create instance of ClickableSpan and assign field for actual text that was clicked
-            var clickableRunwayCondition = new MyClickableSpan(matched_clickkable_condition);
+            var clickableRunwayCondition = new ClickableSpan(matched_clickkable_condition);
             
             // Subscribe to the actual click for each instance
             clickableRunwayCondition.ClickedMyClickableSpan += OnClickedRunwayCondition;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cavokator
 {
-    public class WxInfo
+    public class WxInfoContainer
     {
         public List<bool> AirportErrors { get; set; } = new List<bool>();
         public List<string> AirportIDs { get; set; } = new List<string>();

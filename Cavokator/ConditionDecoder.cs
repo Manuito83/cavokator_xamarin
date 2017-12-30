@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 
 namespace Cavokator
 {
-    class WxRwyCondDecoder
+    class ConditionDecoder
     {
         // String used for main decoding
         private string _rwyConditionText;
@@ -31,7 +20,7 @@ namespace Cavokator
         private int _ConditionType;
 
         // We will use a WxRwyCondition container
-        private WxRwyCondition _wxRunwayCondition = new WxRwyCondition();
+        private ConditionContainer _wxRunwayCondition = new ConditionContainer();
 
 
         /// <summary>
@@ -45,11 +34,15 @@ namespace Cavokator
         /// </summary>
         /// <param name="input_condition"></param>
         /// <returns></returns>
-        public WxRwyCondition DecodeCondition(string input_condition)
+        public ConditionContainer DecodeCondition(string input_condition)
         {
 
             _rwyConditionText = input_condition;
 
+
+            // Error checking (is this condition valid?)
+            ValidityCheck();
+            
             // Find out what it is about
             DiscernType();
 
@@ -255,10 +248,10 @@ namespace Cavokator
                         }
                         else
                         {
+                            _wxRunwayCondition.DepthCode = _rwyConditionText.Substring(position4, 2);
+
                             if (int.TryParse(_rwyConditionText.Substring(position4, 2), out int intDepth))
                             {
-
-                                _wxRunwayCondition.DepthCode = _rwyConditionText.Substring(position4, 2);
                                 _wxRunwayCondition.DepthValue = intDepth;
 
                                 if (intDepth == 91)
@@ -289,10 +282,11 @@ namespace Cavokator
                         }
                         else
                         {
+                            _wxRunwayCondition.FrictionCode = _rwyConditionText.Substring(position6, 2);
+
                             if (int.TryParse(_rwyConditionText.Substring(position6, 2), out int intFriction))
                             {
-
-                                _wxRunwayCondition.FrictionCode = _rwyConditionText.Substring(position6, 2);
+                                
                                 _wxRunwayCondition.FrictionValue = intFriction;
 
                                 if (intFriction >= 96 && intFriction <= 98)
@@ -315,7 +309,6 @@ namespace Cavokator
                 // Conditions type 4, 5 or 6
                 else
                 {
-                    // TODO NEXT
                     // R/SNOCLO
                     if (_ConditionType == 4)
                     {
@@ -383,6 +376,19 @@ namespace Cavokator
             return _wxRunwayCondition;
         }
 
+
+        private void ValidityCheck()
+        {
+            var conditionRegex = new Regex(@"((^)+(R)+(\d\d([LCR]?)+(\/)+([0-9]|\/){6})+(\z))|" +
+                                           @"((^)+(([0-9]|\/){8})+(?=\b))|" +
+                                           @"((\b)+(R\/SNOCLO)+(\z))|" +
+                                           @"((^)+(R\d\d([LCR]?)+(\/)+(CLRD)+(\/\/))+(\z))");
+            var conditionMatches = conditionRegex.Matches(_rwyConditionText);
+
+            if (conditionMatches.Count != 1)
+                _MainError = true;
+
+        }
 
 
         private void DiscernType()

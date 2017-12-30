@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<resources>
+
+  <!-- CHANGELOG STRINGS FOR VERSION 1.3 -->
+  <string name="changelog_titleText">CAVOKATOR version 1.3</string>
+  <string name="changelog_whatIsNew">What\'s new...?</string>
+  <string name="changelog_item1Text">You can now click in the highlighted runway condition strings to decode them automatically!</string>
+  <string name="changelog_item2Text">New section for runway condition decoding!</string>
+  <string name="changelog_item3Text">Choose between LIGHT and DARK themes in the settings menu!</string>
+  <string name="changelog_item4Text">General bug fixes. Also added a new contact section, so that you can suggest new improvements!</string>
+  <string name="changelog_warningText">WARNING</string>
+  <string name="changelog_warningLongText">Cavokator was not certified for in-flight use, please do not use it for real flight operations or do so under your own responsability. There might be errors.</string>
+  <string name="changelog_closeButton">OK!</string>
+  
+</resources>
