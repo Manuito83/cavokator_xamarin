@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<resources>
+
+  <string name="settings_settingsTitle">General Settings</string>
+  <string name="settings_textTheme">Theme</string>
+  <string name="settings_themeSwitchLight">Light</string>
+  <string name="settings_themeSwitchDark">Dark</string>
+
+</resources>
