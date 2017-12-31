@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/wx_options_linearlayoutBottom">
     <RelativeLayout
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -18,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CONFIGURATION"
-            android:textColor="@android:color/holo_purple"
+            android:textColor="?attr/colorAccent"
             android:textSize="18dp" />
         <TextView
             android:id="@+id/wx_options_metarORtafor_text"
@@ -28,13 +29,18 @@
             android:layout_marginTop="50dp"
             android:layout_alignParentLeft="true"
             android:textSize="13dp" />
-        <Spinner
-            android:id="@+id/wx_options_metarORtafor_spinner"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/wx_options_metarORtafor_text"
+        <fr.ganfra.materialspinner.MaterialSpinner
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wx_options_metarORtafor_spinner"
+            app:ms_arrowColor="#bc477b"
+            app:ms_baseColor="@color/spinnerBaseColor"
+            app:ms_highlightColor="@color/spinnerBaseColor"
+            app:ms_hintColor="@color/spinnerBaseColor"
+            app:ms_arrowSize="16dp"
+            app:ms_multiline="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/wx_options_metarORtafor_text" />
+            android:layout_alignBaseline="@id/wx_options_metarORtafor_text" />
         <TextView
             android:text="METAR delay"
             android:layout_width="wrap_content"
@@ -59,8 +65,7 @@
             android:id="@+id/wx_option_metarHours_seekbarText"
             android:layout_marginRight="30dp"
             android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:textColor="@android:color/white" />
+            android:gravity="center" />
         <TextView
             android:text="Save data"
             android:layout_width="wrap_content"
@@ -112,7 +117,6 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/wx_options_closeRelativeLayout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
@@ -121,6 +125,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/wx_option_closeButton"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp" />
+            android:layout_marginTop="20.0dp" />
     </RelativeLayout>
 </LinearLayout>

@@ -14,6 +14,8 @@ namespace Cavokator
         public string description { get; set; }
         public string icao { get; set; }
         public string iata { get; set; }
+        public string latitude_deg { get; set; }
+        public string longitude_deg { get; set; }
     }
 
     
@@ -32,9 +34,8 @@ namespace Cavokator
             var records = new List<AirportCsvDefinition>();
 
             var assets = Application.Context.Assets;
-            var sr = new StreamReader(assets.Open("airport_codes.csv"));
+            var sr = new StreamReader(assets.Open("airport_codes13.csv"));
             var csv = new CsvReader(sr);
-            csv.Configuration.Delimiter = ";";
 
             records = csv.GetRecords<AirportCsvDefinition>().ToList();
 
