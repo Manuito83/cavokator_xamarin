@@ -1015,9 +1015,9 @@ namespace Cavokator
             var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(25, 5, 0, 0);
             metarLines.LayoutParameters = wxTextViewParams;
+            // TODO: hyphenation
             return metarLines;
         }
-
 
         // Configuration for tafor lines
         private TextView ApplyTaforLineStyle(TextView taforLines)
