@@ -123,7 +123,7 @@ namespace Cavokator
         {
 
             // ** CAUTION: USE ONLY FOR TESTING, COMMENT AFTERWARDS **
-            rawMetar = "AAAA 311300Z R28/P2000 R29/2000D -SN -SN -SN -SN -SN -SN -SN -SN -SN";
+            // rawMetar = "AAAA 311300Z R28/P2000 R29/2000D -SN -SN -SN -SN -SN -SN -SN -SN -SN";
             // ^^^ TEST ^^^ TEST ^^^ TEST ^^^
 
             var coloredMetar = new SpannableString(rawMetar);
