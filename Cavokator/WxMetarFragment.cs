@@ -690,6 +690,20 @@ namespace Cavokator
 
                             var coloredMetar = colorCoder.ColorCodeMetar(m);
 
+                            // Prevent automatic "-" hyphen (avoid "-SN" line carriage, for example).
+                            int nonHyphenLine = 8209;
+                            char character = (char)nonHyphenLine;
+                            SpannableStringBuilder s = new SpannableStringBuilder(coloredMetar);
+                            for (int x = 0; x < s.Length(); x++)
+                            {
+                                if (s.CharAt(x) == '-')
+                                {
+                                    s.Replace(x, x + 1, character.ToString());
+                                }
+                            }
+                            coloredMetar = SpannableString.ValueOf(s);
+
+                            
                             metarLines.TextFormatted = coloredMetar;
 
                             // Needed to make clickablespan clickable
@@ -697,6 +711,11 @@ namespace Cavokator
                         }
                         else
                         {
+                            // Prevent automatic "-" hyphen (avoid "-SN" line carriage, for example).
+                            int nonHyphenLine = 8209;
+                            char character = (char)nonHyphenLine;
+                            m.Replace('-', character);
+
                             metarLines.Text = m;
                         }
 
@@ -807,6 +826,20 @@ namespace Cavokator
                             foreach (var line in taforList)
                             {
                                 var coloredTafor = colorCoder.ColorCodeMetar(line);
+
+                                // Prevent automatic "-" hyphen (avoid "-SN" line carriage, for example).
+                                int nonHyphenLine = 8209;
+                                char character = (char)nonHyphenLine;
+                                SpannableStringBuilder s = new SpannableStringBuilder(coloredTafor);
+                                for (int x = 0; x < s.Length(); x++)
+                                {
+                                    if (s.CharAt(x) == '-')
+                                    {
+                                        s.Replace(x, x + 1, character.ToString());
+                                    }
+                                }
+                                coloredTafor = SpannableString.ValueOf(s);
+
                                 spanTaforList.Add(coloredTafor);
                             }
                         }
@@ -814,6 +847,11 @@ namespace Cavokator
                         {
                             foreach (var line in taforList)
                             {
+                                // Prevent automatic "-" hyphen (avoid "-SN" line carriage, for example).
+                                int nonHyphenLine = 8209;
+                                char character = (char)nonHyphenLine;
+                                line.Replace('-', character);
+
                                 spanTaforList.Add(new SpannableString(line));
                             }
                         }
