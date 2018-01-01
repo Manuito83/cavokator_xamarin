@@ -680,6 +680,8 @@ namespace Cavokator
 
                         var metarLines = new TextView(Activity);
 
+                        
+
                         // Color coding
                         if (_doColorWeather)
                         {
@@ -699,7 +701,6 @@ namespace Cavokator
                         }
 
                         shareString = shareString + "\n\n" + m;
-
 
                         // Apply common style
                         metarLines = ApplyMetarLineStyle(metarLines);
@@ -1015,7 +1016,10 @@ namespace Cavokator
             var wxTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             wxTextViewParams.SetMargins(25, 5, 0, 0);
             metarLines.LayoutParameters = wxTextViewParams;
-            // TODO: hyphenation
+
+            #warning This is not working (supposedly until minVersion 23)
+            // metarLines.HyphenationFrequency = HyphenationFrequency.None;
+
             return metarLines;
         }
 
