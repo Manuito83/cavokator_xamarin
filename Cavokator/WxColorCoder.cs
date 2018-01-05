@@ -34,7 +34,7 @@ namespace Cavokator
 
         // RVR
         private int _regularRvr = 1000;
-        private int _badRvr = 600;
+        private int _badRvr = 1500;
 
 
 
@@ -123,7 +123,7 @@ namespace Cavokator
         {
 
             // ** CAUTION: USE ONLY FOR TESTING, COMMENT AFTERWARDS **
-            // rawMetar = "AAAA 311300Z R28/P2000 R29/2000D -SN -SN -SN -SN -SN -SN -SN -SN -SN";
+            // rawMetar = "LEMD 311300Z R28/P2000 R29/2000D R26L/2000U R25C/0800 R01/M0300N R26L/123456 R01L/M0300N";
             // ^^^ TEST ^^^ TEST ^^^ TEST ^^^
 
             var coloredMetar = new SpannableString(rawMetar);
@@ -330,31 +330,73 @@ namespace Cavokator
 
 
             // RVR
-            var rvrRegex = new Regex(@"R[0-9]+.\057[P|M][0-9]+[U|D|N]");  // TODO
+            var rvrRegex = new Regex(@"(?<=\s)+(R)+(\d\d([LCR]?))+(\/)+([PM]?)+([0-9]{4})+([UDN]?)+(?=\b)");  // TODO
             var rvrMatches = rvrRegex.Matches(rawMetar);
             foreach (var match in rvrMatches.Cast<Match>())
             {
 
-                var rvrValue = rawMetar.Substring(match.Index + match.Length - 5, 4);
+                bool paralelRunway = false;
+                if (rawMetar.Substring(match.Index + 4, 1) == "/")
+                    paralelRunway = true;
 
+                bool extremeIndicator = false;
+                if (paralelRunway)
+                {
+                    if (rawMetar.Substring(match.Index + 5, 1) == "P" || rawMetar.Substring(match.Index + 5, 1) == "M")
+                        extremeIndicator = true;
+                }
+                else
+                {
+                    if (rawMetar.Substring(match.Index + 4, 1) == "P" || rawMetar.Substring(match.Index + 4, 1) == "M")
+                        extremeIndicator = true;
+                }
+
+
+                // Runway value
                 try
                 {
+                    if (paralelRunway)
+                        coloredMetar = SpanInfoColor(coloredMetar, match.Index, 5);
+                    else
+                        coloredMetar = SpanInfoColor(coloredMetar, match.Index, 4);
+                }
+                catch { }
+
+
+                // RVR Value
+                try
+                {
+                    string rvrValue = "";
+                    int rvrStart = 0;
+
+                    if (paralelRunway && extremeIndicator)
+                    {
+                        rvrStart = 6;
+                    }
+                    else if ((paralelRunway && !extremeIndicator) || (!paralelRunway && extremeIndicator))
+                    {
+                        rvrStart = 5;
+                    }
+                    else if (!paralelRunway && !extremeIndicator)
+                    {
+                        rvrStart = 4;
+                    }
+
+                    rvrValue = rawMetar.Substring(match.Index + rvrStart, 4);
                     if (Int32.Parse(rvrValue) <= _regularRvr && Int32.Parse(rvrValue) > _badRvr)
                     {
-                        coloredMetar = SpanRegularMetar(coloredMetar, match.Index + match.Length - 6, 5);
+                        coloredMetar = SpanRegularMetar(coloredMetar, match.Index + rvrStart, 4);
                     }
                     else if (Int32.Parse(rvrValue) <= _badRvr)
                     {
-                        coloredMetar = SpanBadMetar(coloredMetar, match.Index + match.Length - 6, 5);
+                        coloredMetar = SpanBadMetar(coloredMetar, match.Index + rvrStart, 4);
                     }
                 }
-                catch
-                {
-                    // ignored
-                }
+                catch { }
 
+
+                // Trend
                 var rvrTrend = rawMetar.Substring(match.Index + match.Length - 1, 1);
-
                 try
                 {
                     switch (rvrTrend)
@@ -370,25 +412,8 @@ namespace Cavokator
                             break;
                     }
                 }
-                catch
-                {
-                    // ignored
-                }
-                try
-                {
-                    if (rawMetar.Substring(match.Index + 3, 1) == "/")
-                    {
-                        coloredMetar = SpanInfoColor(coloredMetar, match.Index, 4);
-                    }
-                    else
-                    {
-                        coloredMetar = SpanInfoColor(coloredMetar, match.Index, 5);
-                    }
-                }
-                catch
-                {
-                    // ignored
-                }
+                catch { }
+
             }
 
 
