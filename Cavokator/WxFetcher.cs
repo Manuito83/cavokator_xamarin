@@ -11,7 +11,7 @@ using System.Xml.Linq;
 namespace Cavokator
 {
 
-    public class WxGet
+    public class WxFetcher
     {
 
         // Configuration
@@ -21,8 +21,8 @@ namespace Cavokator
         private const int TaforHours = 24;
         private const bool TaforLast = true;
 
-        // WxInfoContainer to pass the result of the job
-        private readonly WxInfoContainer _wxinfo = new WxInfoContainer();
+        // WxContainer to pass the result of the job
+        private readonly WxContainer _wxinfo = new WxContainer();
 
         public event EventHandler<WxGetEventArgs> WorkRunning;
         public event EventHandler ConnectionTimeOut;
@@ -49,7 +49,7 @@ namespace Cavokator
         /// <param name="hoursBefore">Hours before to look for metar</param>
         /// <param name="metarOrTafor">Accepts "metar_and_tafor", "only_metar", "only_tafor"</param>
         /// <param name="mostRecent">In case we just need the last one</param>
-        public WxInfoContainer Fetch(List<string> icaoIDlist, int hoursBefore, string metarOrTafor, bool mostRecent)
+        public WxContainer Fetch(List<string> icaoIDlist, int hoursBefore, string metarOrTafor, bool mostRecent)
         {
 
             _metarOrTafor = metarOrTafor;
@@ -415,7 +415,7 @@ namespace Cavokator
             }
 
 
-            // Fill the information in the WxInfoContainer class
+            // Fill the information in the WxContainer class
             _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUtcList);
             _wxinfo.AirportTafors.Insert(airportNumber, taforList);
 

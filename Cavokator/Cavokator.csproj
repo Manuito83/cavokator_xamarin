@@ -59,8 +59,8 @@
     <Reference Include="CsvHelper, Version=6.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.6.1.0\lib\netstandard2.0\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.6.8.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.6.8\lib\netstandard2.0\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.6.11.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.6.11\lib\netstandard2.0\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="MaterialSpinner, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialSpinner-Xamarin.1.1.1\lib\MonoAndroid\MaterialSpinner.dll</HintPath>
@@ -139,12 +139,14 @@
     <Compile Include="ApplyTheme.cs" />
     <Compile Include="ChangelogDialog.cs" />
     <Compile Include="ClickableSpan.cs" />
+    <Compile Include="NotamContainer.cs" />
+    <Compile Include="NotamFetcher.cs" />
     <Compile Include="NotamFragment.cs" />
     <Compile Include="SettingsFragment.cs" />
     <Compile Include="WxColorCoder.cs" />
     <Compile Include="ConditionFragment.cs" />
-    <Compile Include="WxGet.cs" />
-    <Compile Include="WxInfo.cs" />
+    <Compile Include="WxFetcher.cs" />
+    <Compile Include="WxContainer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="ActivityWxMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -375,7 +377,9 @@
     <AndroidResource Include="Resources\drawable-hdpi\ic_settings_black_48dp.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\notam_fragment.axml" />
+    <AndroidResource Include="Resources\layout\notam_fragment.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\ic_book_open_variant_black_48dp.png" />

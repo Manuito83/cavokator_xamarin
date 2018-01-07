@@ -7,7 +7,7 @@
     android:fillViewport="true">
 
   <LinearLayout
-      android:id="@+id/linearlayout_notam_bottom"
+      android:id="@+id/notam_linearlayout_bottom"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
       android:orientation="vertical"
@@ -21,11 +21,11 @@
         android:text="CHOOSE AIRPORT ID"
         android:layout_width="match_parent"
         android:layout_height="30.5dp"
-        android:id="@+id/choose_id_textview" />
+        android:id="@+id/notam_choose_id_textview" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/airport_entry"
+        android:id="@+id/notam_airport_entry"
         android:background="#aaaaaa"
         android:inputType="textMultiLine|textCapCharacters|textNoSuggestions"
         android:digits=" ,ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -45,16 +45,16 @@
           android:layout_width="wrap_content"
           android:layout_height="50dp"
           android:elevation="4dp"
-          android:id="@+id/wx_request_button" />
+          android:id="@+id/notam_request_button" />
       <Button
           android:text="CLEAR"
           android:layout_width="wrap_content"
           android:layout_height="50dp"
           android:elevation="4dp"
-          android:id="@+id/wx_clear_button" />
+          android:id="@+id/notam_clear_button" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/linearlayout_notams"
+        android:id="@+id/notam_linearlayout_lines"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

@@ -53,7 +53,7 @@ namespace Cavokator
 
 
         // Instantiate WXInfo object
-        private WxInfoContainer _wxInfo = new WxInfoContainer();
+        private WxContainer _wxInfo = new WxContainer();
 
 
         // Dictionary of UTC fields IDS, used to update the time difference of METARS/TAFORS with a timer
@@ -528,8 +528,8 @@ namespace Cavokator
         /// </summary>
         private void RequestWeather()
         {
-            // Instanstiate WxGet object
-            var requestedWx = new WxGet();
+            // Instanstiate WxFetcher object
+            var requestedWx = new WxFetcher();
 
             // Subscription to event handlers
             requestedWx.WorkRunning += OnGetWxWorkStarted;
