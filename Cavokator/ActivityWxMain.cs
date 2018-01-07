@@ -29,6 +29,7 @@ namespace Cavokator
 
         private SupportFragment mCurrentFragment;
         private WxMetarFragment mWxMetarFragment;
+        private NotamFragment mNotamFragment;
         private ConditionFragment mConditionFragment;
         private SettingsFragment mSettingsFragment;
         private AboutFragment mAboutFragment;
@@ -43,6 +44,7 @@ namespace Cavokator
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
 
             mWxMetarFragment = new WxMetarFragment();
+            mNotamFragment = new NotamFragment();
             mConditionFragment = new ConditionFragment();
             mSettingsFragment = new SettingsFragment();
             mAboutFragment = new AboutFragment();
@@ -134,6 +136,9 @@ namespace Cavokator
             {
                 case Resource.Id.action_fragment_metar:
                     ReplaceFragment(mWxMetarFragment);
+                    break;
+                case Resource.Id.action_fragment_notam:
+                    ReplaceFragment(mNotamFragment);
                     break;
                 case Resource.Id.action_fragment_condition:
                     ReplaceFragment(mConditionFragment);

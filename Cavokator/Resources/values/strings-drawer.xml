@@ -3,6 +3,7 @@
 <resources>
 
   <string name="drawer_weather">Weather Information</string>
+  <string name="drawer_notam">NOTAMS</string>
   <string name="drawer_runway">Runway Condition</string>
   <string name="drawer_settings">Settings</string>
   <string name="drawer_about">About</string>
