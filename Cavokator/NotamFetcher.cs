@@ -39,21 +39,21 @@ namespace Cavokator
                 {
                     if (Regex.IsMatch(line_match, @"(^|\s)Q\) (.*)"))
                     {
-                        string lineQ = line_match.Replace(" ", "");
-                        
-                        if (Regex.IsMatch(lineQ, @"Q\)([A-Z]{4})\/([A-Z]{5})\/(IV|I|V)\/([A-Z]{1,3})\/([A-Z]{1,2})\/([0-9]{3})\/([0-9]{3})\/([0-9]{4})(N|S)([0-9]{5})(E|W)([0-9]{3})"))
-                        {
+                        string shortQline = line_match.Replace(" ", "");
 
+                        string qStructure = @"Q\)(?<FIR>[A-Z]{4})\/(?<CODE>[A-Z]{5})\/(?<TRAFFIC>IV|I|V|K)\/(?<PURPOSE>[A-Z]{1,3})\/(?<SCOPE>[A-Z]{1,2})\/(?<LOWER>[0-9]{3})\/(?<UPPER>[0-9]{3})\/(?<LAT>[0-9]{4})(?<LAT_CODE>N|S)(?<LON>[0-9]{5})(?<LONG_CODE>E|W)(?<RADIUS>[0-9]{3})";
+
+
+                        Regex regexQ = new Regex(qStructure);
+                        Match qMatches = regexQ.Match(shortQline);
+
+                        if (qMatches.Success)
+                        {
+                          Console.WriteLine("*****fir: " + qMatches.Groups["FIR"].Value);
                         }
 
                     }
                 }
-
-
-                //foreach (string s in result)
-                //{
-                //    Console.WriteLine(s);
-                //}
 
                 Console.WriteLine("****");
             }
