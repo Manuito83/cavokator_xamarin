@@ -25,6 +25,8 @@ namespace Cavokator
         // View that will be used for FindViewById
         private View thisView;
 
+        private NotamContainer myNotamContainer = new NotamContainer();
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -57,9 +59,40 @@ namespace Cavokator
 
         private void OnRequestButtonClicked(object sender, EventArgs e)
         {
-            NotamFetcher mNotams = new NotamFetcher("LEMD");
+            // Close keyboard when button pressed
+            var im = (InputMethodManager)Activity.GetSystemService(Context.InputMethodService);
+            im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
+
+            myNotamContainer = RequestNotams();
+
+            ShowNotams(myNotamContainer);
         }
 
+        private NotamContainer RequestNotams()
+        {
+            // TODO: Send a list here
+            string myAirportRequest = _airportEntryEditText.Text;
+            NotamFetcher mNotams = new NotamFetcher(myAirportRequest);
+
+            return mNotams.DecodedNotam;
+        }
+
+        private void ShowNotams(NotamContainer myNotamContainer)
+        {
+            for (int i = 0; i < myNotamContainer.NotamRaw.Count; i++)
+            {
+                var notamLine = new TextView(Activity);
+
+                notamLine.Text = myNotamContainer.NotamRaw[i];
+
+                Activity.RunOnUiThread(() =>
+                {
+                    // TODO: Add
+                    linearlayoutNotams.AddView(notamLine);
+                });
+
+            }
+        }
 
         private void StyleViews()
         {

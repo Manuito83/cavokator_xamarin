@@ -14,6 +14,6 @@ namespace Cavokator
 {
     class NotamContainer
     {
-        public List<string> Text { get; set; } = new List<string>();
+        public List<string> NotamRaw { get; set; } = new List<string>();
     }
 }

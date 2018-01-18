@@ -330,7 +330,7 @@ namespace Cavokator
 
 
             // RVR
-            var rvrRegex = new Regex(@"(?<=\s)+(R)+(\d\d([LCR]?))+(\/)+([PM]?)+([0-9]{4})+([UDN]?)+(?=\b)");  // TODO
+            var rvrRegex = new Regex(@"(?<=\s)+(R)+(\d\d([LCR]?))+(\/)+([PM]?)+([0-9]{4})+([UDN]?)+(?=\b)"); 
             var rvrMatches = rvrRegex.Matches(rawMetar);
             foreach (var match in rvrMatches.Cast<Match>())
             {

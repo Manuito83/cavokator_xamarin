@@ -16,25 +16,27 @@ namespace Cavokator
 {
     class NotamFetcher
     {
-        public NotamContainer Notams = new NotamContainer();
+        public NotamContainer DecodedNotam { get; } = new NotamContainer();
 
         public NotamFetcher(string icao)
         {
             List<string> notamList = Fetch(icao);
 
+            Decode(notamList);
 
+        }
 
-
+        private void Decode(List<string> notamList)
+        {
             // TODO: https://github.com/liviudnistran/vfrviewer/blob/master/class.NOTAM.php
             foreach (string singleNotam in notamList)
             {
-                Console.WriteLine("****");
-
                 string myNotamFull = singleNotam;
-                myNotamFull = singleNotam.Replace('\r', ' ');
+                //myNotamFull = singleNotam.Replace('\r', ' ');
+
+                ResultRaw(myNotamFull);
 
                 string[] myNotamSections = Regex.Split((myNotamFull), @"\s(?=([A-Z]\)\s))");
-
                 foreach (string line_match in myNotamSections)
                 {
                     if (Regex.IsMatch(line_match, @"(^|\s)Q\) (.*)"))
@@ -49,18 +51,22 @@ namespace Cavokator
 
                         if (qMatches.Success)
                         {
-                          Console.WriteLine("*****fir: " + qMatches.Groups["FIR"].Value);
+                            Console.WriteLine("*****fir: " + qMatches.Groups["FIR"].Value);
                         }
 
                     }
                 }
-
-                Console.WriteLine("****");
             }
 
 
 
 
+
+        }
+
+        private void ResultRaw(string myNotamFull)
+        {
+            DecodedNotam.NotamRaw.Add(myNotamFull);
         }
 
         private List<string> Fetch(string icao)
