@@ -81,14 +81,15 @@ namespace Cavokator
         {
             for (int i = 0; i < myNotamContainer.NotamRaw.Count; i++)
             {
-                var notamLine = new TextView(Activity);
+                LinearLayout linearLayoutNotamLines = thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_lines);
+                TextView notamLine = new TextView(Activity);
 
                 notamLine.Text = myNotamContainer.NotamRaw[i];
 
                 Activity.RunOnUiThread(() =>
                 {
                     // TODO: Add
-                    linearlayoutNotams.AddView(notamLine);
+                    linearLayoutNotamLines.AddView(notamLine);
                 });
 
             }
