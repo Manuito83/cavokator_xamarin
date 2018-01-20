@@ -110,16 +110,6 @@ namespace Cavokator
             _chooseIDtextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _linearlayoutWxBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
 
-            // Get a list of ICAO/IATA/Airport's name from CSV at first execution
-            // We get the whole list of 5000+ because it is faster to iterate compared to consulting CSV 
-            // This operation might be time consuming and we do it at OnCreate in order to have
-            // a better overall response from the app later on
-            //if (_myAirportDefinitions.Count == 0)
-            //{
-            //    AirportConverter iataConverter = new AirportConverter();
-            //    _myAirportDefinitions = iataConverter.GetCodeList();
-            //}
-
 
             // If persistence data option is selected, we get the last values from SharedPreferences
             // and then call ShowWeather again, so that the information is re-generated
