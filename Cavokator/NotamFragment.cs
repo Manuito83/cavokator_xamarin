@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -14,6 +13,7 @@ using Android.Text;
 using Android.Graphics;
 using Plugin.Connectivity;
 using System.Threading.Tasks;
+using Android.Support.V7.Widget;
 
 namespace Cavokator
 {
@@ -172,43 +172,6 @@ namespace Cavokator
                 Toast.MakeText(Activity, Resource.String.Internet_Error, ToastLength.Short).Show();
             }
         }
-
-        /// <summary>
-        /// Populate list with notams for every airport requested
-        /// </summary>
-        private void GetNotams()
-        {
-            for (int i = 0; i < mRequestedAirportsByIcao.Count; i++) 
-            {
-                string currentAirport = mRequestedAirportsByIcao[i];
-
-                NotamFetcher mNotams = new NotamFetcher(currentAirport);
-                mNotamContainerList.Add(mNotams.DecodedNotam);
-            }
-        }
-        
-        private void ShowNotams()
-        {
-            // Iterate every airport populated by GetNotams()
-            for (int i = 0; i < mNotamContainerList.Count; i++)
-            {
-                for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
-                {
-
-                    // TODO: Divide in methods
-                    TextView notamLine = new TextView(Activity);
-
-                    notamLine.Text = mNotamContainerList[i].NotamRaw[j];
-
-                    Activity.RunOnUiThread(() =>
-                    {
-                        // TODO: Add
-                        _linearLayoutNotamLines.AddView(notamLine);
-                    });
-
-                }
-            }
-        }
         
         /// <summary>
         /// Populate "requestedAirports" lists
@@ -257,6 +220,51 @@ namespace Cavokator
                 }
             }
         }
+
+        /// <summary>
+        /// Populate list with notams for every airport requested
+        /// </summary>
+        private void GetNotams()
+        {
+            for (int i = 0; i < mRequestedAirportsByIcao.Count; i++) 
+            {
+                string currentAirport = mRequestedAirportsByIcao[i];
+
+                NotamFetcher mNotams = new NotamFetcher(currentAirport);
+                mNotamContainerList.Add(mNotams.DecodedNotam);
+            }
+        }
+        
+        private void ShowNotams()
+        {
+            // Iterate every airport populated by GetNotams()
+            for (int i = 0; i < mNotamContainerList.Count; i++)
+            {
+                for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+                {
+
+                    AddNotamsCards(i, j);
+
+                }
+            }
+        }
+
+        private void AddNotamsCards(int i, int j)
+        {
+            CardView notamCard = new CardView(Activity);
+
+            TextView notamLine = new TextView(Activity);
+
+            notamLine.Text = mNotamContainerList[i].NotamRaw[j];
+
+            Activity.RunOnUiThread(() =>
+            {
+                notamCard.AddView(notamLine);
+                _linearLayoutNotamLines.AddView(notamCard);
+            });
+        }
+
+
 
         private void StyleViews()
         {
