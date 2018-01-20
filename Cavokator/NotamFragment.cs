@@ -30,16 +30,19 @@ namespace Cavokator
         // View that will be used for FindViewById
         private View thisView;
 
-        private NotamContainer myNotamContainer = new NotamContainer();
+        private List<NotamContainer> mNotamContainerList = new List<NotamContainer>();
 
         // List of actual ICAO (as entered) airports that we are going to request
-        private List<string> requestedAirportsByIcao = new List<string>();
+        private List<string> mRequestedAirportsByIcao = new List<string>();
 
         // List of airports with a mix of ICAO and IATA, that we show to the user as it was requested
-        private List<string> requestedAirportsRawString = new List<string>();
+        private List<string> mRequestedAirportsRawString = new List<string>();
 
         // Keep count of string length in EditText field, so that we know if it has decreased (deletion)
-        private int editTextIdLength;
+        private int mEditTextIdLength;
+
+        // Initialize object to store List downloaded at OnCreate from a CAV file with IATA, ICAO and Airport Names
+        private List<AirportCsvDefinition> mAirportDefinitions = AirportDefinitions._myAirportDefinitions;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -79,7 +82,7 @@ namespace Cavokator
 
             // Apply only if we are adding text
             // Otherwise, we could not delete (due to infinite loop)
-            if (_airportEntryEditText.Text.Length > editTextIdLength)
+            if (_airportEntryEditText.Text.Length > mEditTextIdLength)
             {
                 // If our text is already 4 positions long
                 if (_airportEntryEditText.Text.Length > 3)
@@ -116,7 +119,7 @@ namespace Cavokator
 
         private void BeforeIdTextChanged(object sender, TextChangedEventArgs e)
         {
-            editTextIdLength = _airportEntryEditText.Text.Length;
+            mEditTextIdLength = _airportEntryEditText.Text.Length;
         }
 
         private void OnBackgroundTouch(object sender, View.TouchEventArgs e)
@@ -128,6 +131,13 @@ namespace Cavokator
         private void OnClearButtonClicked(object sender, EventArgs e)
         {
             _linearLayoutNotamLines.RemoveAllViews();
+
+            mNotamContainerList.Clear();
+
+            _airportEntryEditText.Text = "";
+            _airportEntryEditText.SetTextColor(default(Color));
+            _airportEntryEditText.SetBackgroundColor(Color.ParseColor("#aaaaaa"));
+            _airportEntryEditText.SetTypeface(null, TypefaceStyle.Italic);
         }
 
         private void OnRequestButtonClicked(object sender, EventArgs e)
@@ -137,6 +147,8 @@ namespace Cavokator
             im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
 
             _airportEntryEditText.ClearFocus();
+
+            mNotamContainerList.Clear();
 
             // Remove all previous views from the linear layout
             _linearLayoutNotamLines.RemoveAllViews();
@@ -149,9 +161,10 @@ namespace Cavokator
                     // Populate "requestedAirports" lists
                     SanitizeRequestedNotams(_airportEntryEditText.Text);
 
-                    myNotamContainer = RequestNotams();
+                    // Populate list with notams for every airport requested
+                    GetNotams();
 
-                    ShowNotams(myNotamContainer);
+                    ShowNotams();
                 });
             }
             else
@@ -160,37 +173,78 @@ namespace Cavokator
             }
         }
 
+        /// <summary>
+        /// Populate list with notams for every airport requested
+        /// </summary>
+        private void GetNotams()
+        {
+            for (int i = 0; i < mRequestedAirportsByIcao.Count; i++) 
+            {
+                string currentAirport = mRequestedAirportsByIcao[i];
+
+                NotamFetcher mNotams = new NotamFetcher(currentAirport);
+                mNotamContainerList.Add(mNotams.DecodedNotam);
+            }
+        }
+        
+        private void ShowNotams()
+        {
+            // Iterate every airport populated by GetNotams()
+            for (int i = 0; i < mNotamContainerList.Count; i++)
+            {
+                for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+                {
+
+                    // TODO: Divide in methods
+                    TextView notamLine = new TextView(Activity);
+
+                    notamLine.Text = mNotamContainerList[i].NotamRaw[j];
+
+                    Activity.RunOnUiThread(() =>
+                    {
+                        // TODO: Add
+                        _linearLayoutNotamLines.AddView(notamLine);
+                    });
+
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Populate "requestedAirports" lists
+        /// </summary>
+        /// <param name="myNotamContainer"></param>
         private void SanitizeRequestedNotams(string requestedNotamsString)
         {
             // Split airport list entered
             // We perform the same operation to both lists, the user one and the ICAO one
-            requestedAirportsByIcao = requestedNotamsString.Split(' ', '\n', ',').ToList();
-            requestedAirportsRawString = requestedNotamsString.Split(' ', '\n', ',').ToList();
+            mRequestedAirportsByIcao = requestedNotamsString.Split(' ', '\n', ',').ToList();
+            mRequestedAirportsRawString = requestedNotamsString.Split(' ', '\n', ',').ToList();
 
             // Check and delete any entries with less than 3 chars
-            for (var i = requestedAirportsByIcao.Count - 1; i >= 0; i--)
+            for (var i = mRequestedAirportsByIcao.Count - 1; i >= 0; i--)
             {
-                if (requestedAirportsByIcao[i].Length < 3)
+                if (mRequestedAirportsByIcao[i].Length < 3)
                 {
-                    requestedAirportsByIcao.RemoveAt(i);
-                    requestedAirportsRawString.RemoveAt(i);
+                    mRequestedAirportsByIcao.RemoveAt(i);
+                    mRequestedAirportsRawString.RemoveAt(i);
                 }
             }
 
             // If airport code length is 3, it might be an IATA airport
             // so we try to get its ICAO in order to get the WX information
-            for (var i = 0; i < requestedAirportsByIcao.Count; i++)
+            for (var i = 0; i < mRequestedAirportsByIcao.Count; i++)
             {
-                if (requestedAirportsByIcao[i].Length == 3)
+                if (mRequestedAirportsByIcao[i].Length == 3)
                 {
                     // Try to find the IATA in the list
                     try
                     {
-                        for (int j = 0; j < AirportDefinitions._myAirportDefinitions.Count; j++)
+                        for (int j = 0; j < mAirportDefinitions.Count; j++)
                         {
-                            if (AirportDefinitions._myAirportDefinitions[j].iata == requestedAirportsByIcao[i].ToUpper())
+                            if (mAirportDefinitions[j].iata == mRequestedAirportsByIcao[i].ToUpper())
                             {
-                                requestedAirportsByIcao[i] = AirportDefinitions._myAirportDefinitions[j].icao;
+                                mRequestedAirportsByIcao[i] = mAirportDefinitions[j].icao;
                                 break;
                             }
 
@@ -198,36 +252,9 @@ namespace Cavokator
                     }
                     catch
                     {
-                        requestedAirportsByIcao[i] = null;
+                        mRequestedAirportsByIcao[i] = null;
                     }
                 }
-            }
-        }
-
-        private NotamContainer RequestNotams()
-        {
-            string myAirportRequest = requestedAirportsByIcao[0];
-            
-            NotamFetcher mNotams = new NotamFetcher(myAirportRequest);
-
-            return mNotams.DecodedNotam;
-        }
-
-        private void ShowNotams(NotamContainer myNotamContainer)
-        {
-            for (int i = 0; i < myNotamContainer.NotamRaw.Count; i++)
-            {
-                
-                TextView notamLine = new TextView(Activity);
-
-                notamLine.Text = myNotamContainer.NotamRaw[i];
-
-                Activity.RunOnUiThread(() =>
-                {
-                    // TODO: Add
-                    _linearLayoutNotamLines.AddView(notamLine);
-                });
-
             }
         }
 
