@@ -48,8 +48,8 @@ namespace Cavokator
         private List<string> _myAirportsList = new List<string>();
 
 
-        // Object to store List downloaded at OnCreate from a CAV file with IATA, ICAO and Airport Names
-        private List<AirportCsvDefinition> _myAirportDefinitions = new List<AirportCsvDefinition>();
+        // Initialize object to store List downloaded at OnCreate from a CAV file with IATA, ICAO and Airport Names
+        private List<AirportCsvDefinition> _myAirportDefinitions = AirportDefinitions._myAirportDefinitions;
 
 
         // Instantiate WXInfo object
@@ -114,11 +114,11 @@ namespace Cavokator
             // We get the whole list of 5000+ because it is faster to iterate compared to consulting CSV 
             // This operation might be time consuming and we do it at OnCreate in order to have
             // a better overall response from the app later on
-            if (_myAirportDefinitions.Count == 0)
-            {
-                AirportConverter iataConverter = new AirportConverter();
-                _myAirportDefinitions = iataConverter.GetCodeList();
-            }
+            //if (_myAirportDefinitions.Count == 0)
+            //{
+            //    AirportConverter iataConverter = new AirportConverter();
+            //    _myAirportDefinitions = iataConverter.GetCodeList();
+            //}
 
 
             // If persistence data option is selected, we get the last values from SharedPreferences

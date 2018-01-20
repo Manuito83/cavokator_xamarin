@@ -14,6 +14,9 @@ namespace Cavokator
 {
     static class AirportDefinitions
     {
+        /// <summary>
+        /// Information from Airport's CVS file
+        /// </summary>
         public static List<AirportCsvDefinition> _myAirportDefinitions = new List<AirportCsvDefinition>();
 
         static AirportDefinitions()
