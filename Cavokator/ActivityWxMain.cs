@@ -18,7 +18,6 @@ namespace Cavokator
 
     public class ActivityWxMain : AppCompatActivity
     {
-
         #warning Did we create a changelog for this version?
         public static bool versionWithChangelog = true;
         
@@ -34,7 +33,7 @@ namespace Cavokator
         private SettingsFragment mSettingsFragment;
         private AboutFragment mAboutFragment;
         private Stack<SupportFragment> mStackFragment;
-
+        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -50,7 +49,6 @@ namespace Cavokator
             mAboutFragment = new AboutFragment();
 
             mStackFragment = new Stack<SupportFragment>();
-
 
             // Initialize Toolbar
             Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
@@ -77,7 +75,6 @@ namespace Cavokator
                 ShowChangelog();
             }
         }
-
 
         private void ShowChangelog()
         {
@@ -129,7 +126,6 @@ namespace Cavokator
             return true;
         }
 
-
         void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
         {
             switch (e.MenuItem.ItemId)
@@ -155,7 +151,6 @@ namespace Cavokator
             drawerLayout.CloseDrawers();
         }
         
-
         public void ReplaceFragment (SupportFragment fragment)
         {
             if (fragment.IsVisible)
@@ -172,7 +167,6 @@ namespace Cavokator
             mCurrentFragment = fragment;
         }
 
-
         public override void OnBackPressed()
         {
             if (drawerLayout.IsDrawerOpen((int)GravityFlags.Start))
@@ -183,9 +177,6 @@ namespace Cavokator
             {
                 base.OnBackPressed();
             }
-
-            
-
         }
 
     }

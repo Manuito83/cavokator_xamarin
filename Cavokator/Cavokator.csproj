@@ -136,6 +136,7 @@
   <ItemGroup>
     <Compile Include="AboutFragment.cs" />
     <Compile Include="AirportConverter.cs" />
+    <Compile Include="AirportDefinitions.cs" />
     <Compile Include="ApplyTheme.cs" />
     <Compile Include="ChangelogDialog.cs" />
     <Compile Include="ClickableSpan.cs" />
