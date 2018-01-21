@@ -243,10 +243,17 @@ namespace Cavokator
                 for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
                 {
 
+                    //AddAirportName(i, j);
+
                     AddNotamsCards(i, j);
 
                 }
             }
+        }
+
+        private void AddAirportName(int i, int j)
+        {
+            throw new NotImplementedException();
         }
 
         private void AddNotamsCards(int i, int j)

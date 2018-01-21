@@ -61,12 +61,15 @@ namespace Cavokator
             var navigationView = FindViewById<NavigationView>(Resource.Id.my_navigation_view);
             navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;
 
+            // Change this depending on what the APP launches in
+            var fragmentToLaunch = mNotamFragment;
+
             // Add fragments to container (FrameLayout)
             var ft = SupportFragmentManager.BeginTransaction(); 
-            ft.Add(Resource.Id.flContent, mWxMetarFragment);
+            ft.Add(Resource.Id.flContent, fragmentToLaunch);
             ft.Commit();
 
-            mCurrentFragment = mWxMetarFragment;
+            mCurrentFragment = fragmentToLaunch;
 
 
             //Did we change version number and are showing changelog ?
