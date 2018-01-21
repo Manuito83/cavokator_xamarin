@@ -54,6 +54,8 @@ namespace Cavokator
                             Console.WriteLine("*****fir: " + qMatches.Groups["FIR"].Value);
                         }
 
+                        // TODO: decoding
+
                     }
                 }
             }
@@ -77,11 +79,14 @@ namespace Cavokator
             HtmlNodeCollection notamCollection = htmlDoc.DocumentNode.SelectNodes("//pre");
 
             List<String> myNotams = new List<string>();
-            foreach (HtmlNode node in notamCollection)
+            if (notamCollection != null)
             {
-                myNotams.Add(node.InnerText);
+                foreach (HtmlNode node in notamCollection)
+                {
+                    myNotams.Add(node.InnerText);
+                }
             }
-
+            
             return myNotams; 
         }
 

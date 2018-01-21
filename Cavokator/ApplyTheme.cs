@@ -17,7 +17,9 @@ namespace Cavokator
         GreenText,
         CyanText,
         MagentaText,
-        TextHint        
+        TextHint,
+        CardViews, 
+        LightYellowBackground
     }
 
 
@@ -35,6 +37,8 @@ namespace Cavokator
         private Color _color_cyanTextWarning_LIGHT = Color.ParseColor("#039be5");
         private Color _color_magentaTextWarning_LIGHT = Color.ParseColor("#aa00ff");
         private Color _color_textHint_LIGHT = Color.ParseColor("#8C8C8C");
+        private Color _color_cardViews_LIGHT = Color.ParseColor("#ffffff");
+        private Color _color_lightYellowBackground_LIGHT = Color.ParseColor("#fffde7");
 
         // COLORS ##DARK##
         private Color _color_mainBackground_DARK = Color.ParseColor("#303030");
@@ -45,6 +49,8 @@ namespace Cavokator
         private Color _color_cyanTextWarning_DARK = Color.ParseColor("#00e5ff");
         private Color _color_magentaTextWarning_DARK = Color.ParseColor("#e040fb");
         private Color _color_textHint_DARK = Color.ParseColor("#e0e0e0");
+        private Color _color_cardViews_DARK = Color.ParseColor("#757575");
+        private Color _color_lightYellowBackground_DARK = Color.ParseColor("#fffde7");
 
 
         public Color GetColor (DesiredColor mDesiredColor)
@@ -103,6 +109,18 @@ namespace Cavokator
                         myColor = _color_textHint_LIGHT;
                     else if (_currentTheme == "DARK")
                         myColor = _color_textHint_DARK;
+                    break;
+                case DesiredColor.CardViews:
+                    if (_currentTheme == "LIGHT")
+                        myColor = _color_cardViews_LIGHT;
+                    else if (_currentTheme == "DARK")
+                        myColor = _color_cardViews_DARK;
+                    break;
+                case DesiredColor.LightYellowBackground:
+                    if (_currentTheme == "LIGHT")
+                        myColor = _color_lightYellowBackground_LIGHT;
+                    else if (_currentTheme == "DARK")
+                        myColor = _color_lightYellowBackground_DARK;
                     break;
             }
 

@@ -14,6 +14,7 @@ using Android.Graphics;
 using Plugin.Connectivity;
 using System.Threading.Tasks;
 using Android.Support.V7.Widget;
+using Android.Util;
 
 namespace Cavokator
 {
@@ -237,33 +238,100 @@ namespace Cavokator
         
         private void ShowNotams()
         {
-            // Iterate every airport populated by GetNotams()
-            for (int i = 0; i < mNotamContainerList.Count; i++)
+            // Start working if there is something in the container
+            if (mNotamContainerList.Count > 0)
             {
-                for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+                AddRequestedTime();
+
+                // Iterate every airport populated by GetNotams()
+                for (int i = 0; i < mNotamContainerList.Count; i++)
                 {
+                    AddAirportName(i);
 
-                    //AddAirportName(i, j);
-
-                    AddNotamsCards(i, j);
-
+                    if (mNotamContainerList[i].NotamRaw.Count == 0)
+                    {
+                        AddErrorCard();
+                    }
+                    else
+                    {
+                        for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+                        {
+                            AddNotamsCards(i, j);
+                        }
+                    }
                 }
             }
         }
 
-        private void AddAirportName(int i, int j)
+        private void AddRequestedTime()
         {
-            throw new NotImplementedException();
+            // TODO
+            TextView timeLine = new TextView(Activity);
+            DateTime utcNow = DateTime.UtcNow;
         }
 
-        private void AddNotamsCards(int i, int j)
+        private void AddAirportName(int i)
+        {
+            TextView airportName = new TextView(Activity);
+            
+            // Try to get the airport's name from existing _myAirportDefinition List
+            bool foundAirportICAO = false;
+            try
+            {
+                for (int j = 0; j < mAirportDefinitions.Count; j++)
+                {
+                    if (mAirportDefinitions[j].icao == mRequestedAirportsByIcao[i].ToUpper())
+                    {
+                        airportName.Text = mRequestedAirportsRawString[i].ToUpper() + " - " + mAirportDefinitions[j].description;
+                        foundAirportICAO = true;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                if (!foundAirportICAO)
+                {
+                    airportName.Text = mRequestedAirportsRawString[i].ToUpper();
+                }
+
+            }
+
+            // Styling
+            airportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+            airportName.SetTextSize(ComplexUnitType.Dip, 16);
+            LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            airportTextViewParams.SetMargins(0, 70, 0, 20);
+            airportName.LayoutParameters = airportTextViewParams;
+
+            // Adding view
+            Activity.RunOnUiThread(() =>
+            {
+                _linearLayoutNotamLines.AddView(airportName);
+            });
+
+        }
+
+        private void AddErrorCard()
         {
             CardView notamCard = new CardView(Activity);
-
             TextView notamLine = new TextView(Activity);
 
-            notamLine.Text = mNotamContainerList[i].NotamRaw[j];
+            notamLine.Text = Resources.GetString(Resource.String.Notam_not_found);
 
+            // Styling text
+            notamLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
+            notamLine.SetTextSize(ComplexUnitType.Dip, 12);
+            notamLine.SetPadding(30, 30, 15, 30);
+
+            // Styling cards
+            notamCard.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.LightYellowBackground));
+            notamCard.Elevation = 5.0f;
+            var cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            cardViewParams.SetMargins(10, 10, 10, 10);
+            notamCard.LayoutParameters = cardViewParams;
+
+            // Adding view
             Activity.RunOnUiThread(() =>
             {
                 notamCard.AddView(notamLine);
@@ -271,7 +339,32 @@ namespace Cavokator
             });
         }
 
+        private void AddNotamsCards(int i, int j)
+        {
+            CardView notamCard = new CardView(Activity);
+            TextView notamLine = new TextView(Activity);
 
+            notamLine.Text = mNotamContainerList[i].NotamRaw[j];
+
+            // Styling text
+            notamLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            notamLine.SetTextSize(ComplexUnitType.Dip, 12);
+            notamLine.SetPadding(30, 30, 15, 0);
+                        
+            // Styling cards
+            notamCard.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            notamCard.Elevation = 5.0f;
+            var cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            cardViewParams.SetMargins(10, 10, 10, 10);
+            notamCard.LayoutParameters = cardViewParams;
+
+            // Adding view
+            Activity.RunOnUiThread(() =>
+            {
+                notamCard.AddView(notamLine);
+                _linearLayoutNotamLines.AddView(notamCard);
+            });
+        }
 
         private void StyleViews()
         {
