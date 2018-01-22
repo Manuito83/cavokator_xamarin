@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Android.Support.V7.Widget;
 using Android.Util;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace Cavokator
 {
@@ -63,7 +64,9 @@ namespace Cavokator
             thisView = inflater.Inflate(Resource.Layout.notam_fragment, container, false);
 
             StyleViews();
-            
+
+            RecallSavedData();
+
             // Events
             _linearlayoutBottom.Touch += OnBackgroundTouch;
             _notamRequestButton.Click += OnRequestButtonClicked;
@@ -73,8 +76,16 @@ namespace Cavokator
 
             // Sets up timer to update NOTAM UTC
             TimeTick();
-
+            
             return thisView;
+        }
+
+        // Saves fields to SharedPreferences
+        public override void OnPause()
+        {
+            SaveData();
+
+            base.OnPause();
         }
 
         /// <summary>
@@ -157,6 +168,7 @@ namespace Cavokator
 
             _airportEntryEditText.ClearFocus();
 
+            //mNotamContainerList = new List<NotamContainer>();
             mNotamContainerList.Clear();
 
             // Remove all previous views from the linear layout
@@ -409,6 +421,64 @@ namespace Cavokator
 
             
             
+        }
+
+        private void SaveData()
+        {
+            var notamDestroy = Application.Context.GetSharedPreferences("NOTAM_OnPause", FileCreationMode.Private);
+
+            // Save ICAO ID LIST
+            notamDestroy.Edit().PutString("_airportEntryEditText", _airportEntryEditText.Text).Apply();
+
+            // Save AIRPORT IDs
+            var notamContainer = JsonConvert.SerializeObject(mNotamContainerList);
+            notamDestroy.Edit().PutString("notamContainer", notamContainer).Apply();
+
+            var requestedUtc = JsonConvert.SerializeObject(mUtcRequestTime);
+            notamDestroy.Edit().PutString("requestedUtc", requestedUtc).Apply();
+
+            var airportsByIcao = JsonConvert.SerializeObject(mRequestedAirportsByIcao);
+            notamDestroy.Edit().PutString("airportsICAO", airportsByIcao).Apply();
+
+            var airportsRaw = JsonConvert.SerializeObject(mRequestedAirportsRawString);
+            notamDestroy.Edit().PutString("airportsRaw", airportsRaw).Apply();
+        }
+
+        private void RecallSavedData()
+        {
+            ISharedPreferences notamPrefs = Application.Context.GetSharedPreferences("NOTAM_OnPause", FileCreationMode.Private);
+
+            // Airport Text
+            var airportEntryEditText = notamPrefs.GetString("_airportEntryEditText", String.Empty);
+
+            // We will only get saved data if it exists at all, otherwise we could trigger
+            // the event "aftertextchanged" for _airportEntryEditText and we would like to avoid that
+            if (airportEntryEditText != string.Empty)
+            {
+                _airportEntryEditText.Text = airportEntryEditText;
+            }
+
+            try
+            {
+                var deserializeNotamContainer = JsonConvert.DeserializeObject<List<NotamContainer>>(notamPrefs.GetString("notamContainer", string.Empty));
+                mNotamContainerList = deserializeNotamContainer;
+
+                var deserializeRequestedUtc = JsonConvert.DeserializeObject<DateTime>(notamPrefs.GetString("requestedUtc", string.Empty));
+                mUtcRequestTime = deserializeRequestedUtc;
+
+                var deserializeAirportsByIcao = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsICAO", string.Empty));
+                mRequestedAirportsByIcao = deserializeAirportsByIcao;
+
+                var deserializeAirportsRawString = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsRaw", string.Empty));
+                mRequestedAirportsRawString = deserializeAirportsRawString;
+
+                ShowNotams();
+            }
+            catch (Exception)
+            {
+                // Just do nothing, as values are possibly null (first initialization)
+            }
+
         }
 
         private void TimeTick()
