@@ -31,6 +31,8 @@ namespace Cavokator
         // View that will be used for FindViewById
         private View thisView;
 
+        private DateTime mUtcRequestTime = new DateTime();
+
         private List<NotamContainer> mNotamContainerList = new List<NotamContainer>();
 
         // List of actual ICAO (as entered) airports that we are going to request
@@ -267,7 +269,9 @@ namespace Cavokator
         {
             // TODO
             TextView timeLine = new TextView(Activity);
-            DateTime utcNow = DateTime.UtcNow;
+            mUtcRequestTime = DateTime.UtcNow;
+
+
         }
 
         private void AddAirportName(int i)
