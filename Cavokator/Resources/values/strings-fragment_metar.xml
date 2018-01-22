@@ -21,16 +21,8 @@
     <string name="Option_DivideTaforText">Divide Tafor</string>
     <string name="Metar_Issued">METAR @</string>
     <string name="Tafor_Issued">TAFOR @</string>
-    <string name="Ago">ago</string>
-    <string name="Days">days</string>
-    <string name="Hours">hours</string>
-    <string name="Minutes">minutes</string>
-    <string name="Day">day</string>
-    <string name="Hour">hour</string>
-    <string name="Minute">minute</string>
     <string name="Fetching">Fetching...</string>
     <string name="TaforNotAvailable">TAFOR not available</string>
-
     <string name="weather">weather</string>
   
 </resources>

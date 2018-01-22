@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+
+  <string name="Ago">ago</string>
+  <string name="Days">days</string>
+  <string name="Hours">hours</string>
+  <string name="Minutes">minutes</string>
+  <string name="Day">day</string>
+  <string name="Hour">hour</string>
+  <string name="Minute">minute</string>
+  <string name="time_just_now">just now</string>
+
+</resources>
+  

@@ -15,12 +15,13 @@ using Plugin.Connectivity;
 using System.Threading.Tasks;
 using Android.Support.V7.Widget;
 using Android.Util;
+using System.Threading;
 
 namespace Cavokator
 {
     class NotamFragment : Android.Support.V4.App.Fragment
     {
-        // Main fields
+        // Main views
         private LinearLayout _linearlayoutBottom;
         private EditText _airportEntryEditText;
         private Button _notamRequestButton;
@@ -31,7 +32,9 @@ namespace Cavokator
         // View that will be used for FindViewById
         private View thisView;
 
-        private DateTime mUtcRequestTime = new DateTime();
+        // Views for UTC time
+        private DateTime mUtcRequestTime;
+        private TextView mUtcTextView;
 
         private List<NotamContainer> mNotamContainerList = new List<NotamContainer>();
 
@@ -54,7 +57,6 @@ namespace Cavokator
             HasOptionsMenu = true;
         }
 
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // In order to return the view for this Fragment
@@ -69,6 +71,9 @@ namespace Cavokator
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
 
+            // Sets up timer to update NOTAM UTC
+            TimeTick();
+
             return thisView;
         }
 
@@ -76,49 +81,49 @@ namespace Cavokator
         /// First we change the box style, then we limit length to 4 chars
         /// </summary>
         private void OnIdTextChanged(object sender, AfterTextChangedEventArgs e)
+    {
+        // Style EdiText text when writting
+        _airportEntryEditText.SetTextColor(Color.Black);
+        _airportEntryEditText.SetBackgroundColor(Color.White);
+        _airportEntryEditText.SetTypeface(null, TypefaceStyle.Normal);
+
+
+        // Apply only if we are adding text
+        // Otherwise, we could not delete (due to infinite loop)
+        if (_airportEntryEditText.Text.Length > mEditTextIdLength)
         {
-            // Style EdiText text when writting
-            _airportEntryEditText.SetTextColor(Color.Black);
-            _airportEntryEditText.SetBackgroundColor(Color.White);
-            _airportEntryEditText.SetTypeface(null, TypefaceStyle.Normal);
-
-
-            // Apply only if we are adding text
-            // Otherwise, we could not delete (due to infinite loop)
-            if (_airportEntryEditText.Text.Length > mEditTextIdLength)
+            // If our text is already 4 positions long
+            if (_airportEntryEditText.Text.Length > 3)
             {
-                // If our text is already 4 positions long
-                if (_airportEntryEditText.Text.Length > 3)
+                // Take a look at the last 4 chars entered
+                string lastFourChars = _airportEntryEditText.Text.Substring(_airportEntryEditText.Text.Length - 4, 4);
+
+                // If there is at least a space, then do nothing
+                bool maxLengthReached = true;
+                foreach (char c in lastFourChars)
                 {
-                    // Take a look at the last 4 chars entered
-                    string lastFourChars = _airportEntryEditText.Text.Substring(_airportEntryEditText.Text.Length - 4, 4);
-
-                    // If there is at least a space, then do nothing
-                    bool maxLengthReached = true;
-                    foreach (char c in lastFourChars)
+                    if (c == ' ')
                     {
-                        if (c == ' ')
-                        {
-                            maxLengthReached = false;
-                        }
+                        maxLengthReached = false;
                     }
+                }
 
-                    // If there is no space, then we apply a space
-                    if (maxLengthReached)
-                    {
-                        // We need to unsubscribe and subscribe again to the event
-                        // Otherwise we would get an infinite loop
-                        _airportEntryEditText.AfterTextChanged -= OnIdTextChanged;
+                // If there is no space, then we apply a space
+                if (maxLengthReached)
+                {
+                    // We need to unsubscribe and subscribe again to the event
+                    // Otherwise we would get an infinite loop
+                    _airportEntryEditText.AfterTextChanged -= OnIdTextChanged;
 
-                        _airportEntryEditText.Append(" ");
+                    _airportEntryEditText.Append(" ");
 
-                        _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
-
-                    }
+                    _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
 
                 }
+
             }
         }
+    }
 
         private void BeforeIdTextChanged(object sender, TextChangedEventArgs e)
         {
@@ -136,6 +141,7 @@ namespace Cavokator
             _linearLayoutNotamLines.RemoveAllViews();
 
             mNotamContainerList.Clear();
+            mUtcTextView = null;
 
             _airportEntryEditText.Text = "";
             _airportEntryEditText.SetTextColor(default(Color));
@@ -155,6 +161,9 @@ namespace Cavokator
 
             // Remove all previous views from the linear layout
             _linearLayoutNotamLines.RemoveAllViews();
+
+            // Update the time at which the request was performed
+            mUtcRequestTime = DateTime.UtcNow;
 
             if (CrossConnectivity.Current.IsConnected)
             {
@@ -267,11 +276,25 @@ namespace Cavokator
 
         private void AddRequestedTime()
         {
-            // TODO
-            TextView timeLine = new TextView(Activity);
-            mUtcRequestTime = DateTime.UtcNow;
+            string utcStringBeginning = "* " + Resources.GetString(Resource.String.NOTAM_requested);
+            string justNow = Resources.GetString(Resource.String.time_just_now) + " *";
 
+            string utcString = $"{utcStringBeginning} {justNow}";
 
+            mUtcTextView = new TextView(Activity);
+            mUtcTextView.Text = utcString;
+            mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
+            mUtcTextView.SetTextSize(ComplexUnitType.Dip, 14);
+            mUtcTextView.Gravity = GravityFlags.Center;
+            var utcTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            utcTextViewParams.SetMargins(0, 50, 0, 0);
+            mUtcTextView.LayoutParameters = utcTextViewParams;
+
+            // Adding view
+            Activity.RunOnUiThread(() =>
+            {
+                _linearLayoutNotamLines.AddView(mUtcTextView);
+            });
         }
 
         private void AddAirportName(int i)
@@ -282,30 +305,24 @@ namespace Cavokator
             bool foundAirportICAO = false;
             try
             {
-                for (int j = 0; j < mAirportDefinitions.Count; j++)
-                {
+                for (var j = 0; j < mAirportDefinitions.Count; j++)
                     if (mAirportDefinitions[j].icao == mRequestedAirportsByIcao[i].ToUpper())
                     {
                         airportName.Text = mRequestedAirportsRawString[i].ToUpper() + " - " + mAirportDefinitions[j].description;
                         foundAirportICAO = true;
                         break;
                     }
-                }
             }
             finally
             {
-                if (!foundAirportICAO)
-                {
-                    airportName.Text = mRequestedAirportsRawString[i].ToUpper();
-                }
-
+                if (!foundAirportICAO) airportName.Text = mRequestedAirportsRawString[i].ToUpper();
             }
 
             // Styling
             airportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             airportName.SetTextSize(ComplexUnitType.Dip, 16);
             LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            airportTextViewParams.SetMargins(0, 70, 0, 20);
+            airportTextViewParams.SetMargins(0, 50, 0, 20);
             airportName.LayoutParameters = airportTextViewParams;
 
             // Adding view
@@ -394,6 +411,80 @@ namespace Cavokator
             
         }
 
-     
+        private void TimeTick()
+        {
+            // Update requested UTC time
+            var timerDelegate = new TimerCallback(UpdateRequestedTime);
+            var utcUpdateTimer = new Timer(timerDelegate, null, 0, 30000);
+        }
+
+        /// <summary>
+        /// Update requested UTC time
+        /// </summary>
+        /// <param name="state"></param>
+        private void UpdateRequestedTime(object state)
+        {
+            // Make sure were are finding the TextView
+            if (thisView.IsAttachedToWindow && mUtcTextView != null)
+            {
+                var utcNow = DateTime.UtcNow;
+                var timeComparison = utcNow - mUtcRequestTime;
+
+                string utcStringBeginning = "* " + Resources.GetString(Resource.String.NOTAM_requested);
+                string utcStringEnd = Resources.GetString(Resource.String.Ago) + " *";
+                string justNow = Resources.GetString(Resource.String.time_just_now) + " *";
+                string days = Resources.GetString(Resource.String.Days);
+                string hours = Resources.GetString(Resource.String.Hours);
+                string minutes = Resources.GetString(Resource.String.Minutes);
+                string day = Resources.GetString(Resource.String.Day);
+                string hour = Resources.GetString(Resource.String.Hour);
+                string minute = Resources.GetString(Resource.String.Minute);
+
+                string utcString = String.Empty;
+
+                if (timeComparison.Days > 1 && timeComparison.Hours > 1)
+                    utcString =
+                        $"{utcStringBeginning} {timeComparison.Days} {days}, {timeComparison.Hours} {hours} {utcStringEnd}";
+                else if (timeComparison.Days == 1 && timeComparison.Hours > 1)
+                    utcString =
+                        $"{utcStringBeginning} {timeComparison.Days} {day}, {timeComparison.Hours} {hours} {utcStringEnd}";
+                else if (timeComparison.Days > 1 && timeComparison.Hours == 1)
+                    utcString =
+                        $"{utcStringBeginning} {timeComparison.Days} {days}, {timeComparison.Hours} {hour} {utcStringEnd}";
+                else if (timeComparison.Days == 1 && timeComparison.Hours == 1)
+                    utcString =
+                        $"{utcStringBeginning} {timeComparison.Days} {day}, {timeComparison.Hours} {hour} {utcStringEnd}";
+                else if (timeComparison.Days < 1 && timeComparison.Hours > 1 && timeComparison.Minutes > 1)
+                    utcString =
+                        $"{utcStringBeginning} {timeComparison.Hours} {hours}, {timeComparison.Minutes} {minutes} {utcStringEnd}";
+                else if (timeComparison.Days < 1 && timeComparison.Hours == 1 && timeComparison.Minutes > 1)
+                    utcString =
+                        $"{utcStringBeginning} {timeComparison.Hours} {hour}, {timeComparison.Minutes} {minutes} {utcStringEnd}";
+                else if (timeComparison.Days < 1 && timeComparison.Hours > 1 && timeComparison.Minutes == 1)
+                    utcString =
+                        $"{utcStringBeginning} {timeComparison.Hours} {hours}, {timeComparison.Minutes} {minute} {utcStringEnd}";
+                else if (timeComparison.Days < 1 && timeComparison.Hours == 1 && timeComparison.Minutes == 1)
+                    utcString =
+                        $"{utcStringBeginning} {timeComparison.Hours} {hour}, {timeComparison.Minutes} {minute} {utcStringEnd}";
+                else if (timeComparison.Days < 1 && timeComparison.Hours < 1 && timeComparison.Minutes > 1)
+                    utcString = $"{utcStringBeginning} {timeComparison.Minutes} {minutes} {utcStringEnd}";
+                else
+                    utcString = $"{utcStringBeginning} {justNow}";
+
+                // Adding view
+                Activity.RunOnUiThread(() =>
+                {
+                    mUtcTextView.Text = utcString;
+
+                    // Styling
+                    if (timeComparison.Hours >= 6)
+                        mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
+                    else if (timeComparison.Hours >= 2)
+                        mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
+                    else
+                        mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
+                });
+            }
+        }
     }
 }
