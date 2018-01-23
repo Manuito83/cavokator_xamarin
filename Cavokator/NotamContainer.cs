@@ -14,6 +14,8 @@ namespace Cavokator
 {
     class NotamContainer
     {
+        public bool connectionError;
+
         public List<string> NotamRaw { get; set; } = new List<string>();
     }
 }

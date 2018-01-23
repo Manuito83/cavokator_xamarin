@@ -30,6 +30,8 @@ namespace Cavokator
         private TextView _chooseIDtextview;
         private LinearLayout _linearLayoutNotamLines;
 
+        private bool connectionError;
+
         // View that will be used for FindViewById
         private View thisView;
 
@@ -154,6 +156,8 @@ namespace Cavokator
             mNotamContainerList.Clear();
             mUtcTextView = null;
 
+            connectionError = false;
+
             _airportEntryEditText.Text = "";
             _airportEntryEditText.SetTextColor(default(Color));
             _airportEntryEditText.SetBackgroundColor(Color.ParseColor("#aaaaaa"));
@@ -165,6 +169,8 @@ namespace Cavokator
             // Close keyboard when button pressed
             var im = (InputMethodManager)Activity.GetSystemService(Context.InputMethodService);
             im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
+
+            connectionError = false;
 
             _airportEntryEditText.ClearFocus();
 
@@ -187,7 +193,15 @@ namespace Cavokator
                     // Populate list with notams for every airport requested
                     GetNotams();
 
-                    ShowNotams();
+                    // Did we connect succesfully? Then show Notams!
+                    if (connectionError == false)
+                        ShowNotams();
+                    else
+                    {
+                        mNotamContainerList.Clear();
+                        ShowConnectionError();
+                    }
+                        
                 });
             }
             else
@@ -195,7 +209,7 @@ namespace Cavokator
                 Toast.MakeText(Activity, Resource.String.Internet_Error, ToastLength.Short).Show();
             }
         }
-        
+
         /// <summary>
         /// Populate "requestedAirports" lists
         /// </summary>
@@ -254,7 +268,16 @@ namespace Cavokator
                 string currentAirport = mRequestedAirportsByIcao[i];
 
                 NotamFetcher mNotams = new NotamFetcher(currentAirport);
-                mNotamContainerList.Add(mNotams.DecodedNotam);
+
+                if (!mNotams.DecodedNotam.connectionError)
+                {
+                    mNotamContainerList.Add(mNotams.DecodedNotam);
+                }
+                else
+                {
+                    connectionError = true;
+                    break;
+                }
             }
         }
         
@@ -263,26 +286,51 @@ namespace Cavokator
             // Start working if there is something in the container
             if (mNotamContainerList.Count > 0)
             {
-                AddRequestedTime();
-
-                // Iterate every airport populated by GetNotams()
-                for (int i = 0; i < mNotamContainerList.Count; i++)
+                if (!connectionError)
                 {
-                    AddAirportName(i);
+                    AddRequestedTime();
 
-                    if (mNotamContainerList[i].NotamRaw.Count == 0)
+                    // Iterate every airport populated by GetNotams()
+                    for (int i = 0; i < mNotamContainerList.Count; i++)
                     {
-                        AddErrorCard();
-                    }
-                    else
-                    {
-                        for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+                        AddAirportName(i);
+
+                        if (mNotamContainerList[i].NotamRaw.Count == 0)
                         {
-                            AddNotamsCards(i, j);
+                            AddErrorCard();
+                        }
+                        else
+                        {
+                            for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+                            {
+                                AddNotamsCards(i, j);
+                            }
                         }
                     }
                 }
+                else
+                {
+                    ShowConnectionError();
+                }
             }
+        }
+
+        private void ShowConnectionError()
+        {
+            TextView errorTextView = new TextView(Activity);
+            errorTextView.Text = Resources.GetString(Resource.String.NOTAM_connectionError);
+            errorTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
+            errorTextView.SetTextSize(ComplexUnitType.Dip, 14);
+            errorTextView.Gravity = GravityFlags.Center;
+            var errorTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            errorTextViewParams.SetMargins(0, 50, 0, 0);
+            errorTextView.LayoutParameters = errorTextViewParams;
+
+            // Adding view
+            Activity.RunOnUiThread(() =>
+            {
+                _linearLayoutNotamLines.AddView(errorTextView);
+            });
         }
 
         private void AddRequestedTime()

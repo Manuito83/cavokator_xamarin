@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 using Android.App;
@@ -22,8 +24,10 @@ namespace Cavokator
         {
             List<string> notamList = Fetch(icao);
 
-            Decode(notamList);
-
+            if (notamList != null)
+                Decode(notamList);
+            else
+                DecodedNotam.connectionError = true;
         }
 
         private void Decode(List<string> notamList)
@@ -49,11 +53,10 @@ namespace Cavokator
                         Regex regexQ = new Regex(qStructure);
                         Match qMatches = regexQ.Match(shortQline);
 
-                        if (qMatches.Success)
-                        {
-                            Console.WriteLine("*****fir: " + qMatches.Groups["FIR"].Value);
-                        }
-
+                        //if (qMatches.Success)
+                        //{
+                        //    Console.WriteLine("*****fir: " + qMatches.Groups["FIR"].Value);
+                        //}
                         // TODO: decoding
 
                     }
@@ -75,21 +78,78 @@ namespace Cavokator
         {
             // TODO: timeouts events + handling
 
-            HtmlWeb web = new HtmlWeb();
-            var htmlDoc = web.Load(GetSourceUrl(icao));
-
-            HtmlNodeCollection notamCollection = htmlDoc.DocumentNode.SelectNodes("//pre");
-
-            List<String> myNotams = new List<string>();
-            if (notamCollection != null)
+            try
             {
-                foreach (HtmlNode node in notamCollection)
+                var htmlSource = RetrieveHtml(GetSourceUrl(icao));
+
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(htmlSource);
+
+                HtmlNodeCollection notamCollection = doc.DocumentNode.SelectNodes("//pre");
+
+                List<String> myNotams = new List<string>();
+                if (notamCollection != null)
                 {
-                    myNotams.Add(node.InnerText);
+                    foreach (HtmlNode node in notamCollection)
+                    {
+                        myNotams.Add(node.InnerText);
+                    }
+                }
+            
+                return myNotams; 
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static string RetrieveHtml(string url)
+        {
+            // Used to build entire input
+            StringBuilder sb = new StringBuilder();
+
+            // Used on each read operation
+            byte[] buf = new byte[8192];
+
+            // Prepare the web page we will be asking for
+            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+            request.Timeout = 10000; // Timeout in milliseconds
+            
+            try
+            {
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
+                {
+                    // We will read data via the response stream
+                    Stream resStream = response.GetResponseStream();
+
+                    string tempString = null;
+                    int count = 0;
+
+                    do
+                    {
+                        // Fill the buffer with data
+                        count = resStream.Read(buf, 0, buf.Length);
+
+                        // Make sure we read some data
+                        if (count != 0)
+                        {
+                            // Translate from bytes to ASCII text
+                            tempString = Encoding.ASCII.GetString(buf, 0, count);
+
+                            // Continue building the string
+                            sb.Append(tempString);
+                        }
+                    }
+                    while (count > 0); // Any more data to read?
                 }
             }
-            
-            return myNotams; 
+            catch (WebException e) when (e.Status == WebExceptionStatus.Timeout)
+            {
+                // If we got here, it was a timeout exception
+            }
+
+            return sb.ToString();
         }
 
         private string GetSourceUrl(string icao)
@@ -100,5 +160,7 @@ namespace Cavokator
 
             return url;
         }
+
     }
+
 }
