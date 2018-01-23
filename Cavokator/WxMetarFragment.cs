@@ -245,53 +245,39 @@ namespace Cavokator
                 _airportEntryEditText.Text = storedAirportIdText;
             }
 
-
-            try
+            // Make sure there are values != null, in order to avoid assigning null!
+            var deserializeIds = JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("airportIDs", string.Empty));
+            if (deserializeIds != null)
             {
                 // Airport IDs
-                var deserializeIds =
-                    JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("airportIDs", string.Empty));
+
                 _wxInfo.AirportIDs = deserializeIds;
 
                 // My Airports
-                var myAirportsIDs =
-                    JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("myAirportIDs", string.Empty));
+                var myAirportsIDs = JsonConvert.DeserializeObject<List<string>>(wxprefs.GetString("myAirportIDs", string.Empty));
                 _myAirportsList = myAirportsIDs;
 
                 // Airport Errors
-                var deserializeErrors =
-                    JsonConvert.DeserializeObject<List<bool>>(wxprefs.GetString("airportErrors", string.Empty));
+                var deserializeErrors = JsonConvert.DeserializeObject<List<bool>>(wxprefs.GetString("airportErrors", string.Empty));
                 _wxInfo.AirportErrors = deserializeErrors;
 
                 // Airport Metars UTC
-                var deserializeMetarsUtc =
-                    JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportMetarsUTC",
-                        string.Empty));
+                var deserializeMetarsUtc = JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportMetarsUTC", string.Empty));
                 _wxInfo.AirportMetarsUtc = deserializeMetarsUtc;
 
                 // Airport Metars
-                var deserializeMetars =
-                    JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportMetars",
-                        string.Empty));
+                var deserializeMetars = JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportMetars", string.Empty));
                 _wxInfo.AirportMetars = deserializeMetars;
 
                 // Airport Tafors UTC
-                var deserializeTaforsUtc =
-                    JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportTaforsUTC",
-                        string.Empty));
+                var deserializeTaforsUtc = JsonConvert.DeserializeObject<List<List<DateTime>>>(wxprefs.GetString("airportTaforsUTC", string.Empty));
                 _wxInfo.AirportTaforsUtc = deserializeTaforsUtc;
 
                 // Airport Tafors
-                var deserializeTafors =
-                    JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportTafors",
-                        string.Empty));
+                var deserializeTafors = JsonConvert.DeserializeObject<List<List<string>>>(wxprefs.GetString("airportTafors", string.Empty));
                 _wxInfo.AirportTafors = deserializeTafors;
 
                 ShowWeather();
-            }
-            catch (Exception)
-            {
-                // Just do nothing, as values are possibly null (first initialization)
             }
         }
 

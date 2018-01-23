@@ -525,7 +525,7 @@ namespace Cavokator
         private static string GetMetarUrl(string icaoId, int hoursBefore, bool mostRecent)
         {
 
-            var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+            var url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
                             + "dataSource=metars"
                             + "&requestType=retrieve"
                             + "&format=xml"
@@ -544,7 +544,7 @@ namespace Cavokator
         /// <returns></returns>
         private string GetTaforUrl(string icaoId)
         {
-            var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+            var url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
                             + "dataSource=tafs"
                             + "&requestType=retrieve"
                             + "&format=xml"
