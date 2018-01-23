@@ -30,6 +30,10 @@ namespace Cavokator
         private TextView _chooseIDtextview;
         private LinearLayout _linearLayoutNotamLines;
 
+        // ProgressDialog to show while we fetch the wx information
+        private AlertDialog.Builder _notamFetchingAlertDialogBuilder;
+        private AlertDialog _notamFetchingAlertDialog;
+
         private bool connectionError;
 
         // View that will be used for FindViewById
@@ -181,9 +185,18 @@ namespace Cavokator
 
             // Update the time at which the request was performed
             mUtcRequestTime = DateTime.UtcNow;
-
+            
             if (CrossConnectivity.Current.IsConnected)
             {
+                _notamRequestButton.Enabled = false;
+                
+                // Show our AlertDialog
+                _notamFetchingAlertDialogBuilder = new AlertDialog.Builder(Activity);
+                _notamFetchingAlertDialogBuilder.SetTitle(Resources.GetString(Resource.String.Fetching));
+                _notamFetchingAlertDialogBuilder.SetMessage("");
+                _notamFetchingAlertDialog = _notamFetchingAlertDialogBuilder.Create();
+                _notamFetchingAlertDialog.Show();
+
                 // Start thread outside UI
                 Task.Factory.StartNew(() =>
                 {
@@ -201,8 +214,14 @@ namespace Cavokator
                         mNotamContainerList.Clear();
                         ShowConnectionError();
                     }
-                        
+
+                    Activity.RunOnUiThread(() =>
+                    {
+                        _notamRequestButton.Enabled = true;
+                    });
                 });
+
+                
             }
             else
             {
@@ -272,15 +291,17 @@ namespace Cavokator
                 if (!mNotams.DecodedNotam.connectionError)
                 {
                     mNotamContainerList.Add(mNotams.DecodedNotam);
+                    PercentageCompletedAsync(i, mRequestedAirportsByIcao.Count, currentAirport);
                 }
                 else
                 {
+                    _notamFetchingAlertDialog.Dismiss();
                     connectionError = true;
                     break;
                 }
             }
         }
-        
+
         private void ShowNotams()
         {
             // Start working if there is something in the container
@@ -597,6 +618,27 @@ namespace Cavokator
                     else
                         mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
                 });
+            }
+        }
+
+        private async Task PercentageCompletedAsync(int currentCount, int totalCount, string currentAirport)
+        {
+            int percentage = (currentCount +1 ) * 100 / totalCount;
+
+            if (percentage <= 100)
+            {
+                Activity.RunOnUiThread(() =>
+                {
+                    // Show the airport and percentage
+                    _notamFetchingAlertDialog.SetMessage(currentAirport.ToUpper() + " - (" + percentage + "%)");
+                });
+            }
+
+            // If we reached a 100%, we will wait a bit to that users can see the whole bar
+            if (percentage == 100)
+            {
+                await Task.Delay(750);
+                _notamFetchingAlertDialog.Dismiss();
             }
         }
     }

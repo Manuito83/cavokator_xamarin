@@ -74,10 +74,6 @@ namespace Cavokator
                             // Pass ShowWX the airport number (requested), available XML and airport ID
                             ProcessWx(airportNumber, metarDecodedXml, null, icaoIDlist[i]);
                         }
-                        else
-                        {
-                            _connectionErrorException = true;
-                        }
                     }
                 }
                 else if (_metarOrTafor == "only_tafor")
@@ -90,25 +86,21 @@ namespace Cavokator
                             // Pass ShowWX the airport number (requested), available XML and airport ID
                             ProcessWx(airportNumber, null, taforDecodedXml, icaoIDlist[i]);
                         }
-                        else
-                        {
-                            _connectionErrorException = true;
-                        }
                     }
                 }
                 else if (_metarOrTafor == "metar_and_tafor")
                 {
                     {
                         var metarDecodedXml = GetMetar(icaoIDlist[i], hoursBefore, mostRecent);
-                        var taforDecodedXml = GetTafor(icaoIDlist[i]);
 
                         if (!_connectionErrorException)
                         {
-                            ProcessWx(airportNumber, metarDecodedXml, taforDecodedXml, icaoIDlist[i]);
-                        }
-                        else
-                        {
-                            _connectionErrorException = true;
+                            var taforDecodedXml = GetTafor(icaoIDlist[i]);
+
+                            if (!_connectionErrorException)
+                            {
+                                ProcessWx(airportNumber, metarDecodedXml, taforDecodedXml, icaoIDlist[i]);
+                            }
                         }
                     }
                 }
@@ -496,7 +488,6 @@ namespace Cavokator
 
         private static string GetMetarUrlHTTPS(string icaoId, int hoursBefore, bool mostRecent)
         {
-
             var url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
                       + "dataSource=metars"
                       + "&requestType=retrieve"
@@ -553,7 +544,7 @@ namespace Cavokator
 
             // Prepare the web page we will be asking for
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Timeout = 10000; // Timeout in milliseconds
+            request.Timeout = 8000; // Timeout in milliseconds
 
             try
             {

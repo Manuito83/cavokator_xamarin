@@ -57,7 +57,6 @@ namespace Cavokator
                         //{
                         //    Console.WriteLine("*****fir: " + qMatches.Groups["FIR"].Value);
                         //}
-                        // TODO: decoding
 
                     }
                 }
@@ -76,8 +75,6 @@ namespace Cavokator
 
         private List<string> Fetch(string icao)
         {
-            // TODO: timeouts events + handling
-
             try
             {
                 var htmlSource = RetrieveHtml(GetSourceUrl(icao));
