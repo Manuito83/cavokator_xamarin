@@ -152,7 +152,7 @@ namespace Cavokator
             return sb.ToString();
         }
 
-        private string GetSourceUrl(string icao)
+        private static string GetSourceUrl(string icao)
         {
             string url = "https://pilotweb.nas.faa.gov/PilotWeb/notamRetrievalByICAOAction.do?"
                          + "method=displayByICAOs&reportType=RAW&formatType=DOMESTIC&"
