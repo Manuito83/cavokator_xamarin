@@ -73,6 +73,8 @@ namespace Cavokator
 
         private List<string> Fetch(string icao)
         {
+            // TODO: timeouts events + handling
+
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(GetSourceUrl(icao));
 

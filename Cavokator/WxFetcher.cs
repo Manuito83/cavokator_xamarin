@@ -25,7 +25,6 @@ namespace Cavokator
         private readonly WxContainer _wxinfo = new WxContainer();
 
         public event EventHandler<WxGetEventArgs> WorkRunning;
-        public event EventHandler ConnectionTimeOut;
         public event EventHandler ConnectionError;
 
         /// <summary>
@@ -157,47 +156,57 @@ namespace Cavokator
             // Get async data and pass cancellation token
             var metarRawData = Task.Run(async () => await GetRawData(metarUrl, token), token);
 
+            // Try to get metar and return
+            string metarXmlRaw;
             try
             {
                 metarRawData.Wait(token);
+                metarXmlRaw = metarRawData.Result;
+
+                var parsedMetarXml = XDocument.Parse(metarXmlRaw);
+
+                return parsedMetarXml;
             }
+            // If it does not work, return empty string
             catch
             {
-                // Call event raiser
-                OnConnectionTimeOut();
-                
-                // Connection error var in order to stop the work
-                _connectionErrorException = true;
-                return null;
-            }
-                
-            var metarXmlRaw = metarRawData.Result;
-
-            if (metarXmlRaw == string.Empty)
-            {
-                // Connection error var in order to stop the work
-                _connectionErrorException = true;
-                return null;
-            }
-            else
-            {
-                // Parse xml string
+                // Then try with HTTPS address in Aviation Weather
                 try
                 {
-                    var parsedMetarXml = XDocument.Parse(metarXmlRaw);
-                    return parsedMetarXml;
+                    var tokenSourceHttps = new CancellationTokenSource(TimeSpan.FromSeconds(_connectionTimeOutSeconds));
+                    var tokenHttps = tokenSourceHttps.Token;
+
+                    var metarUrlHttps = GetMetarUrlHTTPS(icaoId, hoursBefore, mostRecent);
+                    var metarRawDataHttps = Task.Run(async () => await GetRawData(metarUrlHttps, tokenHttps), tokenHttps);
+
+                    metarRawDataHttps.Wait(tokenHttps);
+                    metarXmlRaw = metarRawDataHttps.Result;
+
+                    // Parse xml string and return if OK, or give error if empty
+                    try
+                    {
+                        var parsedMetarXml = XDocument.Parse(metarXmlRaw);
+                        return parsedMetarXml;
+                    }
+                    catch
+                    {
+                        _connectionErrorException = true;
+                        OnConnectionError();
+                        return null;
+                    }
                 }
                 catch
                 {
-                    _connectionErrorException = true;
+                    // Call event raiser
                     OnConnectionError();
+                
+                    // Connection error var in order to stop the work
+                    _connectionErrorException = true;
                     return null;
                 }
-
             }
 
         }
-
 
         /// <summary>
         /// Gets Tafor from previously formed URL based on AviationWeather.gov
@@ -208,57 +217,67 @@ namespace Cavokator
         /// <returns></returns>
         private XDocument GetTafor(string icaoId)
         {
+
             // Form TAFOR URL
-            string taforUrl = GetTaforUrl(icaoId);
+            var taforUrl = GetTaforUrl(icaoId);
 
             // Cancellation Token to set timeout of async task (http request, mainly)
             var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(_connectionTimeOutSeconds));
             var token = tokenSource.Token;
 
             // Get async data and pass cancellation token
-            Task<string> taforRawData = Task.Run(async () => await GetRawData(taforUrl, token), token);
+            var taforRawData = Task.Run(async () => await GetRawData(taforUrl, token), token);
 
+            // Try to get tafor and return
+            string taforXmlRaw;
             try
             {
                 taforRawData.Wait(token);
-            }
-            catch (OperationCanceledException)
-            {
-                // Call event raiser
-                OnConnectionTimeOut();
+                taforXmlRaw = taforRawData.Result;
 
-                // Connection error var in order to stop the work
-                _connectionErrorException = true;
-                return null;
+                var taforMetarXml = XDocument.Parse(taforXmlRaw);
+
+                return taforMetarXml;
             }
-            
-            var taforXmlRaw = taforRawData.Result;
-            
-            if (taforXmlRaw == string.Empty)
+            // If it does not work, return empty string
+            catch
             {
-                // Connection error var in order to stop the work
-                _connectionErrorException = true;
-                return null;
-            }
-            else
-            {
-                // Parse xml string
+                // Then try with HTTPS address in Aviation Weather
                 try
                 {
-                    var parsedTaforXml = XDocument.Parse(taforXmlRaw);
-                    return parsedTaforXml;
+                    var tokenSourceHttps = new CancellationTokenSource(TimeSpan.FromSeconds(_connectionTimeOutSeconds));
+                    var tokenHttps = tokenSourceHttps.Token;
+
+                    var taforUrlHttps = GetTaforUrlHTTPS(icaoId);
+                    var taforRawDataHttps = Task.Run(async () => await GetRawData(taforUrlHttps, tokenHttps), tokenHttps);
+
+                    taforRawDataHttps.Wait(tokenHttps);
+                    taforXmlRaw = taforRawDataHttps.Result;
+
+                    // Parse xml string and return if OK, or give error if empty
+                    try
+                    {
+                        var taforMetarXml = XDocument.Parse(taforXmlRaw);
+                        return taforMetarXml;
+                    }
+                    catch
+                    {
+                        _connectionErrorException = true;
+                        OnConnectionError();
+                        return null;
+                    }
                 }
                 catch
                 {
-                    _connectionErrorException = true;
+                    // Call event raiser
                     OnConnectionError();
+
+                    // Connection error var in order to stop the work
+                    _connectionErrorException = true;
                     return null;
                 }
-
             }
-
         }
-
 
         /// <summary>
         /// Takes parsed XML and fills public List<T/> with information
@@ -327,7 +346,6 @@ namespace Cavokator
                 }
             }
         }
-
 
         private void FillValidMetar(int airportNumber, XContainer metarParsedXml, List<IGrouping<string, XElement>> airport, int i)
         {
@@ -477,13 +495,11 @@ namespace Cavokator
                     inputDateTime = DateTime.MinValue;
                     inputString = String.Empty;
                 }
-
-
             }
             catch (OperationCanceledException)
             {
                 // Call event raiser
-                OnConnectionTimeOut();
+                OnConnectionError();
 
                 // Connection error var in order to stop the work
                 _connectionErrorException = true;
@@ -513,8 +529,6 @@ namespace Cavokator
             _wxinfo.AirportTaforsUtc.Insert(airportNumber, taforUTC_list);
         }
 
-        
-
         /// <summary>
         /// Returns string with Metar URL
         /// </summary>
@@ -525,7 +539,7 @@ namespace Cavokator
         private static string GetMetarUrl(string icaoId, int hoursBefore, bool mostRecent)
         {
 
-            var url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+            var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
                             + "dataSource=metars"
                             + "&requestType=retrieve"
                             + "&format=xml"
@@ -536,6 +550,26 @@ namespace Cavokator
             return url;
         }
 
+        /// <summary>
+        /// Returns string with Metar URL
+        /// </summary>
+        /// <param name="icaoId"></param>
+        /// <param name="hoursBefore"></param>
+        /// <param name="mostRecent"></param>
+        /// <returns></returns>
+        private static string GetMetarUrlHTTPS(string icaoId, int hoursBefore, bool mostRecent)
+        {
+
+            var url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+                      + "dataSource=metars"
+                      + "&requestType=retrieve"
+                      + "&format=xml"
+                      + "&stationString=" + icaoId
+                      + "&hoursBeforeNow=" + hoursBefore
+                      + "&mostRecent=" + mostRecent;
+
+            return url;
+        }
 
         /// <summary>
         /// Returns string with Tafor URL
@@ -544,7 +578,7 @@ namespace Cavokator
         /// <returns></returns>
         private string GetTaforUrl(string icaoId)
         {
-            var url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+            var url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?"
                             + "dataSource=tafs"
                             + "&requestType=retrieve"
                             + "&format=xml"
@@ -556,7 +590,24 @@ namespace Cavokator
             return url;
         }
 
+        /// <summary>
+        /// Returns string with Tafor URL
+        /// </summary>
+        /// <param name="icaoId"></param>
+        /// <returns></returns>
+        private string GetTaforUrlHTTPS(string icaoId)
+        {
+            var url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+                      + "dataSource=tafs"
+                      + "&requestType=retrieve"
+                      + "&format=xml"
+                      + "&stationString=" + icaoId
+                      + "&hoursBeforeNow=" + TaforHours
+                      + "&mostRecent=" + TaforLast
+                      + "&timeType=issue";
 
+            return url;
+        }
 
         private string GetAlternateTaforUrl(string icaoId)
         {
@@ -564,7 +615,6 @@ namespace Cavokator
 
             return url;
         }
-
 
         /// <summary>
         /// Async Task to get data information from website
@@ -574,7 +624,6 @@ namespace Cavokator
         /// <returns></returns>
         private async Task<string> GetRawData(string url, CancellationToken token)
         {
-
             string content;
             
             // HttpClient
@@ -588,16 +637,11 @@ namespace Cavokator
             }
             catch
             {
-                // Call event raiser
-                OnConnectionError();
                 content = "";
                 return content;
-                
             }
         }
 
-
-        
         // Event raiser
         protected virtual void OnWorkStarted()
         {
@@ -608,12 +652,6 @@ namespace Cavokator
         protected virtual void OnWorkFinished()
         {
             WorkRunning?.Invoke(this, new WxGetEventArgs() { Running = false });
-        }
-
-        // Event raiser
-        protected virtual void OnConnectionTimeOut()
-        {
-            ConnectionTimeOut?.Invoke(this, EventArgs.Empty);
         }
 
         // Event raiser
@@ -630,8 +668,6 @@ namespace Cavokator
         }
 
     }
-
-
 
 
     public class WxGetEventArgs : EventArgs

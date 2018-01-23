@@ -9,7 +9,6 @@
     <string name="Connection_Error">CONNECTION ERROR!</string>
     <string name="Internet_Error">CHECK INTERNET CONNECTION!</string>
     <string name="Error_fetching_airport">- No data available!</string>
-    <string name="Server_Timeout">SERVER TIMEOUT!</string>
     <string name="Option_ConfigurationText">CONFIGURATION</string>
     <string name="Option_ChooseMetarOrTaforText">Type of weather</string>
     <string name="Option_MetarHoursText">Metar delay</string>

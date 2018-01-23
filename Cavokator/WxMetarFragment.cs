@@ -439,13 +439,11 @@ namespace Cavokator
 
         }
 
-
         private void UtcTimerTick()
         {
             var timerDelegate = new TimerCallback(OnTimedUtcEvent);
             var utcUpdateTimer = new Timer(timerDelegate, null, 0, 30000);
         }
-
 
         // Saves fields to SharedPreferences
         public override void OnPause()
@@ -488,7 +486,6 @@ namespace Cavokator
             base.OnPause();
         }
 
-
         // Updates UtcLines
         public override void OnResume()
         {
@@ -497,7 +494,6 @@ namespace Cavokator
 
             base.OnResume();
         }
-
 
         /// <summary>
         /// Gets the weather, from List or airporst in _icaoIdList
@@ -509,18 +505,14 @@ namespace Cavokator
 
             // Subscription to event handlers
             requestedWx.WorkRunning += OnGetWxWorkStarted;
-            requestedWx.ConnectionTimeOut += OnConnectionTimeOut;
             requestedWx.ConnectionError += OnConnectionError;
             requestedWx.PercentageCompleted += OnPercentageCompleted;
-
 
             var linearlayoutWXmetarsTafors = thisView.FindViewById<LinearLayout>(Resource.Id.linearlayout_wx_metarstafors);
 
             // Close keyboard when button pressed
             var im = (InputMethodManager)Activity.GetSystemService(Context.InputMethodService);
             im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
-
-
 
             // Remove all previous views from the linear layout
             linearlayoutWXmetarsTafors.RemoveAllViews();
@@ -543,7 +535,6 @@ namespace Cavokator
                 Toast.MakeText(Activity, Resource.String.Internet_Error, ToastLength.Short).Show();
             }
         }
-
 
         // Shows weather either live or from stored SharedPreferences
         private void ShowWeather()
@@ -876,7 +867,6 @@ namespace Cavokator
 
         }
 
-
         private string ParseToReadableUtc(TimeSpan timeComparison, string type)
         {
             string readableUtc;
@@ -951,7 +941,6 @@ namespace Cavokator
             return readableUtc;
         }
 
-
         // Configuration for error lines
         private TextView ApplyErrorLineStyle(TextView errorAirportName)
         {
@@ -963,7 +952,6 @@ namespace Cavokator
             return errorAirportName;
         }
 
-
         // Configuration for airport lines
         private TextView ApplyAirportIDLineStyle(TextView airportName)
         {
@@ -974,7 +962,6 @@ namespace Cavokator
             airportName.LayoutParameters = airportTextViewParams;
             return airportName;
         }
-
 
         // Configuration for metar UTC lines
         private TextView ApplyUTCLineStyle(TextView utcLine, TimeSpan timeComparison, string type)
@@ -1021,7 +1008,6 @@ namespace Cavokator
             return utcLine;
         }
 
-
         // Configuration for metar lines
         private TextView ApplyMetarLineStyle(TextView metarLines)
         {
@@ -1059,7 +1045,6 @@ namespace Cavokator
             return taforLines;
         }
 
-
         // Configuration for splited lines
         private TextView ApplyMarkerLineStyle(TextView taforLines)
         {
@@ -1070,7 +1055,6 @@ namespace Cavokator
             taforLines.LayoutParameters = wxTextViewParams;
             return taforLines;
         }
-
 
         // Eventhandler to activate and deactivate the button while information is being fetched
         // The event triggers twice with different arguments 
@@ -1092,8 +1076,6 @@ namespace Cavokator
             }
         }
 
-
-
         // Eventhandler to show RUNWAY CONDITION DIALOG
         private void OnClickRunwayCondition(object source, WxColorCoderArgs condition)
         {
@@ -1106,16 +1088,6 @@ namespace Cavokator
             });
         }
 
-
-        // Eventhandler to show Toast
-        private void OnConnectionTimeOut(object source, EventArgs e)
-        {
-            Activity.RunOnUiThread(() =>
-            {
-                Toast.MakeText(Activity, Resource.String.Server_Timeout, ToastLength.Short).Show();
-            });
-        }
-
         // Eventhandler to show Toast
         private void OnConnectionError(object source, EventArgs e)
         {
@@ -1125,13 +1097,11 @@ namespace Cavokator
             });
         }
 
-
         // Eventhandler to update _metarOrTafor value from Dialog
         private void OnMetarOrTaforChanged(object source, WXOptionsDialogEventArgs e)
         {
             _metarOrTafor = e.MetarOrTafor;
         }
-
 
         // Eventhandler to update _hoursBefore value from Dialog
         private void OnHoursBeforeChanged(object source, WXOptionsDialogEventArgs e)
@@ -1150,13 +1120,11 @@ namespace Cavokator
             }
         }
 
-
         // Eventhandler to update _saveData value from Dialog
         private void OnSaveDataChanged(object source, WXOptionsDialogEventArgs e)
         {
             _saveData = e.SaveData;
         }
-
 
         // Eventhandler to update _doColorWeather value from Dialog
         private void OnColorWeatherChanged(object source, WXOptionsDialogEventArgs e)
@@ -1164,13 +1132,11 @@ namespace Cavokator
             _doColorWeather = e.ColorWeather;
         }
 
-
         // Eventhandler to update _doDivideTafor value from Dialog
         private void OnDivideTaforChanged(object source, WXOptionsDialogEventArgs e)
         {
             _doDivideTafor = e.DivideTafor;
         }
-
 
         // Eventhandler to update UTC Times every minute
         private void OnTimedUtcEvent(object state)
@@ -1181,7 +1147,6 @@ namespace Cavokator
                 UpdateTaforUtcLine();
             }
         }
-
 
         // Eventhandler to update ProgressDialog
         private async void OnPercentageCompleted(object source, WxGetEventArgs e)
@@ -1209,7 +1174,6 @@ namespace Cavokator
             }
 
         }
-
 
         private void UpdateMetarUtcLine()
         {
@@ -1245,7 +1209,6 @@ namespace Cavokator
             }
         }
 
-
         private void UpdateTaforUtcLine()
         {
             foreach (var pair in _taforUtcFieldsIds)
@@ -1280,7 +1243,6 @@ namespace Cavokator
 
             }
         }
-
 
         // Recovers or sets configuration from Shared 
         private void GetPreferences()
@@ -1393,7 +1355,6 @@ namespace Cavokator
 
 
         }
-
 
     }
 }
