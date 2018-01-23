@@ -16,7 +16,9 @@ using System.Threading.Tasks;
 using Android.Support.V7.Widget;
 using Android.Util;
 using System.Threading;
+using Android.Support.V7.App;
 using Newtonsoft.Json;
+using AlertDialog = Android.App.AlertDialog;
 
 namespace Cavokator
 {
@@ -60,6 +62,9 @@ namespace Cavokator
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            // TODO: change in every fragment
+            ((AppCompatActivity)Activity).SupportActionBar.Title = "NOTAMS";
 
             HasOptionsMenu = true;
         }
