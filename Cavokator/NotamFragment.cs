@@ -168,7 +168,6 @@ namespace Cavokator
 
             _airportEntryEditText.ClearFocus();
 
-            //mNotamContainerList = new List<NotamContainer>();
             mNotamContainerList.Clear();
 
             // Remove all previous views from the linear layout
@@ -456,28 +455,30 @@ namespace Cavokator
             if (airportEntryEditText != string.Empty)
             {
                 _airportEntryEditText.Text = airportEntryEditText;
+
+                try
+                {
+                    var deserializeNotamContainer = JsonConvert.DeserializeObject<List<NotamContainer>>(notamPrefs.GetString("notamContainer", string.Empty));
+                    mNotamContainerList = deserializeNotamContainer;
+
+                    var deserializeRequestedUtc = JsonConvert.DeserializeObject<DateTime>(notamPrefs.GetString("requestedUtc", string.Empty));
+                    mUtcRequestTime = deserializeRequestedUtc;
+
+                    var deserializeAirportsByIcao = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsICAO", string.Empty));
+                    mRequestedAirportsByIcao = deserializeAirportsByIcao;
+
+                    var deserializeAirportsRawString = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsRaw", string.Empty));
+                    mRequestedAirportsRawString = deserializeAirportsRawString;
+
+                    ShowNotams();
+                }
+                catch (Exception)
+                {
+                    // Just do nothing, as values are possibly null (first initialization)
+                }
             }
 
-            try
-            {
-                var deserializeNotamContainer = JsonConvert.DeserializeObject<List<NotamContainer>>(notamPrefs.GetString("notamContainer", string.Empty));
-                mNotamContainerList = deserializeNotamContainer;
 
-                var deserializeRequestedUtc = JsonConvert.DeserializeObject<DateTime>(notamPrefs.GetString("requestedUtc", string.Empty));
-                mUtcRequestTime = deserializeRequestedUtc;
-
-                var deserializeAirportsByIcao = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsICAO", string.Empty));
-                mRequestedAirportsByIcao = deserializeAirportsByIcao;
-
-                var deserializeAirportsRawString = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsRaw", string.Empty));
-                mRequestedAirportsRawString = deserializeAirportsRawString;
-
-                ShowNotams();
-            }
-            catch (Exception)
-            {
-                // Just do nothing, as values are possibly null (first initialization)
-            }
 
         }
 
