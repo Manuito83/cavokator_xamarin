@@ -72,7 +72,7 @@ namespace Cavokator
                         Match qMatches = regexQ.Match(shortQline);
                         if (qMatches.Success)
                         {
-                            myQNotamContainer.qMatch = qMatches;
+                            myQNotamContainer.QMatch = qMatches;
                             success = true;
                         }
                     }
@@ -105,7 +105,7 @@ namespace Cavokator
 
         private void FillContainerWithNotamQ(NotamTypeQ myNotamQ)
         {
-            Console.WriteLine("FIR: " + myNotamQ.qMatch.Groups["FIR"].Value);
+            Console.WriteLine("FIR: " + myNotamQ.QMatch.Groups["FIR"].Value);
         }
 
         private List<string> Fetch(string icao)

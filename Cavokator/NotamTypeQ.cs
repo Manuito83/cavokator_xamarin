@@ -14,7 +14,14 @@ namespace Cavokator
 {
     internal class NotamTypeQ
     {
-        public string NotamID { get; set; }
-        public Match qMatch  { get; set; }
+        private string notamID = String.Empty;
+        public string NotamID { get => notamID; set => notamID = value; }
+
+        private Match qMatch = Match.Empty;
+        public Match QMatch { get => qMatch; set => qMatch = value; }
+
+        
+        
+        
     }
 }
