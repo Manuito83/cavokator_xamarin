@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Content.Res;
 using Android.Graphics;
 using Android.OS;
+using Android.Support.V7.App;
 using Android.Text;
 using Android.Text.Method;
 using Android.Util;
@@ -84,6 +85,8 @@ namespace Cavokator
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            ((AppCompatActivity)Activity).SupportActionBar.Title = "Weather";
 
             HasOptionsMenu = true;
         }

@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Support.V7.Widget;
+using Android.Support.V7.App;
 
 namespace Cavokator
 {
@@ -35,6 +36,8 @@ namespace Cavokator
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            ((AppCompatActivity)Activity).SupportActionBar.Title = "Settings";
         }
 
 

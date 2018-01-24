@@ -1,5 +1,6 @@
 ﻿using Android.Content;
 using Android.OS;
+using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 
@@ -27,6 +28,8 @@ namespace Cavokator
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            ((AppCompatActivity)Activity).SupportActionBar.Title = "About";
 
             HasOptionsMenu = true;
         }

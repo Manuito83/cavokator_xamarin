@@ -63,7 +63,6 @@ namespace Cavokator
         {
             base.OnCreate(savedInstanceState);
 
-            // TODO: change in every fragment
             ((AppCompatActivity)Activity).SupportActionBar.Title = "NOTAMS";
 
             HasOptionsMenu = true;
