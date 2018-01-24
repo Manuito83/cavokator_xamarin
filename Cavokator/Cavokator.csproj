@@ -146,6 +146,7 @@
     <Compile Include="NotamContainer.cs" />
     <Compile Include="NotamFetcher.cs" />
     <Compile Include="NotamFragment.cs" />
+    <Compile Include="NotamTypeQ.cs" />
     <Compile Include="SettingsFragment.cs" />
     <Compile Include="WxColorCoder.cs" />
     <Compile Include="ConditionFragment.cs" />
