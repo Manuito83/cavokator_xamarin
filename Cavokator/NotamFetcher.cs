@@ -35,9 +35,10 @@ namespace Cavokator
             // TODO: https://github.com/liviudnistran/vfrviewer/blob/master/class.NOTAM.php
             foreach (string singleNotam in notamList)
             {
-                string myNotamFull = singleNotam;
-                //myNotamFull = singleNotam.Replace('\r', ' ');
 
+
+                string myNotamFull = singleNotam;
+                
                 ResultRaw(myNotamFull);
 
                 string[] myNotamSections = Regex.Split((myNotamFull), @"\s(?=([A-Z]\)\s))");

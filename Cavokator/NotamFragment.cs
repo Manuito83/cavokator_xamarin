@@ -233,10 +233,8 @@ namespace Cavokator
             }
         }
 
-        /// <summary>
+
         /// Populate "requestedAirports" lists
-        /// </summary>
-        /// <param name="myNotamContainer"></param>
         private void SanitizeRequestedNotams(string requestedNotamsString)
         {
             // Split airport list entered
@@ -281,9 +279,7 @@ namespace Cavokator
             }
         }
 
-        /// <summary>
         /// Populate list with notams for every airport requested
-        /// </summary>
         private void GetNotams()
         {
             for (int i = 0; i < mRequestedAirportsByIcao.Count; i++) 
@@ -556,10 +552,8 @@ namespace Cavokator
             var utcUpdateTimer = new Timer(timerDelegate, null, 0, 30000);
         }
 
-        /// <summary>
+
         /// Update requested UTC time
-        /// </summary>
-        /// <param name="state"></param>
         private void UpdateRequestedTime(object state)
         {
             // Make sure were are finding the TextView

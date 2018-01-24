@@ -34,8 +34,8 @@ namespace Cavokator
 
  
         // ProgressDialog to show while we fetch the wx information
-        private AlertDialog.Builder _wxAlertDialogBuilder;
-        private AlertDialog _wxAlertDialog;
+        private Android.App.AlertDialog.Builder _wxAlertDialogBuilder;
+        private Android.App.AlertDialog _wxAlertDialog;
 
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace Cavokator
 
             
             // Show our AlertDialog
-            _wxAlertDialogBuilder = new AlertDialog.Builder(Activity);
+            _wxAlertDialogBuilder = new Android.App.AlertDialog.Builder(Activity);
             _wxAlertDialogBuilder.SetTitle(Resources.GetString(Resource.String.Fetching));
             _wxAlertDialogBuilder.SetMessage("");
             _wxAlertDialog = _wxAlertDialogBuilder.Create();
