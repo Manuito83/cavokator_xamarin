@@ -18,7 +18,7 @@ namespace Cavokator
 {
     class NotamFetcher
     {
-        public NotamContainer DecodedNotam { get; } = new NotamContainer();
+        public NotamContainer DecodedNotam = new NotamContainer();
 
         public NotamFetcher(string icao)
         {
@@ -27,7 +27,7 @@ namespace Cavokator
             if (notamList != null)
                 Decode(notamList);
             else
-                DecodedNotam.connectionError = true;
+                DecodedNotam.ConnectionError = true;
         }
 
         private void Decode(List<string> notamList)
@@ -37,75 +37,96 @@ namespace Cavokator
             {
                 // Try to find what kind of NOTAM we are dealing with
                 NotamTypeQ qNotamContainer = AssessNotamTypeQ(singleNotam);
-                NotamTypeQ dNotamContainer = AssessNotamTypeD(singleNotam);
+                NotamTypeD dNotamContainer = AssessNotamTypeD(singleNotam);
 
                 if (qNotamContainer == null && dNotamContainer == null)
                 {
                     // Pass RAW value to container
-                    DecodedNotam.NotamRaw.Add(singleNotam);
+                    FillContainerWithRawLines(singleNotam);
                 }
                 else if (qNotamContainer != null)
                 {
-                    FillContainerWithNotamQ(qNotamContainer);
+                    FillContainerWithNotamQInformation(qNotamContainer);
+                    DecodedNotam.NotamRaw.Add(singleNotam);
                 }
                 else if (dNotamContainer != null)
                 {
-                    //TODO: FillContainerWithNotamD(string singleNotam);
+                    // TODO
+                    // FillContainerWithNotamD(dNotamContainer);
+                    // DecodedNotam.NotamRaw.Add(singleNotam);
                 }
             }
         }
 
         private NotamTypeQ AssessNotamTypeQ(string singleNotam)
         {
-            NotamTypeQ myQNotamContainer = new NotamTypeQ();
-            bool success = false;
+            NotamTypeQ myNotamTypeQ = new NotamTypeQ();
 
             try
             {
                 string[] myNotamSections = Regex.Split((singleNotam), @"\s(?=([A-Z]\)\s))");
-                foreach (string line_match in myNotamSections)
+                foreach (string line in myNotamSections)
                 {
-                    if (Regex.IsMatch(line_match, @"(^|\s)Q\) (.*)"))
+                    // NOTAM ID
+                    Regex idRegex = new Regex(@"(^|\s)(?<ID>[A-Z][0-9]{4}\/[0-9]{2}) (NOTAMN|NOTAMR|NOTAMC)");
+                    Match idMatch = idRegex.Match(line);
+                    if (idMatch.Success)
+                        myNotamTypeQ.NotamID = idMatch.Groups["ID"].Value;
+                    
+                    // GROUP Q)
+                    else if (Regex.IsMatch(line, @"(^|\s)Q\) (.*)"))
                     {
-                        string shortQline = line_match.Replace(" ", "");
-                        Regex regexQ = new Regex(@"Q\)(?<FIR>[A-Z]{4})\/(?<CODE>[A-Z]{5})\/(?<TRAFFIC>IV|I|V|K)\/(?<PURPOSE>[A-Z]{1,3})\/(?<SCOPE>[A-Z]{1,2})\/(?<LOWER>[0-9]{3})\/(?<UPPER>[0-9]{3})\/(?<LAT>[0-9]{4})(?<LAT_CODE>N|S)(?<LON>[0-9]{5})(?<LONG_CODE>E|W)(?<RADIUS>[0-9]{3})");
-                        Match qMatches = regexQ.Match(shortQline);
-                        if (qMatches.Success)
-                        {
-                            myQNotamContainer.QMatch = qMatches;
-                            success = true;
-                        }
+                        string shortQline = line.Replace(" ", "");
+                        Regex qRegex = new Regex(@"Q\)(?<FIR>[A-Z]{4})\/(?<CODE>[A-Z]{5})\/(?<TRAFFIC>IV|I|V|K)\/(?<PURPOSE>[A-Z]{1,3})\/(?<SCOPE>[A-Z]{1,2})\/(?<LOWER>[0-9]{3})\/(?<UPPER>[0-9]{3})\/(?<LAT>[0-9]{4})(?<LAT_CODE>N|S)(?<LON>[0-9]{5})(?<LONG_CODE>E|W)(?<RADIUS>[0-9]{3})");
+                        Match qMatch = qRegex.Match(shortQline);
+                        if (qMatch.Success)
+                            myNotamTypeQ.QMatch = qMatch;
+                    }
+
+                    // GROUP E)
+                    else if (Regex.IsMatch(line, @"(^|\s)E\) (.*)"))
+                    {
+                        Regex eRegex = new Regex(@"(^|\s)E\) (?<FREE_TEXT>.*)");
+                        Match eMatch = eRegex.Match(line);
+                        if (eMatch.Success)
+                            myNotamTypeQ.EText = eMatch.Groups["FREE_TEXT"].Value;
                     }
                 }
             }
-            catch { }
-
-            if (success)
-                return myQNotamContainer;
-            else
-                return null;
-        }
-
-        private NotamTypeQ AssessNotamTypeD(string singleNotam)
-        {
-            NotamTypeQ myDNotamContainer = new NotamTypeQ();
-            bool success = false;
-
-            try
+            catch
             {
-                //
-            }
-            catch { }
-
-            if (success)
-                return myDNotamContainer;
-            else
                 return null;
+            }
+
+            // If we have filled all the (minimum) required data, pass the NOTAM Q
+            if (myNotamTypeQ.NotamID != String.Empty &&
+                myNotamTypeQ.QMatch != Match.Empty &&
+                myNotamTypeQ.EText != String.Empty)
+
+                return myNotamTypeQ;
+            
+            // Otherwise, return null (NOTAM to be processed as raw)
+            return null;
         }
 
-        private void FillContainerWithNotamQ(NotamTypeQ myNotamQ)
+        private NotamTypeD AssessNotamTypeD(string singleNotam)
         {
-            Console.WriteLine("FIR: " + myNotamQ.QMatch.Groups["FIR"].Value);
+            return null;
+        }
+
+        private void FillContainerWithRawLines(string singleNotam)
+        {
+            DecodedNotam.NotamQ.Add(false);
+            DecodedNotam.NotamD.Add(false);
+            DecodedNotam.NotamRaw.Add(singleNotam);
+        }
+
+        private void FillContainerWithNotamQInformation(NotamTypeQ myNotamQ)
+        {
+            DecodedNotam.NotamQ.Add(true);
+            DecodedNotam.NotamD.Add(false);
+            DecodedNotam.NotamID.Add(myNotamQ.NotamID);
+            DecodedNotam.NotamFreeText.Add(myNotamQ.EText);
         }
 
         private List<string> Fetch(string icao)

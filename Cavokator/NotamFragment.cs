@@ -75,7 +75,7 @@ namespace Cavokator
 
             StyleViews();
 
-            RecallSavedData();
+            //RecallSavedData();
 
             // Events
             _linearlayoutBottom.Touch += OnBackgroundTouch;
@@ -288,10 +288,10 @@ namespace Cavokator
 
                 NotamFetcher mNotams = new NotamFetcher(currentAirport);
 
-                if (!mNotams.DecodedNotam.connectionError)
+                if (!mNotams.DecodedNotam.ConnectionError)
                 {
                     mNotamContainerList.Add(mNotams.DecodedNotam);
-                    PercentageCompletedAsync(i, mRequestedAirportsByIcao.Count, currentAirport);
+                    PercentageCompleted(i, mRequestedAirportsByIcao.Count, currentAirport);
                 }
                 else
                 {
@@ -319,12 +319,25 @@ namespace Cavokator
                         if (mNotamContainerList[i].NotamRaw.Count == 0)
                         {
                             AddErrorCard();
+                            break;
                         }
-                        else
-                        {
-                            for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+
+                        for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+                        { 
+                            // It's Q
+                            if (mNotamContainerList[i].NotamQ[j])
                             {
-                                AddNotamsCards(i, j);
+                                AddNotamQCards(i, j);
+                            }
+                            // It's D
+                            else if (mNotamContainerList[i].NotamD[j])
+                            {
+                                //
+                            }
+                            // It's raw
+                            else
+                            {
+                                AddRawNotamsCards(i, j);
                             }
                         }
                     }
@@ -335,6 +348,8 @@ namespace Cavokator
                 }
             }
         }
+
+
 
         private void ShowConnectionError()
         {
@@ -440,7 +455,50 @@ namespace Cavokator
             });
         }
 
-        private void AddNotamsCards(int i, int j)
+        private void AddNotamQCards(int i, int j)
+        {
+            CardView notamCard = new CardView(Activity);
+            RelativeLayout qCardsLayout = new RelativeLayout(Activity);
+            TextView notamId = new TextView(Activity);
+            TextView notamFreeText = new TextView(Activity);
+
+            notamId.Text = mNotamContainerList[i].NotamID[j];
+            notamFreeText.Text = mNotamContainerList[i].NotamFreeText[j];
+            
+            // Styling cards
+            notamCard.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            notamCard.Elevation = 5.0f;
+            var cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            cardViewParams.SetMargins(10, 10, 10, 10);
+            notamCard.LayoutParameters = cardViewParams;
+
+            // Styling layout
+            
+
+            // Styling notamId
+            notamId.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            notamId.SetTextSize(ComplexUnitType.Dip, 12);
+            notamId.SetPadding(30, 30, 15, 0);
+
+            // Styling notamFreeText
+            notamFreeText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            notamFreeText.SetTextSize(ComplexUnitType.Dip, 12);
+            notamFreeText.SetPadding(30, 30, 15, 0);
+
+
+
+            // Adding view
+            Activity.RunOnUiThread(() =>
+            {
+                qCardsLayout.AddView(notamId);
+                qCardsLayout.AddView(notamFreeText);
+                notamCard.AddView(qCardsLayout);
+                _linearLayoutNotamLines.AddView(notamCard);
+            });
+
+        }
+
+        private void AddRawNotamsCards(int i, int j)
         {
             CardView notamCard = new CardView(Activity);
             TextView notamLine = new TextView(Activity);
@@ -619,7 +677,7 @@ namespace Cavokator
             }
         }
 
-        private async Task PercentageCompletedAsync(int currentCount, int totalCount, string currentAirport)
+        private async Task PercentageCompleted(int currentCount, int totalCount, string currentAirport)
         {
             int percentage = (currentCount +1 ) * 100 / totalCount;
 
