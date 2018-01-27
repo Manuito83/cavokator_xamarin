@@ -144,6 +144,7 @@
     <Compile Include="ChangelogDialog.cs" />
     <Compile Include="ClickableSpan.cs" />
     <Compile Include="NotamContainer.cs" />
+    <Compile Include="NotamDialogRaw.cs" />
     <Compile Include="NotamFetcher.cs" />
     <Compile Include="NotamFragment.cs" />
     <Compile Include="NotamTypeD.cs" />
@@ -196,6 +197,7 @@
     <AndroidResource Include="Resources\layout\changelog_dialog.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\notam_dialog_raw.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\menu\menu_share.xml" />
@@ -406,7 +408,7 @@
     <AndroidResource Include="Resources\values\strings-fragment_notam.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\values\strings-time.xml" />
+    <AndroidResource Include="Resources\values\strings-general.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Annotations.26.1.0.1\build\MonoAndroid80\Xamarin.Android.Support.Annotations.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Annotations.26.1.0.1\build\MonoAndroid80\Xamarin.Android.Support.Annotations.targets')" />

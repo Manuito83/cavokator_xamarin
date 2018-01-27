@@ -77,7 +77,7 @@ namespace Cavokator
 
             StyleViews();
 
-            RecallSavedData();
+            //RecallSavedData();
 
             // Events
             _linearlayoutBottom.Touch += OnBackgroundTouch;
@@ -489,21 +489,30 @@ namespace Cavokator
                 TextView notamIdTextView = new TextView(Activity);
                 notamIdTextView.Id = 1;
 
-                ClickableSpan idClickable = new ClickableSpan(mNotamContainerList[i].NotamID[j]);
-                //idClickable.OnClick(lala());
+                ClickableSpan myClickableSpan = new ClickableSpan(mNotamContainerList[i].NotamID[j]);
+                myClickableSpan.ClickedMyClickableSpan += LocalClickedNotamId;
+                SpannableString idSpan = new SpannableString(mNotamContainerList[i].NotamID[j]);
+                idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
+                idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
+                idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
 
-                SpannableString idUnderlined = new SpannableString(mNotamContainerList[i].NotamID[j]);
-                idUnderlined.SetSpan(idClickable, 0, idUnderlined.Length(), 0);
-                idUnderlined.SetSpan(new UnderlineSpan(), 0, idUnderlined.Length(), 0);
-                notamIdTextView.TextFormatted = idUnderlined;
-
-                // Needed to make clickablespan clickable
+                notamIdTextView.TextFormatted = idSpan;
                 notamIdTextView.MovementMethod = new LinkMovementMethod();
 
-                notamIdTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
                 notamIdTextView.SetTextSize(ComplexUnitType.Dip, 12);
                 notamIdTextView.SetPadding(30, 30, 15, 0);
                 return notamIdTextView;
+            }
+
+            void LocalClickedNotamId(object sender, MyClickableSpanArgs e)
+            {
+                Activity.RunOnUiThread(() =>
+                {
+                    // Pull up dialog
+                    var transaction = FragmentManager.BeginTransaction();
+                    var notamRawDialog = new NotamDialogRaw(mNotamContainerList[i].NotamID[j], mNotamContainerList[i].NotamRaw[j]);
+                    notamRawDialog.Show(transaction, "notamRawDialog");
+                });
             }
 
             TextView LocalStyleFreeText(TextView notamId1)
@@ -521,7 +530,7 @@ namespace Cavokator
                 return notamFreeText1;
             }
 
-            // --- Adding view ---
+            // Adding view
             Activity.RunOnUiThread(() =>
             {
                 qCardsLayout.AddView(notamId);
@@ -529,8 +538,8 @@ namespace Cavokator
                 notamCard.AddView(qCardsLayout);
                 _linearLayoutNotamLines.AddView(notamCard);
             });
-
         }
+
 
 
         private void AddRawNotamsCards(int i, int j)

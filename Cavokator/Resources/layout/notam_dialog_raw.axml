@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notam_rawDialog_baseLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minWidth="300dp">
+    <!-- ID -->
+    <TextView
+        android:id="@+id/notam_rawDialog_notamId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NOTAM ID"
+        android:textSize="14dp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal" />
+    <ScrollView
+        android:id="@+id/notam_rawDialog_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true">
+        <!-- NOTAM RAW -->
+            <TextView
+                android:text="NOTAM TEXT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/notam_rawDialog_notamText"
+                android:textSize="11dp"
+                android:layout_marginTop="20.0dp"
+                android:enabled="true"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginRight="20.0dp"
+                android:layout_marginBottom="20.0dp"
+              android:layout_gravity="center_horizontal"/>
+    </ScrollView>
+    <!-- CLOSE BUTTON -->
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="0.0dp">
+    <View
+      android:layout_width="fill_parent"
+      android:layout_height="2dp"
+      android:background="#c0c0c0" />
+    <Button
+        android:text="Close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/notam_rawDialog_closeButton"
+        android:layout_marginTop="10.0dp"
+        android:layout_marginBottom="14.0dp"
+        android:layout_gravity="center_horizontal" />
+  </RelativeLayout>
+</LinearLayout>
