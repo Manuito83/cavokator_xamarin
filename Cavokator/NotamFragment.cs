@@ -77,7 +77,7 @@ namespace Cavokator
 
             StyleViews();
 
-            //RecallSavedData();
+            RecallSavedData();
 
             // Events
             _linearlayoutBottom.Touch += OnBackgroundTouch;
@@ -235,7 +235,6 @@ namespace Cavokator
             }
         }
 
-
         /// Populate "requestedAirports" lists
         private void SanitizeRequestedNotams(string requestedNotamsString)
         {
@@ -350,8 +349,6 @@ namespace Cavokator
                 }
             }
         }
-
-
 
         private void ShowConnectionError()
         {
@@ -476,7 +473,7 @@ namespace Cavokator
                 cardView.Elevation = 5.0f;
                 var cardViewParams =
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-                cardViewParams.SetMargins(10, 10, 10, 10);
+                cardViewParams.SetMargins(10, 10, 10, 20);
                 cardView.LayoutParameters = cardViewParams;
 
                 // --- RelativeLayout ---

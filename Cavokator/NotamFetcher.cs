@@ -84,9 +84,9 @@ namespace Cavokator
                     }
 
                     // GROUP E)
-                    else if (Regex.IsMatch(line, @"(^|\s)E\) (.*)"))
+                    else if (Regex.IsMatch(line, @"(^|\s)E\) ([.\n|\W|\w]*)"))
                     {
-                        Regex eRegex = new Regex(@"(^|\s)E\) (?<FREE_TEXT>.*)");
+                        Regex eRegex = new Regex(@"(^|\s)E\) (?<FREE_TEXT>[.\n|\W|\w]*)");
                         Match eMatch = eRegex.Match(line);
                         if (eMatch.Success)
                             myNotamTypeQ.EText = eMatch.Groups["FREE_TEXT"].Value;
