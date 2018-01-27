@@ -17,6 +17,8 @@ using Android.Support.V7.Widget;
 using Android.Util;
 using System.Threading;
 using Android.Support.V7.App;
+using Android.Text.Method;
+using Android.Text.Style;
 using Newtonsoft.Json;
 using AlertDialog = Android.App.AlertDialog;
 
@@ -75,7 +77,7 @@ namespace Cavokator
 
             StyleViews();
 
-            //RecallSavedData();
+            RecallSavedData();
 
             // Events
             _linearlayoutBottom.Touch += OnBackgroundTouch;
@@ -457,37 +459,69 @@ namespace Cavokator
 
         private void AddNotamQCards(int i, int j)
         {
-            CardView notamCard = new CardView(Activity);
-            RelativeLayout qCardsLayout = new RelativeLayout(Activity);
-            TextView notamId = new TextView(Activity);
-            TextView notamFreeText = new TextView(Activity);
-
-            notamId.Text = mNotamContainerList[i].NotamID[j];
-            notamFreeText.Text = mNotamContainerList[i].NotamFreeText[j];
+            // Style card and RelativeLayout
+            var notamCard = LocalStyleCard(out var qCardsLayout);
             
-            // Styling cards
-            notamCard.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-            notamCard.Elevation = 5.0f;
-            var cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            cardViewParams.SetMargins(10, 10, 10, 10);
-            notamCard.LayoutParameters = cardViewParams;
-
-            // Styling layout
-            
-
             // Styling notamId
-            notamId.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-            notamId.SetTextSize(ComplexUnitType.Dip, 12);
-            notamId.SetPadding(30, 30, 15, 0);
+            var notamId = LocalStyleNotamId();
 
             // Styling notamFreeText
-            notamFreeText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-            notamFreeText.SetTextSize(ComplexUnitType.Dip, 12);
-            notamFreeText.SetPadding(30, 30, 15, 0);
+            var notamFreeText = LocalStyleFreeText(notamId);
 
+            CardView LocalStyleCard(out RelativeLayout relativeLayout)
+            {
+                // --- Styling cards ---
+                CardView cardView = new CardView(Activity);
+                cardView.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                cardView.Elevation = 5.0f;
+                var cardViewParams =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                cardViewParams.SetMargins(10, 10, 10, 10);
+                cardView.LayoutParameters = cardViewParams;
 
+                // --- RelativeLayout ---
+                relativeLayout = new RelativeLayout(Activity);
+                return cardView;
+            }
 
-            // Adding view
+            TextView LocalStyleNotamId()
+            {
+                TextView notamIdTextView = new TextView(Activity);
+                notamIdTextView.Id = 1;
+
+                ClickableSpan idClickable = new ClickableSpan(mNotamContainerList[i].NotamID[j]);
+                //idClickable.OnClick(lala());
+
+                SpannableString idUnderlined = new SpannableString(mNotamContainerList[i].NotamID[j]);
+                idUnderlined.SetSpan(idClickable, 0, idUnderlined.Length(), 0);
+                idUnderlined.SetSpan(new UnderlineSpan(), 0, idUnderlined.Length(), 0);
+                notamIdTextView.TextFormatted = idUnderlined;
+
+                // Needed to make clickablespan clickable
+                notamIdTextView.MovementMethod = new LinkMovementMethod();
+
+                notamIdTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                notamIdTextView.SetTextSize(ComplexUnitType.Dip, 12);
+                notamIdTextView.SetPadding(30, 30, 15, 0);
+                return notamIdTextView;
+            }
+
+            TextView LocalStyleFreeText(TextView notamId1)
+            {
+                TextView notamFreeText1 = new TextView(Activity);
+                notamFreeText1.Id = 2;
+                notamFreeText1.Text = mNotamContainerList[i].NotamFreeText[j];
+                notamFreeText1.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+                notamFreeText1.SetTextSize(ComplexUnitType.Dip, 12);
+                notamFreeText1.SetPadding(30, 30, 15, 10);
+                RelativeLayout.LayoutParams notamFreeTextParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                notamFreeTextParams.AddRule(LayoutRules.Below, notamId1.Id);
+                notamFreeText1.LayoutParameters = notamFreeTextParams;
+                return notamFreeText1;
+            }
+
+            // --- Adding view ---
             Activity.RunOnUiThread(() =>
             {
                 qCardsLayout.AddView(notamId);
@@ -497,6 +531,7 @@ namespace Cavokator
             });
 
         }
+
 
         private void AddRawNotamsCards(int i, int j)
         {
