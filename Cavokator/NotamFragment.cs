@@ -22,6 +22,7 @@ using Android.Text.Style;
 using Newtonsoft.Json;
 using AlertDialog = Android.App.AlertDialog;
 using Android.Support.Design.Widget;
+using Android.Gms.Maps;
 
 namespace Cavokator
 {
@@ -83,7 +84,8 @@ namespace Cavokator
 
             StyleViews();
 
-            RecallSavedData();
+            // TODO: change after implementation
+            //RecallSavedData();
 
             // Events
             _linearlayoutBottom.Touch += OnBackgroundTouch;
@@ -538,10 +540,17 @@ namespace Cavokator
             {
                 Activity.RunOnUiThread(() =>
                 {
-                    // Pull up dialog
                     var transaction = FragmentManager.BeginTransaction();
-                    var notamRawDialog = new NotamDialogRaw(mNotamContainerList[i].NotamID[j], mNotamContainerList[i].NotamRaw[j]);
-                    notamRawDialog.Show(transaction, "notamRawDialog");
+                    var notamRawMap = new NotamDialogMap(mNotamContainerList[i].Latitude[j],
+                                                         mNotamContainerList[i].Longitude[j],
+                                                         mNotamContainerList[i].Radius[j]);
+                    notamRawMap.Show(transaction, "notamRawDialog");
+
+                    // Pull up dialog
+                    // TODO: undo after testing
+                    //var transaction = FragmentManager.BeginTransaction();
+                    //var notamRawDialog = new NotamDialogRaw(mNotamContainerList[i].NotamID[j], mNotamContainerList[i].NotamRaw[j]);
+                    //notamRawDialog.Show(transaction, "notamRawDialog");
                 });
             }
 
@@ -560,6 +569,11 @@ namespace Cavokator
                 return notamFreeText1;
             }
 
+            if (mNotamContainerList[i].Latitude[j] != 999)
+            {
+                // TODO: map dialog
+            }
+
             // Adding view
             Activity.RunOnUiThread(() =>
             {
@@ -569,8 +583,6 @@ namespace Cavokator
                 _linearLayoutNotamLines.AddView(notamCard);
             });
         }
-
-
 
         private void AddRawNotamsCards(int i, int j)
         {

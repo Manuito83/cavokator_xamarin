@@ -13,6 +13,7 @@ using Android.Views;
 using Android.Widget;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using Android.Locations;
 
 namespace Cavokator
 {
@@ -77,7 +78,7 @@ namespace Cavokator
                     else if (Regex.IsMatch(line, @"(^|\s)Q\) (.*)"))
                     {
                         string shortQline = line.Replace(" ", "");
-                        Regex qRegex = new Regex(@"Q\)(?<FIR>[A-Z]{4})\/(?<CODE>[A-Z]{5})\/(?<TRAFFIC>IV|I|V|K)\/(?<PURPOSE>[A-Z]{1,3})\/(?<SCOPE>[A-Z]{1,2})\/(?<LOWER>[0-9]{3})\/(?<UPPER>[0-9]{3})\/(?<LAT>[0-9]{4})(?<LAT_CODE>N|S)(?<LON>[0-9]{5})(?<LONG_CODE>E|W)(?<RADIUS>[0-9]{3})");
+                        Regex qRegex = new Regex(@"Q\)(?<FIR>[A-Z]{4})\/(?<CODE>[A-Z]{5})\/(?<TRAFFIC>IV|I|V|K)\/(?<PURPOSE>[A-Z]{1,3})\/(?<SCOPE>[A-Z]{1,2})\/(?<LOWER>[0-9]{3})\/(?<UPPER>[0-9]{3})\/(?<LAT>[0-9]{4})(?<LAT_CODE>N|S)(?<LON>[0-9]{5})(?<LON_CODE>E|W)(?<RADIUS>[0-9]{3})");
                         Match qMatch = qRegex.Match(shortQline);
                         if (qMatch.Success)
                             myNotamTypeQ.QMatch = qMatch;
@@ -127,6 +128,48 @@ namespace Cavokator
             DecodedNotam.NotamD.Add(false);
             DecodedNotam.NotamID.Add(myNotamQ.NotamID);
             DecodedNotam.NotamFreeText.Add(myNotamQ.EText);
+
+            try
+            {
+                LocalPassCoordinates();
+            }
+            catch
+            {
+                DecodedNotam.Latitude.Add(999);
+                DecodedNotam.Longitude.Add(999);
+                DecodedNotam.Radius.Add(999);
+            }
+
+            void LocalPassCoordinates()
+            {
+                string latitude = myNotamQ.QMatch.Groups["LAT"].Value + myNotamQ.QMatch.Groups["LAT_CODE"].Value;
+                string latitudeCode = myNotamQ.QMatch.Groups["LAT_CODE"].Value;
+                string longitude = myNotamQ.QMatch.Groups["LON"].Value + myNotamQ.QMatch.Groups["LON_CODE"].Value;
+                string longitudeCode = myNotamQ.QMatch.Groups["LON_CODE"].Value;
+                string radius = myNotamQ.QMatch.Groups["RADIUS"].Value;
+                Int32.TryParse(radius, out int radiusInt);
+                DecodedNotam.Radius.Add(radiusInt);
+
+                string degreesLatString = latitude.Substring(0, 2);
+                string minutesLatString = latitude.Substring(2, 2);
+                float.TryParse(degreesLatString, out var degreesLat);
+                float.TryParse(minutesLatString, out var minutesLat);
+                minutesLat = minutesLat / 60;
+                float finalLat = degreesLat + minutesLat;
+                if (latitudeCode == "S")
+                    finalLat = -finalLat;
+                DecodedNotam.Latitude.Add(finalLat);
+
+                string degreesLonString = longitude.Substring(0, 3);
+                string minutesLonString = longitude.Substring(3, 2);
+                float.TryParse(degreesLonString, out float degreesLon);
+                float.TryParse(minutesLonString, out float minutesLon);
+                minutesLon = minutesLon / 60;
+                float finalLon = degreesLon + minutesLon;
+                if (longitudeCode == "W")
+                    finalLon = -finalLon;
+                DecodedNotam.Longitude.Add(finalLon);
+            }
         }
 
         private List<string> Fetch(string icao)

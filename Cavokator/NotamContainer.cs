@@ -22,5 +22,9 @@ namespace Cavokator
         public List<string> NotamID = new List<string>();
         public List<string> NotamFreeText = new List<string>();
         public List<string> NotamRaw = new List<string>();
+
+        public List<float> Latitude = new List<float>();
+        public List<float> Longitude = new List<float>();
+        public List<int> Radius = new List<int>();
     }
 }

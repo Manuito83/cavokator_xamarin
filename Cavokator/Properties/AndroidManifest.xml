@@ -11,5 +11,9 @@
 	<application 
       android:label="Cavokator" 
       android:theme="@style/Theme.CavocatorDesign" 
-      android:icon="@drawable/ic_appicon"></application>
+      android:icon="@drawable/ic_appicon">
+	    <meta-data
+	      android:name="com.google.android.geo.API_KEY"
+	      android:value="AIzaSyDG5AmuKo1Q6-3ZOfr05RzrLHqcG40DuPQ"/>
+  </application>
 </manifest>
