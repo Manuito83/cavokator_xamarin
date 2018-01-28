@@ -21,12 +21,18 @@ using Android.Text.Method;
 using Android.Text.Style;
 using Newtonsoft.Json;
 using AlertDialog = Android.App.AlertDialog;
+using Android.Support.Design.Widget;
 
 namespace Cavokator
 {
     class NotamFragment : Android.Support.V4.App.Fragment
     {
+        // Floating action button
+        private CoordinatorLayout _coordinatorLayout;
+        private FloatingActionButton _fabScrollTop;
+        
         // Main views
+        private ScrollView _scrollViewContainer;
         private LinearLayout _linearlayoutBottom;
         private EditText _airportEntryEditText;
         private Button _notamRequestButton;
@@ -85,11 +91,38 @@ namespace Cavokator
             _notamClearButton.Click += OnClearButtonClicked;
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
+            _scrollViewContainer.ScrollChange += OnScrollMoved;
+            _fabScrollTop.Click += ScrollToTop;
+
+            // Add FAB and hide
+            _coordinatorLayout.AddView(_fabScrollTop);
+            _fabScrollTop.Hide();
 
             // Sets up timer to update NOTAM UTC
             TimeTick();
             
             return thisView;
+        }
+
+        private void ScrollToTop(object sender, EventArgs e)
+        {
+            _scrollViewContainer.SmoothScrollTo(0, 0);
+        }
+
+        private void OnScrollMoved(object sender, View.ScrollChangeEventArgs e)
+        {
+            if (_scrollViewContainer.ScrollY > 1000)
+            {
+                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)_fabScrollTop.LayoutParameters;
+                lp.Gravity = (int)(GravityFlags.Bottom | GravityFlags.Right | GravityFlags.End);
+                lp.SetMargins(0, 0, 16, 16);
+                _fabScrollTop.LayoutParameters = lp;
+                _fabScrollTop.Show();
+            }
+            else
+            {
+                _fabScrollTop.Hide();
+            }
         }
 
         // Saves fields to SharedPreferences
@@ -568,6 +601,11 @@ namespace Cavokator
 
         private void StyleViews()
         {
+            _coordinatorLayout = thisView.FindViewById<CoordinatorLayout>(Resource.Id.cl);
+            _fabScrollTop = new FloatingActionButton(Activity);
+            _fabScrollTop.SetImageResource(Resource.Drawable.ic_arrow_up_bold_white_48dp);
+            _scrollViewContainer = thisView.FindViewById<ScrollView>(Resource.Id.notam_fragment_container);
+
             _linearlayoutBottom = thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_bottom);
             _linearlayoutBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
             
@@ -583,11 +621,6 @@ namespace Cavokator
             _notamClearButton.Text = Resources.GetString(Resource.String.Clear_button);
             _chooseIDtextview.Text = Resources.GetString(Resource.String.Airport_ID_TextView);
             _airportEntryEditText.Hint = Resources.GetString(Resource.String.Icao_Or_Iata);
-
-            
-
-            
-            
         }
 
         private void SaveData()
