@@ -72,7 +72,7 @@ namespace Cavokator
         {
             base.OnCreate(savedInstanceState);
 
-            ((AppCompatActivity)Activity).SupportActionBar.Title = "NOTAMS";
+            ((AppCompatActivity)Activity).SupportActionBar.Title = "NOTAM";
 
             HasOptionsMenu = true;
         }
@@ -227,7 +227,7 @@ namespace Cavokator
             // Update the time at which the request was performed
             mUtcRequestTime = DateTime.UtcNow;
             
-            if (CrossConnectivity.Current.IsConnected)
+            if (CrossConnectivity.Current.IsConnected && _airportEntryEditText.Text != String.Empty)
             {
                 _notamRequestButton.Enabled = false;
                 
@@ -261,10 +261,8 @@ namespace Cavokator
                         _notamRequestButton.Enabled = true;
                     });
                 });
-
-                
             }
-            else
+            else if (!CrossConnectivity.Current.IsConnected)
             {
                 Toast.MakeText(Activity, Resource.String.Internet_Error, ToastLength.Short).Show();
             }
@@ -500,6 +498,25 @@ namespace Cavokator
             // Styling notamFreeText
             var notamFreeText = LocalStyleFreeText(notamId);
 
+            ImageView worldIcon = new ImageView(Activity);
+            if (mNotamContainerList[i].Latitude[j] != 999)
+            {
+                worldIcon = LocalStyleMapIcon(worldIcon);
+            }
+            
+            // Adding view
+            Activity.RunOnUiThread(() =>
+            {
+                qCardsLayout.AddView(notamId);
+                qCardsLayout.AddView(notamFreeText);
+                qCardsLayout.AddView(worldIcon);
+                notamCard.AddView(qCardsLayout);
+                _linearLayoutNotamLines.AddView(notamCard);
+            });
+
+            // ** Local functions for styling ** //
+            
+            // Styling CardViews
             CardView LocalStyleCard(out RelativeLayout relativeLayout)
             {
                 // --- Styling cards ---
@@ -516,13 +533,25 @@ namespace Cavokator
                 return cardView;
             }
 
+            // Styling NOTAM ID
             TextView LocalStyleNotamId()
             {
                 TextView notamIdTextView = new TextView(Activity);
                 notamIdTextView.Id = 1;
 
                 ClickableSpan myClickableSpan = new ClickableSpan(mNotamContainerList[i].NotamID[j]);
-                myClickableSpan.ClickedMyClickableSpan += LocalClickedNotamId;
+
+                myClickableSpan.ClickedMyClickableSpan += delegate
+                {
+                    Activity.RunOnUiThread(() =>
+                    {
+                        // Pull up dialog
+                        var transaction = FragmentManager.BeginTransaction();
+                        var notamRawDialog = new NotamDialogRaw(mNotamContainerList[i].NotamID[j], mNotamContainerList[i].NotamRaw[j]);
+                        notamRawDialog.Show(transaction, "notamRawDialog");
+                    });
+                };
+
                 SpannableString idSpan = new SpannableString(mNotamContainerList[i].NotamID[j]);
                 idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
                 idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
@@ -536,24 +565,7 @@ namespace Cavokator
                 return notamIdTextView;
             }
 
-            void LocalClickedNotamId(object sender, MyClickableSpanArgs e)
-            {
-                Activity.RunOnUiThread(() =>
-                {
-                    var transaction = FragmentManager.BeginTransaction();
-                    var notamRawMap = new NotamDialogMap(mNotamContainerList[i].Latitude[j],
-                                                         mNotamContainerList[i].Longitude[j],
-                                                         mNotamContainerList[i].Radius[j]);
-                    notamRawMap.Show(transaction, "notamRawDialog");
-
-                    // Pull up dialog
-                    // TODO: undo after testing
-                    //var transaction = FragmentManager.BeginTransaction();
-                    //var notamRawDialog = new NotamDialogRaw(mNotamContainerList[i].NotamID[j], mNotamContainerList[i].NotamRaw[j]);
-                    //notamRawDialog.Show(transaction, "notamRawDialog");
-                });
-            }
-
+            // Styling free NOTAM text
             TextView LocalStyleFreeText(TextView notamId1)
             {
                 TextView notamFreeText1 = new TextView(Activity);
@@ -569,19 +581,33 @@ namespace Cavokator
                 return notamFreeText1;
             }
 
-            if (mNotamContainerList[i].Latitude[j] != 999)
+            // Styling map icon
+            ImageView LocalStyleMapIcon(ImageView myWorldMap)
             {
-                // TODO: map dialog
-            }
+                myWorldMap.Id = 3;
 
-            // Adding view
-            Activity.RunOnUiThread(() =>
-            {
-                qCardsLayout.AddView(notamId);
-                qCardsLayout.AddView(notamFreeText);
-                notamCard.AddView(qCardsLayout);
-                _linearLayoutNotamLines.AddView(notamCard);
-            });
+                myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
+
+                RelativeLayout.LayoutParams worldMapIconParams = 
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                worldMapIconParams.AddRule(LayoutRules.AlignParentRight);
+                worldMapIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
+                worldMapIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
+                worldMapIconParams.SetMargins(0, 10, 15, 25);
+                myWorldMap.LayoutParameters = worldMapIconParams;
+
+                myWorldMap.Click += delegate
+                {
+                    var transaction = FragmentManager.BeginTransaction();
+                    var notamRawMap = new NotamDialogMap(mNotamContainerList[i].NotamID[j],
+                        mNotamContainerList[i].Latitude[j],
+                        mNotamContainerList[i].Longitude[j],
+                        mNotamContainerList[i].Radius[j]);
+                    notamRawMap.Show(transaction, "notamRawDialog");
+                };
+
+                return myWorldMap;
+            }
         }
 
         private void AddRawNotamsCards(int i, int j)
@@ -631,7 +657,7 @@ namespace Cavokator
 
             _notamRequestButton.Text = Resources.GetString(Resource.String.Send_button);
             _notamClearButton.Text = Resources.GetString(Resource.String.Clear_button);
-            _chooseIDtextview.Text = Resources.GetString(Resource.String.Airport_ID_TextView);
+            _chooseIDtextview.Text = Resources.GetString(Resource.String.NOTAM_ID_TextView);
             _airportEntryEditText.Hint = Resources.GetString(Resource.String.Icao_Or_Iata);
         }
 

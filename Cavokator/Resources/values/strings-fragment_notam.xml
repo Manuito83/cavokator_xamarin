@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="NOTAM_ID_TextView">CHOOSE AIRPORT / FIR</string>
   <string name="Notam_not_found">No NOTAM found!</string>
   <string name="NOTAM_requested">NOTAM requested @</string>
   <string name="NOTAM_connectionError">* Server connection ERROR *</string>

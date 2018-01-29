@@ -1,32 +1,31 @@
-﻿using Android.App;
-using Android.Gms.Maps;
+﻿using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.OS;
-using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
-using Java.Lang;
-using SupportFragment = Android.Support.V4.App.Fragment;
-
-
 
 namespace Cavokator
 {
     class NotamDialogMap : Android.Support.V4.App.DialogFragment, IOnMapReadyCallback
     {
-        
-        SupportMapFragment mapFragment = new SupportMapFragment();
 
         private GoogleMap mMap;
 
         private View thisView;
 
+        private LinearLayout _notamContainerBottom;
+        private LinearLayout _buttonContainerBottom;
+        private TextView _notamIdTextView;
+        private Button _dismissButton;
+
+        private string notamId;
         private float latitude;
         private float longitude;
         private int radius;
 
-        public NotamDialogMap(float latitude, float longitude, int radius)
+        public NotamDialogMap(string notamId, float latitude, float longitude, int radius)
         {
+            this.notamId = notamId;
             this.latitude = latitude;
             this.longitude = longitude;
             this.radius = radius;
@@ -35,29 +34,10 @@ namespace Cavokator
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             base.OnCreateView(inflater, container, savedInstanceState);
-            mapFragment = new SupportMapFragment();
-            if (thisView != null)
-            {
-                ViewGroup parent = (ViewGroup)thisView.Parent;
-                if (parent != null)
-                    parent.RemoveView(thisView);
-            }
 
-            try
-            {
-                thisView = inflater.Inflate(Resource.Layout.notam_dialog_map, container, false);
-            }
-            catch (InflateException e)
-            {
-                /* map is already there, just return view as it is */
-            }
+            thisView = inflater.Inflate(Resource.Layout.notam_dialog_map, container, false);
 
-            // Inflate view
-            //if (savedInstanceState == null)
-            //    thisView = inflater.Inflate(Resource.Layout.notam_dialog_map, container, false);
-
-            //SupportMapFragment mapFragment = (SupportMapFragment)FragmentManager.FindFragmentById(Resource.Id.mapFragment);
-            //mapFragment.GetMapAsync(this);
+            StyleViews();
 
             return thisView;
         }
@@ -67,7 +47,7 @@ namespace Cavokator
             base.OnViewCreated(view, savedInstanceState);
 
             Android.Support.V4.App.FragmentManager fm = ChildFragmentManager;
-            mapFragment = (SupportMapFragment)fm.FindFragmentByTag("mapFragment");
+            SupportMapFragment mapFragment = (SupportMapFragment)fm.FindFragmentByTag("mapFragment");
             if (mapFragment == null)
             {
                 mapFragment = new SupportMapFragment();
@@ -78,6 +58,8 @@ namespace Cavokator
             }
 
             mapFragment.GetMapAsync(this);
+
+            _buttonContainerBottom.AddView(_dismissButton);
         }
 
         public void OnMapReady(GoogleMap map)
@@ -87,7 +69,6 @@ namespace Cavokator
             mMap.MoveCamera(CameraUpdateFactory.NewLatLngZoom(new LatLng(latitude, longitude), 7));
 
             var mapOptions = new MarkerOptions();
-            //mapOptions.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.ic_share_variant_white_24dp)).Anchor(0.0f, 1.0f);
             mapOptions.SetTitle("NOTAM");
             mapOptions.SetPosition(new LatLng(latitude, longitude));
             mMap.AddMarker(mapOptions);
@@ -97,8 +78,23 @@ namespace Cavokator
             circleOptions.InvokeRadius(radius * 1852);
             circleOptions.InvokeStrokeColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
             mMap.AddCircle(circleOptions);
-
         }
 
+        private void StyleViews()
+        {
+            _notamContainerBottom = thisView.FindViewById<LinearLayout>(Resource.Id.notam_mapDialog_mapContainer);
+            _notamContainerBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
+
+            _buttonContainerBottom = thisView.FindViewById<LinearLayout>(Resource.Id.notam_mapDialog_buttonContainer);
+            _buttonContainerBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
+
+            _notamIdTextView = thisView.FindViewById<TextView>(Resource.Id.notam_mapDialog_notamId);
+            _notamIdTextView.Text = "NOTAM " + notamId;
+            _notamIdTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
+
+            _dismissButton = new Button(Activity);
+            _dismissButton.Text = Resources.GetString(Resource.String.OK);
+            _dismissButton.Click += delegate { Dismiss(); };
+        }
     }
 }

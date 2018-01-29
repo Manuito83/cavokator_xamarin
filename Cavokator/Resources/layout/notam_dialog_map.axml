@@ -2,12 +2,17 @@
 <LinearLayout 
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/notam_mapDialog_mapContainer"
-  android:layout_width="match_parent"
+  android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:orientation="vertical"
   android:minWidth="300dp">
-  <!-- ID -->
+  <LinearLayout 
+    android:id="@+id/notam_mapDialog_mapContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minWidth="300dp"
+    android:layout_weight="1">
   <TextView
     android:id="@+id/notam_mapDialog_notamId"
     android:layout_width="wrap_content"
@@ -15,11 +20,14 @@
     android:text="NOTAM ID"
     android:textSize="14dp"
     android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:layout_gravity="center_horizontal" />
-  <!--<fragment
-    android:id="@+id/notam_mapDialog_mapFragment"
-    android:layout_width="wrap_content"
+  </LinearLayout>
+  <LinearLayout 
+    android:id="@+id/notam_mapDialog_buttonContainer"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    class="com.google.android.gms.maps.SupportMapFragment"/>-->
+    android:orientation="vertical"
+    android:minWidth="300dp">
+  </LinearLayout>
 </LinearLayout>
-
