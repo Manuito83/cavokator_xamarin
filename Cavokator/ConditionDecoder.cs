@@ -1,4 +1,11 @@
-﻿using System.Text.RegularExpressions;
+﻿//
+// CAVOKATOR APP
+// Website: https://github.com/Manuito83/Cavokator
+// License GNU General Public License v3.0
+// Manuel Ortega, 2018
+//
+
+using System.Text.RegularExpressions;
 
 
 namespace Cavokator

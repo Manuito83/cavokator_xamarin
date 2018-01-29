@@ -1,4 +1,11 @@
-﻿using Android.Gms.Maps;
+﻿//
+// CAVOKATOR APP
+// Website: https://github.com/Manuito83/Cavokator
+// License GNU General Public License v3.0
+// Manuel Ortega, 2018
+//
+
+using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.OS;
 using Android.Views;

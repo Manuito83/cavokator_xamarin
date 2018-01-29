@@ -1,4 +1,11 @@
-﻿namespace Cavokator
+﻿//
+// CAVOKATOR APP
+// Website: https://github.com/Manuito83/Cavokator
+// License GNU General Public License v3.0
+// Manuel Ortega, 2018
+//
+
+namespace Cavokator
 {
     public class ConditionContainer
     {

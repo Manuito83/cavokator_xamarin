@@ -1,4 +1,11 @@
-﻿using Android.App;
+﻿//
+// CAVOKATOR APP
+// Website: https://github.com/Manuito83/Cavokator
+// License GNU General Public License v3.0
+// Manuel Ortega, 2018
+//
+
+using Android.App;
 using Android.Content;
 using Android.Content.Res;
 using Android.Graphics;

@@ -1,3 +1,10 @@
+//
+// CAVOKATOR APP
+// Website: https://github.com/Manuito83/Cavokator
+// License GNU General Public License v3.0
+// Manuel Ortega, 2018
+//
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;

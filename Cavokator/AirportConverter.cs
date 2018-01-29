@@ -1,4 +1,11 @@
-﻿using System.IO;
+﻿//
+// CAVOKATOR APP
+// Website: https://github.com/Manuito83/Cavokator
+// License GNU General Public License v3.0
+// Manuel Ortega, 2018
+//
+
+using System.IO;
 using System.Linq;
 using Android.App;
 using CsvHelper;
