@@ -494,52 +494,60 @@ namespace Cavokator
         private void AddNotamQCards(int i, int j)
         {
             // Style card and RelativeLayout
-            var notamCard = LocalStyleCard(out var qCardsLayout);
-            
+            CardView notamCard = LocalStyleCard();
+
+            // Styling MainLayout
+            LinearLayout notamLayoutContainer = LocalStyleContainer();
+
             // Styling notamId
-            var notamId = LocalStyleNotamId();
-
-            // Styling notamFreeText
-            var notamFreeText = LocalStyleFreeText(notamId);
-
-            ImageView worldIcon = new ImageView(Activity);
-            if (mNotamContainerList[i].Latitude[j] != 999)
-            {
-                worldIcon = LocalStyleMapIcon(worldIcon);
-            }
+            RelativeLayout topLayout = LocalStyleTopLayout();
             
+            // Styling notamFreeText
+            LinearLayout notamFreeTextLayout = LocalStyleFreeText();
+
+            RelativeLayout timeRelativeLayout = LocalTimeSpan(mNotamContainerList[i].StartTime[j],
+                                                   mNotamContainerList[i].EndTime[j]);
+
             // Adding view
             Activity.RunOnUiThread(() =>
             {
-                qCardsLayout.AddView(notamId);
-                qCardsLayout.AddView(notamFreeText);
-                qCardsLayout.AddView(worldIcon);
-                notamCard.AddView(qCardsLayout);
+                notamCard.AddView(notamLayoutContainer);
+                notamLayoutContainer.AddView(topLayout);
+                notamLayoutContainer.AddView(notamFreeTextLayout);
+                notamLayoutContainer.AddView(timeRelativeLayout);
                 _linearLayoutNotamLines.AddView(notamCard);
             });
 
             // ** Local functions for styling ** //
             
-            // Styling CardViews
-            CardView LocalStyleCard(out RelativeLayout relativeLayout)
+            CardView LocalStyleCard()
             {
-                // --- Styling cards ---
                 CardView cardView = new CardView(Activity);
                 cardView.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
                 cardView.Elevation = 5.0f;
                 var cardViewParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
                 cardViewParams.SetMargins(10, 10, 10, 20);
                 cardView.LayoutParameters = cardViewParams;
 
-                // --- RelativeLayout ---
-                relativeLayout = new RelativeLayout(Activity);
                 return cardView;
             }
 
-            // Styling NOTAM ID
-            TextView LocalStyleNotamId()
+            LinearLayout LocalStyleContainer()
             {
+                LinearLayout myContainerLayout = new LinearLayout(Activity);
+                myContainerLayout.Orientation = Orientation.Vertical;
+                LinearLayout.LayoutParams myContainerLayoutParams =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                myContainerLayout.LayoutParameters = myContainerLayoutParams;
+
+                return myContainerLayout;
+            }
+
+            RelativeLayout LocalStyleTopLayout()
+            {
+                RelativeLayout myTopLayout = new RelativeLayout(Activity);
+
                 TextView notamIdTextView = new TextView(Activity);
                 notamIdTextView.Id = 1;
 
@@ -566,51 +574,147 @@ namespace Cavokator
 
                 notamIdTextView.SetTextSize(ComplexUnitType.Dip, 12);
                 notamIdTextView.SetPadding(30, 30, 15, 0);
-                return notamIdTextView;
-            }
 
-            // Styling free NOTAM text
-            TextView LocalStyleFreeText(TextView notamId1)
-            {
-                TextView notamFreeText1 = new TextView(Activity);
-                notamFreeText1.Id = 2;
-                notamFreeText1.Text = mNotamContainerList[i].NotamFreeText[j];
-                notamFreeText1.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-                notamFreeText1.SetTextSize(ComplexUnitType.Dip, 12);
-                notamFreeText1.SetPadding(30, 30, 15, 10);
-                RelativeLayout.LayoutParams notamFreeTextParams =
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                notamFreeTextParams.AddRule(LayoutRules.Below, notamId1.Id);
-                notamFreeText1.LayoutParameters = notamFreeTextParams;
-                return notamFreeText1;
-            }
-
-            // Styling map icon
-            ImageView LocalStyleMapIcon(ImageView myWorldMap)
-            {
-                myWorldMap.Id = 3;
-
-                myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
-
-                RelativeLayout.LayoutParams worldMapIconParams = 
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
-                worldMapIconParams.AddRule(LayoutRules.AlignParentRight);
-                worldMapIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
-                worldMapIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
-                worldMapIconParams.SetMargins(0, 10, 15, 25);
-                myWorldMap.LayoutParameters = worldMapIconParams;
-
-                myWorldMap.Click += delegate
+                myTopLayout.AddView(notamIdTextView);
+                
+                if (mNotamContainerList[i].Latitude[j] != 9999)
                 {
-                    var transaction = FragmentManager.BeginTransaction();
-                    var notamRawMap = new NotamDialogMap(mNotamContainerList[i].NotamID[j],
-                        mNotamContainerList[i].Latitude[j],
-                        mNotamContainerList[i].Longitude[j],
-                        mNotamContainerList[i].Radius[j]);
-                    notamRawMap.Show(transaction, "notamRawDialog");
-                };
+                    ImageView myWorldMap = new ImageView(Activity);
 
-                return myWorldMap;
+                    myWorldMap.Id = 2;
+
+                    myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
+
+                    RelativeLayout.LayoutParams worldMapIconParams =
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    worldMapIconParams.AddRule(LayoutRules.AlignParentRight);
+                    worldMapIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
+                    worldMapIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
+                    worldMapIconParams.SetMargins(0, 10, 15, 25);
+                    myWorldMap.LayoutParameters = worldMapIconParams;
+
+                    myTopLayout.AddView(myWorldMap);
+
+                    myWorldMap.Click += delegate
+                    {
+                        var transaction = FragmentManager.BeginTransaction();
+                        var notamRawMap = new NotamDialogMap(mNotamContainerList[i].NotamID[j],
+                            mNotamContainerList[i].Latitude[j],
+                            mNotamContainerList[i].Longitude[j],
+                            mNotamContainerList[i].Radius[j]);
+                        notamRawMap.Show(transaction, "notamRawDialog");
+                    };
+                }
+
+                return myTopLayout;
+            }            
+            
+            LinearLayout LocalStyleFreeText()
+            {
+                LinearLayout freeTextLayout = new LinearLayout(Activity);
+                freeTextLayout.Orientation = Orientation.Vertical;
+
+                LinearLayout.LayoutParams freeTextLayoutParams = 
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                freeTextLayout.LayoutParameters = freeTextLayoutParams;
+
+                TextView notamFreeText = new TextView(Activity);
+                notamFreeText.Text = mNotamContainerList[i].NotamFreeText[j];
+                notamFreeText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+                notamFreeText.SetTextSize(ComplexUnitType.Dip, 12);
+                notamFreeText.SetPadding(30, 30, 15, 10);
+
+                freeTextLayout.AddView(notamFreeText);
+
+                return freeTextLayout;
+            }
+
+            RelativeLayout LocalTimeSpan(DateTime myTimeStart, DateTime myTimeEnd)
+            {
+                RelativeLayout myBaseTimeLayout = new RelativeLayout(Activity);
+                LinearLayout.LayoutParams myBaseTimeLayoutParams = 
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
+                myBaseTimeLayoutParams.SetMargins(30, 20, 0, 30);
+                myBaseTimeLayout.LayoutParameters = myBaseTimeLayoutParams;
+
+                ImageView calendarIcon = new ImageView(Activity);
+                calendarIcon.Id = 1;
+                calendarIcon.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
+                RelativeLayout.LayoutParams calendarIconParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                calendarIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                calendarIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                calendarIconParams.SetMargins(0, 0, 20, 0);
+                calendarIconParams.AddRule(LayoutRules.CenterVertical);
+                calendarIcon.LayoutParameters = calendarIconParams;
+
+                TextView myStartTimeEditText = new TextView(Activity);
+                myStartTimeEditText.Id = 2;
+                myStartTimeEditText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+                myStartTimeEditText.SetTextSize(ComplexUnitType.Dip, 11);
+                RelativeLayout.LayoutParams myStartTimeEditTextParams = 
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                myStartTimeEditTextParams.SetMargins(0, 0, 0, 0);
+                myStartTimeEditTextParams.AddRule(LayoutRules.RightOf, calendarIcon.Id);
+                myStartTimeEditTextParams.AddRule(LayoutRules.CenterVertical);
+                myStartTimeEditText.LayoutParameters = myStartTimeEditTextParams;
+                myStartTimeEditText.Text = myTimeStart.ToString("dd") + "-" +
+                                           myTimeStart.ToString("MMM") + "-" +
+                                           myTimeStart.ToString("yy") + " " +
+                                           myTimeStart.ToString("HH") + ":" +
+                                           myTimeStart.ToString("mm");
+
+                ImageView arrowIcon = new ImageView(Activity);
+                arrowIcon.Id = 3;
+                arrowIcon.SetImageResource(Resource.Drawable.ic_menu_right_black_48dp);
+                RelativeLayout.LayoutParams arrowIconParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                arrowIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                arrowIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                arrowIconParams.SetMargins(8, 0, 8, 0);
+                arrowIconParams.AddRule(LayoutRules.RightOf, myStartTimeEditText.Id);
+                arrowIconParams.AddRule(LayoutRules.CenterVertical);
+                arrowIcon.LayoutParameters = arrowIconParams;
+
+                TextView myEndTimeEditText = new TextView(Activity);
+                myEndTimeEditText.Id = 4;
+                myEndTimeEditText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+                myEndTimeEditText.SetTextSize(ComplexUnitType.Dip, 11);
+                RelativeLayout.LayoutParams myEndTimeEditTextParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                myEndTimeEditTextParams.SetMargins(0, 0, 0, 0);
+                myEndTimeEditTextParams.AddRule(LayoutRules.RightOf, arrowIcon.Id);
+                myEndTimeEditTextParams.AddRule(LayoutRules.CenterVertical);
+                myEndTimeEditText.LayoutParameters = myEndTimeEditTextParams;
+                string myEndTimeString = String.Empty;
+                if (!mNotamContainerList[i].CEstimated[j] && !mNotamContainerList[i].CPermanent[j])
+                {
+                    myEndTimeString = myTimeEnd.ToString("dd") + "-" +
+                           myTimeEnd.ToString("MMM") + "-" +
+                           myTimeEnd.ToString("yy") + " " +
+                           myTimeEnd.ToString("HH") + ":" +
+                           myTimeEnd.ToString("mm");
+                }
+                else if (mNotamContainerList[i].CEstimated[j])
+                {
+                    myEndTimeString = myTimeEnd.ToString("dd") + "-" +
+                           myTimeEnd.ToString("MMM") + "-" +
+                           myTimeEnd.ToString("yy") + " " +
+                           myTimeEnd.ToString("HH") + ":" +
+                           myTimeEnd.ToString("mm") + " (ESTIMATED)";
+                }
+                else if (mNotamContainerList[i].CPermanent[j])
+                {
+                    myEndTimeString = "PERMANENT";
+                }
+                myEndTimeEditText.Text = myEndTimeString;
+
+                myBaseTimeLayout.AddView(calendarIcon);
+                myBaseTimeLayout.AddView(myStartTimeEditText);
+                myBaseTimeLayout.AddView(arrowIcon);
+                myBaseTimeLayout.AddView(myEndTimeEditText);
+
+                return myBaseTimeLayout;
             }
         }
 
@@ -725,7 +829,6 @@ namespace Cavokator
             var timerDelegate = new TimerCallback(UpdateRequestedTime);
             var utcUpdateTimer = new Timer(timerDelegate, null, 0, 30000);
         }
-
 
         /// Update requested UTC time
         private void UpdateRequestedTime(object state)

@@ -8,19 +8,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
-using Android.Locations;
 
 namespace Cavokator
 {
@@ -91,6 +82,54 @@ namespace Cavokator
                             myNotamTypeQ.QMatch = qMatch;
                     }
 
+                    // GROUP B)
+                    else if (Regex.IsMatch(line, @"(^|\s)B\) ([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})"))
+                    {
+                        Regex bRegex = new Regex(@"(^|\s)B\) (?<TIME_START>([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2}))");
+                        Match bMatch = bRegex.Match(line);
+                        if (bMatch.Success)
+                        {
+                            string startTimeRaw = bMatch.Groups["TIME_START"].Value;
+                            DateTime myStartTime = DateTime.ParseExact(startTimeRaw, "yyMMddHHmm", null);
+                            myNotamTypeQ.StartTime = myStartTime;
+                        }
+                    }
+                    
+                    // GROUP C) EST
+                    else if (Regex.IsMatch(line, @"(^|\s)C\) ([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2}) (EST)"))
+                    {
+                        Regex cRegex = new Regex(@"(^|\s)C\) (?<TIME_END>([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})) (EST)");
+                        Match cMatch = cRegex.Match(line);
+                        if (cMatch.Success)
+                        {
+                            string endTimeRaw = cMatch.Groups["TIME_END"].Value;
+                            DateTime myEndTime = DateTime.ParseExact(endTimeRaw, "yyMMddHHmm", null);
+                            myNotamTypeQ.EndTime = myEndTime;
+
+                            myNotamTypeQ.CEstimated = true;
+                        }
+                    }
+                    
+                    // GROUP C) NORMAL
+                    else if (Regex.IsMatch(line, @"(^|\s)C\) ([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})"))
+                    {
+                        Regex cRegex = new Regex(@"(^|\s)C\) (?<TIME_END>([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2}))");
+                        Match cMatch = cRegex.Match(line);
+                        if (cMatch.Success)
+                        {
+                            string endTimeRaw = cMatch.Groups["TIME_END"].Value;
+                            DateTime myEndTime = DateTime.ParseExact(endTimeRaw, "yyMMddHHmm", null);
+                            myNotamTypeQ.EndTime = myEndTime;
+                        }
+                    }
+
+                    // GROUP C) PERM
+                    else if (Regex.IsMatch(line, @"(^|\s)C\) (PERM)"))
+                    {
+                        myNotamTypeQ.EndTime = DateTime.MaxValue;
+                        myNotamTypeQ.CPermanent = true;
+                    }
+
                     // GROUP E)
                     else if (Regex.IsMatch(line, @"(^|\s)E\) ([.\n|\W|\w]*)"))
                     {
@@ -109,6 +148,8 @@ namespace Cavokator
             // If we have filled all the (minimum) required data, pass the NOTAM Q
             if (myNotamTypeQ.NotamID != String.Empty &&
                 myNotamTypeQ.QMatch != Match.Empty &&
+                myNotamTypeQ.StartTime != DateTime.MinValue &&
+                myNotamTypeQ.EndTime != DateTime.MinValue &&
                 myNotamTypeQ.EText != String.Empty)
 
                 return myNotamTypeQ;
@@ -124,9 +165,22 @@ namespace Cavokator
 
         private void FillContainerWithRawLines(string singleNotam)
         {
+            // Valid values
+            DecodedNotam.NotamRaw.Add(singleNotam);
+            
+            // TODO: fill all!
+            DecodedNotam.StartTime.Add(DateTime.MinValue);
+            DecodedNotam.EndTime.Add(DateTime.MinValue);
+            DecodedNotam.CEstimated.Add(false);
+            DecodedNotam.CPermanent.Add(false);
+            DecodedNotam.Latitude.Add(0);
+            DecodedNotam.Longitude.Add(0);
+            DecodedNotam.Radius.Add(0);
+            DecodedNotam.NotamFreeText.Add(String.Empty);
+            DecodedNotam.NotamID.Add(String.Empty);
             DecodedNotam.NotamQ.Add(false);
             DecodedNotam.NotamD.Add(false);
-            DecodedNotam.NotamRaw.Add(singleNotam);
+            
         }
 
         private void FillContainerWithNotamQInformation(NotamTypeQ myNotamQ)
@@ -134,18 +188,30 @@ namespace Cavokator
             DecodedNotam.NotamQ.Add(true);
             DecodedNotam.NotamD.Add(false);
             DecodedNotam.NotamID.Add(myNotamQ.NotamID);
+            DecodedNotam.StartTime.Add(myNotamQ.StartTime);
+            DecodedNotam.EndTime.Add(myNotamQ.EndTime);
             DecodedNotam.NotamFreeText.Add(myNotamQ.EText);
-
+            
             try
             {
                 LocalPassCoordinates();
             }
             catch
             {
-                DecodedNotam.Latitude.Add(999);
-                DecodedNotam.Longitude.Add(999);
-                DecodedNotam.Radius.Add(999);
+                DecodedNotam.Latitude.Add(9999);
+                DecodedNotam.Longitude.Add(9999);
+                DecodedNotam.Radius.Add(9999);
             }
+
+            if (myNotamQ.CEstimated)
+                DecodedNotam.CEstimated.Add(true);
+            else
+                DecodedNotam.CEstimated.Add(false);
+
+            if (myNotamQ.CPermanent)
+                DecodedNotam.CPermanent.Add(true);
+            else
+                DecodedNotam.CPermanent.Add(false);
 
             void LocalPassCoordinates()
             {

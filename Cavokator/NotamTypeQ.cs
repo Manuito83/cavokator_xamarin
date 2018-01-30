@@ -27,10 +27,20 @@ namespace Cavokator
         private Match qMatch = Match.Empty;
         public Match QMatch { get => qMatch; set => qMatch = value; }
 
+        private DateTime startTime = DateTime.MinValue;
+        public DateTime StartTime { get => startTime; set => startTime = value; }
+
+        private DateTime endTime = DateTime.MinValue;
+        public DateTime EndTime { get => endTime; set => endTime = value; }
+
+        private bool cEstimated = false;
+        public bool CEstimated { get => cEstimated; set => cEstimated = value; }
+
+        private bool cPermanent = false;
+        public bool CPermanent { get => cPermanent; set => cPermanent = value; }
+
         private string eText = String.Empty;
         public string EText { get => eText; set => eText = value; }
-
-
-
+        
     }
 }
