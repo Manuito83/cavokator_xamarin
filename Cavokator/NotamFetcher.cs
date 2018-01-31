@@ -70,7 +70,7 @@ namespace Cavokator
                     Regex idRegex = new Regex(@"(^|\s)(?<ID>[A-Z][0-9]{4}\/[0-9]{2}) (NOTAMN|NOTAMR|NOTAMC)");
                     Match idMatch = idRegex.Match(line);
                     if (idMatch.Success)
-                        myNotamTypeQ.NotamID = idMatch.Groups["ID"].Value;
+                        myNotamTypeQ.NotamId = idMatch.Groups["ID"].Value;
                     
                     // GROUP Q)
                     else if (Regex.IsMatch(line, @"(^|\s)Q\) (.*)"))
@@ -130,6 +130,18 @@ namespace Cavokator
                         myNotamTypeQ.CPermanent = true;
                     }
 
+                    // GROUP D)
+                    else if (Regex.IsMatch(line, @"(^|\s)D\) ([.\n|\W|\w]*)"))
+                    {
+                        Regex dRegex = new Regex(@"(^|\s)D\) (?<SPAN>[.\n|\W|\w]*)");
+                        Match dMatch = dRegex.Match(line);
+                        if (dMatch.Success)
+                        {
+                            string spanTimeRaw = dMatch.Groups["SPAN"].Value;
+                            myNotamTypeQ.SpanTime = spanTimeRaw;
+                        }
+                    }
+
                     // GROUP E)
                     else if (Regex.IsMatch(line, @"(^|\s)E\) ([.\n|\W|\w]*)"))
                     {
@@ -146,7 +158,7 @@ namespace Cavokator
             }
 
             // If we have filled all the (minimum) required data, pass the NOTAM Q
-            if (myNotamTypeQ.NotamID != String.Empty &&
+            if (myNotamTypeQ.NotamId != String.Empty &&
                 myNotamTypeQ.QMatch != Match.Empty &&
                 myNotamTypeQ.StartTime != DateTime.MinValue &&
                 myNotamTypeQ.EndTime != DateTime.MinValue &&
@@ -173,11 +185,12 @@ namespace Cavokator
             DecodedNotam.EndTime.Add(DateTime.MinValue);
             DecodedNotam.CEstimated.Add(false);
             DecodedNotam.CPermanent.Add(false);
+            DecodedNotam.Span.Add(String.Empty);
             DecodedNotam.Latitude.Add(0);
             DecodedNotam.Longitude.Add(0);
             DecodedNotam.Radius.Add(0);
             DecodedNotam.NotamFreeText.Add(String.Empty);
-            DecodedNotam.NotamID.Add(String.Empty);
+            DecodedNotam.NotamId.Add(String.Empty);
             DecodedNotam.NotamQ.Add(false);
             DecodedNotam.NotamD.Add(false);
             
@@ -187,9 +200,10 @@ namespace Cavokator
         {
             DecodedNotam.NotamQ.Add(true);
             DecodedNotam.NotamD.Add(false);
-            DecodedNotam.NotamID.Add(myNotamQ.NotamID);
+            DecodedNotam.NotamId.Add(myNotamQ.NotamId);
             DecodedNotam.StartTime.Add(myNotamQ.StartTime);
             DecodedNotam.EndTime.Add(myNotamQ.EndTime);
+            DecodedNotam.Span.Add(myNotamQ.SpanTime);
             DecodedNotam.NotamFreeText.Add(myNotamQ.EText);
             
             try

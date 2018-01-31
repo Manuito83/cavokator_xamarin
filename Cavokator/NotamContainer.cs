@@ -14,23 +14,24 @@ namespace Cavokator
     {
         public bool ConnectionError;
 
-        public List<bool> NotamQ = new List<bool>();
-        public List<bool> NotamD = new List<bool>();
+        public readonly List<bool> NotamQ = new List<bool>();
+        public readonly List<bool> NotamD = new List<bool>();
 
-        public List<string> NotamID = new List<string>();
+        public readonly List<string> NotamId = new List<string>();
 
-        public List<float> Latitude = new List<float>();
-        public List<float> Longitude = new List<float>();
-        public List<int> Radius = new List<int>();
+        public readonly List<float> Latitude = new List<float>();
+        public readonly List<float> Longitude = new List<float>();
+        public readonly List<int> Radius = new List<int>();
 
-        public List<DateTime> StartTime = new List<DateTime>();
-        public List<DateTime> EndTime = new List<DateTime>();
-        public List<bool> CEstimated = new List<bool>();
-        public List<bool> CPermanent = new List<bool>();
+        public readonly List<DateTime> StartTime = new List<DateTime>();
+        public readonly List<DateTime> EndTime = new List<DateTime>();
+        public readonly List<bool> CEstimated = new List<bool>();
+        public readonly List<bool> CPermanent = new List<bool>();
+        public readonly List<string> Span = new List<string>();
 
-        public List<string> NotamFreeText = new List<string>();
+        public readonly List<string> NotamFreeText = new List<string>();
 
-        public List<string> NotamRaw = new List<string>();
+        public readonly List<string> NotamRaw = new List<string>();
 
 
     }

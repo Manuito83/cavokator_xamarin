@@ -49,28 +49,28 @@ namespace Cavokator
         private AlertDialog.Builder _notamFetchingAlertDialogBuilder;
         private AlertDialog _notamFetchingAlertDialog;
 
-        private bool connectionError;
+        private bool _connectionError;
 
         // View that will be used for FindViewById
-        private View thisView;
+        private View _thisView;
 
         // Views for UTC time
-        private DateTime mUtcRequestTime;
-        private TextView mUtcTextView;
+        private DateTime _mUtcRequestTime;
+        private TextView _mUtcTextView;
 
-        private List<NotamContainer> mNotamContainerList = new List<NotamContainer>();
+        private List<NotamContainer> _mNotamContainerList = new List<NotamContainer>();
 
         // List of actual ICAO (as entered) airports that we are going to request
-        private List<string> mRequestedAirportsByIcao = new List<string>();
+        private List<string> _mRequestedAirportsByIcao = new List<string>();
 
         // List of airports with a mix of ICAO and IATA, that we show to the user as it was requested
-        private List<string> mRequestedAirportsRawString = new List<string>();
+        private List<string> _mRequestedAirportsRawString = new List<string>();
 
         // Keep count of string length in EditText field, so that we know if it has decreased (deletion)
-        private int mEditTextIdLength;
+        private int _mEditTextIdLength;
 
         // Initialize object to store List downloaded at OnCreate from a CAV file with IATA, ICAO and Airport Names
-        private List<AirportCsvDefinition> mAirportDefinitions = AirportDefinitions._myAirportDefinitions;
+        private List<AirportCsvDefinition> _mAirportDefinitions = AirportDefinitions._myAirportDefinitions;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -84,7 +84,7 @@ namespace Cavokator
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // In order to return the view for this Fragment
-            thisView = inflater.Inflate(Resource.Layout.notam_fragment, container, false);
+            _thisView = inflater.Inflate(Resource.Layout.notam_fragment, container, false);
 
             StyleViews();
 
@@ -107,7 +107,7 @@ namespace Cavokator
             // Sets up timer to update NOTAM UTC
             TimeTick();
             
-            return thisView;
+            return _thisView;
         }
 
         private void ScrollToTop(object sender, EventArgs e)
@@ -152,7 +152,7 @@ namespace Cavokator
 
         // Apply only if we are adding text
         // Otherwise, we could not delete (due to infinite loop)
-        if (_airportEntryEditText.Text.Length > mEditTextIdLength)
+        if (_airportEntryEditText.Text.Length > _mEditTextIdLength)
         {
             // If our text is already 4 positions long
             if (_airportEntryEditText.Text.Length > 3)
@@ -189,7 +189,7 @@ namespace Cavokator
 
         private void BeforeIdTextChanged(object sender, TextChangedEventArgs e)
         {
-            mEditTextIdLength = _airportEntryEditText.Text.Length;
+            _mEditTextIdLength = _airportEntryEditText.Text.Length;
         }
 
         private void OnBackgroundTouch(object sender, View.TouchEventArgs e)
@@ -202,10 +202,10 @@ namespace Cavokator
         {
             _linearLayoutNotamLines.RemoveAllViews();
 
-            mNotamContainerList.Clear();
-            mUtcTextView = null;
+            _mNotamContainerList.Clear();
+            _mUtcTextView = null;
 
-            connectionError = false;
+            _connectionError = false;
 
             _airportEntryEditText.Text = "";
             _airportEntryEditText.SetTextColor(default(Color));
@@ -219,17 +219,17 @@ namespace Cavokator
             var im = (InputMethodManager)Activity.GetSystemService(Context.InputMethodService);
             im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
 
-            connectionError = false;
+            _connectionError = false;
 
             _airportEntryEditText.ClearFocus();
 
-            mNotamContainerList.Clear();
+            _mNotamContainerList.Clear();
 
             // Remove all previous views from the linear layout
             _linearLayoutNotamLines.RemoveAllViews();
 
             // Update the time at which the request was performed
-            mUtcRequestTime = DateTime.UtcNow;
+            _mUtcRequestTime = DateTime.UtcNow;
             
             if (CrossConnectivity.Current.IsConnected && _airportEntryEditText.Text != String.Empty)
             {
@@ -252,11 +252,11 @@ namespace Cavokator
                     GetNotams();
 
                     // Did we connect succesfully? Then show Notams!
-                    if (connectionError == false)
+                    if (_connectionError == false)
                         ShowNotams();
                     else
                     {
-                        mNotamContainerList.Clear();
+                        _mNotamContainerList.Clear();
                         ShowConnectionError();
                     }
 
@@ -277,33 +277,33 @@ namespace Cavokator
         {
             // Split airport list entered
             // We perform the same operation to both lists, the user one and the ICAO one
-            mRequestedAirportsByIcao = requestedNotamsString.Split(' ', '\n', ',').ToList();
-            mRequestedAirportsRawString = requestedNotamsString.Split(' ', '\n', ',').ToList();
+            _mRequestedAirportsByIcao = requestedNotamsString.Split(' ', '\n', ',').ToList();
+            _mRequestedAirportsRawString = requestedNotamsString.Split(' ', '\n', ',').ToList();
 
             // Check and delete any entries with less than 3 chars
-            for (var i = mRequestedAirportsByIcao.Count - 1; i >= 0; i--)
+            for (var i = _mRequestedAirportsByIcao.Count - 1; i >= 0; i--)
             {
-                if (mRequestedAirportsByIcao[i].Length < 3)
+                if (_mRequestedAirportsByIcao[i].Length < 3)
                 {
-                    mRequestedAirportsByIcao.RemoveAt(i);
-                    mRequestedAirportsRawString.RemoveAt(i);
+                    _mRequestedAirportsByIcao.RemoveAt(i);
+                    _mRequestedAirportsRawString.RemoveAt(i);
                 }
             }
 
             // If airport code length is 3, it might be an IATA airport
             // so we try to get its ICAO in order to get the WX information
-            for (var i = 0; i < mRequestedAirportsByIcao.Count; i++)
+            for (var i = 0; i < _mRequestedAirportsByIcao.Count; i++)
             {
-                if (mRequestedAirportsByIcao[i].Length == 3)
+                if (_mRequestedAirportsByIcao[i].Length == 3)
                 {
                     // Try to find the IATA in the list
                     try
                     {
-                        for (int j = 0; j < mAirportDefinitions.Count; j++)
+                        for (int j = 0; j < _mAirportDefinitions.Count; j++)
                         {
-                            if (mAirportDefinitions[j].iata == mRequestedAirportsByIcao[i].ToUpper())
+                            if (_mAirportDefinitions[j].iata == _mRequestedAirportsByIcao[i].ToUpper())
                             {
-                                mRequestedAirportsByIcao[i] = mAirportDefinitions[j].icao;
+                                _mRequestedAirportsByIcao[i] = _mAirportDefinitions[j].icao;
                                 break;
                             }
 
@@ -311,7 +311,7 @@ namespace Cavokator
                     }
                     catch
                     {
-                        mRequestedAirportsByIcao[i] = null;
+                        _mRequestedAirportsByIcao[i] = null;
                     }
                 }
             }
@@ -320,21 +320,21 @@ namespace Cavokator
         /// Populate list with notams for every airport requested
         private void GetNotams()
         {
-            for (int i = 0; i < mRequestedAirportsByIcao.Count; i++) 
+            for (int i = 0; i < _mRequestedAirportsByIcao.Count; i++) 
             {
-                string currentAirport = mRequestedAirportsByIcao[i];
+                string currentAirport = _mRequestedAirportsByIcao[i];
 
                 NotamFetcher mNotams = new NotamFetcher(currentAirport);
 
                 if (!mNotams.DecodedNotam.ConnectionError)
                 {
-                    mNotamContainerList.Add(mNotams.DecodedNotam);
-                    PercentageCompleted(i, mRequestedAirportsByIcao.Count, currentAirport);
+                    _mNotamContainerList.Add(mNotams.DecodedNotam);
+                    PercentageCompleted(i, _mRequestedAirportsByIcao.Count, currentAirport);
                 }
                 else
                 {
                     _notamFetchingAlertDialog.Dismiss();
-                    connectionError = true;
+                    _connectionError = true;
                     break;
                 }
             }
@@ -343,32 +343,41 @@ namespace Cavokator
         private void ShowNotams()
         {
             // Start working if there is something in the container
-            if (mNotamContainerList.Count > 0)
+            if (_mNotamContainerList.Count > 0)
             {
-                if (!connectionError)
+                if (!_connectionError)
                 {
                     AddRequestedTime();
 
                     // Iterate every airport populated by GetNotams()
-                    for (int i = 0; i < mNotamContainerList.Count; i++)
+                    for (int i = 0; i < _mNotamContainerList.Count; i++)
                     {
                         AddAirportName(i);
 
-                        if (mNotamContainerList[i].NotamRaw.Count == 0)
+                        if (_mNotamContainerList[i].NotamRaw.Count == 0)
                         {
                             AddErrorCard();
                             break;
                         }
 
-                        for (int j = 0; j < mNotamContainerList[i].NotamRaw.Count; j++)
+                        for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
                         { 
                             // It's Q
-                            if (mNotamContainerList[i].NotamQ[j])
+                            if (_mNotamContainerList[i].NotamQ[j])
                             {
-                                AddNotamQCards(i, j);
+                                try
+                                {
+                                    AddNotamQCards(i, j);
+                                }
+                                catch
+                                {
+                                    // If error showing Q, show Raw
+                                    AddRawNotamsCards(i, j);
+                                }
+                                
                             }
                             // It's D
-                            else if (mNotamContainerList[i].NotamD[j])
+                            else if (_mNotamContainerList[i].NotamD[j])
                             {
                                 //
                             }
@@ -412,19 +421,19 @@ namespace Cavokator
 
             string utcString = $"{utcStringBeginning} {justNow}";
 
-            mUtcTextView = new TextView(Activity);
-            mUtcTextView.Text = utcString;
-            mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
-            mUtcTextView.SetTextSize(ComplexUnitType.Dip, 14);
-            mUtcTextView.Gravity = GravityFlags.Center;
+            _mUtcTextView = new TextView(Activity);
+            _mUtcTextView.Text = utcString;
+            _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
+            _mUtcTextView.SetTextSize(ComplexUnitType.Dip, 14);
+            _mUtcTextView.Gravity = GravityFlags.Center;
             var utcTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             utcTextViewParams.SetMargins(0, 50, 0, 0);
-            mUtcTextView.LayoutParameters = utcTextViewParams;
+            _mUtcTextView.LayoutParameters = utcTextViewParams;
 
             // Adding view
             Activity.RunOnUiThread(() =>
             {
-                _linearLayoutNotamLines.AddView(mUtcTextView);
+                _linearLayoutNotamLines.AddView(_mUtcTextView);
             });
         }
 
@@ -433,20 +442,20 @@ namespace Cavokator
             TextView airportName = new TextView(Activity);
             
             // Try to get the airport's name from existing _myAirportDefinition List
-            bool foundAirportICAO = false;
+            bool foundAirportIcao = false;
             try
             {
-                for (var j = 0; j < mAirportDefinitions.Count; j++)
-                    if (mAirportDefinitions[j].icao == mRequestedAirportsByIcao[i].ToUpper())
+                for (var j = 0; j < _mAirportDefinitions.Count; j++)
+                    if (_mAirportDefinitions[j].icao == _mRequestedAirportsByIcao[i].ToUpper())
                     {
-                        airportName.Text = mRequestedAirportsRawString[i].ToUpper() + " - " + mAirportDefinitions[j].description;
-                        foundAirportICAO = true;
+                        airportName.Text = _mRequestedAirportsRawString[i].ToUpper() + " - " + _mAirportDefinitions[j].description;
+                        foundAirportIcao = true;
                         break;
                     }
             }
             finally
             {
-                if (!foundAirportICAO) airportName.Text = mRequestedAirportsRawString[i].ToUpper();
+                if (!foundAirportIcao) airportName.Text = _mRequestedAirportsRawString[i].ToUpper();
             }
 
             // Styling
@@ -505,8 +514,10 @@ namespace Cavokator
             // Styling notamFreeText
             LinearLayout notamFreeTextLayout = LocalStyleFreeText();
 
-            RelativeLayout timeRelativeLayout = LocalTimeSpan(mNotamContainerList[i].StartTime[j],
-                                                   mNotamContainerList[i].EndTime[j]);
+            RelativeLayout toFromRelativeLayout = LocalTimeFromTo(_mNotamContainerList[i].StartTime[j],
+                                                   _mNotamContainerList[i].EndTime[j]);
+
+            RelativeLayout spanRelativeLayout = LocalTimeSpan();
 
             // Adding view
             Activity.RunOnUiThread(() =>
@@ -514,7 +525,8 @@ namespace Cavokator
                 notamCard.AddView(notamLayoutContainer);
                 notamLayoutContainer.AddView(topLayout);
                 notamLayoutContainer.AddView(notamFreeTextLayout);
-                notamLayoutContainer.AddView(timeRelativeLayout);
+                notamLayoutContainer.AddView(toFromRelativeLayout);
+                notamLayoutContainer.AddView(spanRelativeLayout);
                 _linearLayoutNotamLines.AddView(notamCard);
             });
 
@@ -537,8 +549,9 @@ namespace Cavokator
             {
                 LinearLayout myContainerLayout = new LinearLayout(Activity);
                 myContainerLayout.Orientation = Orientation.Vertical;
-                LinearLayout.LayoutParams myContainerLayoutParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                FrameLayout.LayoutParams myContainerLayoutParams =
+                    new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                myContainerLayoutParams.SetMargins(0, 0, 0, 30);
                 myContainerLayout.LayoutParameters = myContainerLayoutParams;
 
                 return myContainerLayout;
@@ -551,7 +564,7 @@ namespace Cavokator
                 TextView notamIdTextView = new TextView(Activity);
                 notamIdTextView.Id = 1;
 
-                ClickableSpan myClickableSpan = new ClickableSpan(mNotamContainerList[i].NotamID[j]);
+                ClickableSpan myClickableSpan = new ClickableSpan(_mNotamContainerList[i].NotamId[j]);
 
                 myClickableSpan.ClickedMyClickableSpan += delegate
                 {
@@ -559,12 +572,12 @@ namespace Cavokator
                     {
                         // Pull up dialog
                         var transaction = FragmentManager.BeginTransaction();
-                        var notamRawDialog = new NotamDialogRaw(mNotamContainerList[i].NotamID[j], mNotamContainerList[i].NotamRaw[j]);
+                        var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[i].NotamId[j], _mNotamContainerList[i].NotamRaw[j]);
                         notamRawDialog.Show(transaction, "notamRawDialog");
                     });
                 };
 
-                SpannableString idSpan = new SpannableString(mNotamContainerList[i].NotamID[j]);
+                SpannableString idSpan = new SpannableString(_mNotamContainerList[i].NotamId[j]);
                 idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
                 idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
                 idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
@@ -577,7 +590,7 @@ namespace Cavokator
 
                 myTopLayout.AddView(notamIdTextView);
                 
-                if (mNotamContainerList[i].Latitude[j] != 9999)
+                if (_mNotamContainerList[i].Latitude[j] != 9999)
                 {
                     ImageView myWorldMap = new ImageView(Activity);
 
@@ -598,10 +611,10 @@ namespace Cavokator
                     myWorldMap.Click += delegate
                     {
                         var transaction = FragmentManager.BeginTransaction();
-                        var notamRawMap = new NotamDialogMap(mNotamContainerList[i].NotamID[j],
-                            mNotamContainerList[i].Latitude[j],
-                            mNotamContainerList[i].Longitude[j],
-                            mNotamContainerList[i].Radius[j]);
+                        var notamRawMap = new NotamDialogMap(_mNotamContainerList[i].NotamId[j],
+                            _mNotamContainerList[i].Latitude[j],
+                            _mNotamContainerList[i].Longitude[j],
+                            _mNotamContainerList[i].Radius[j]);
                         notamRawMap.Show(transaction, "notamRawDialog");
                     };
                 }
@@ -619,7 +632,7 @@ namespace Cavokator
                 freeTextLayout.LayoutParameters = freeTextLayoutParams;
 
                 TextView notamFreeText = new TextView(Activity);
-                notamFreeText.Text = mNotamContainerList[i].NotamFreeText[j];
+                notamFreeText.Text = _mNotamContainerList[i].NotamFreeText[j];
                 notamFreeText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
                 notamFreeText.SetTextSize(ComplexUnitType.Dip, 12);
                 notamFreeText.SetPadding(30, 30, 15, 10);
@@ -629,12 +642,12 @@ namespace Cavokator
                 return freeTextLayout;
             }
 
-            RelativeLayout LocalTimeSpan(DateTime myTimeStart, DateTime myTimeEnd)
+            RelativeLayout LocalTimeFromTo(DateTime myTimeStart, DateTime myTimeEnd)
             {
                 RelativeLayout myBaseTimeLayout = new RelativeLayout(Activity);
                 LinearLayout.LayoutParams myBaseTimeLayoutParams = 
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
-                myBaseTimeLayoutParams.SetMargins(30, 20, 0, 30);
+                myBaseTimeLayoutParams.SetMargins(30, 20, 0, 0);
                 myBaseTimeLayout.LayoutParameters = myBaseTimeLayoutParams;
 
                 ImageView calendarIcon = new ImageView(Activity);
@@ -687,7 +700,7 @@ namespace Cavokator
                 myEndTimeEditTextParams.AddRule(LayoutRules.CenterVertical);
                 myEndTimeEditText.LayoutParameters = myEndTimeEditTextParams;
                 string myEndTimeString = String.Empty;
-                if (!mNotamContainerList[i].CEstimated[j] && !mNotamContainerList[i].CPermanent[j])
+                if (!_mNotamContainerList[i].CEstimated[j] && !_mNotamContainerList[i].CPermanent[j])
                 {
                     myEndTimeString = myTimeEnd.ToString("dd") + "-" +
                            myTimeEnd.ToString("MMM") + "-" +
@@ -695,7 +708,7 @@ namespace Cavokator
                            myTimeEnd.ToString("HH") + ":" +
                            myTimeEnd.ToString("mm");
                 }
-                else if (mNotamContainerList[i].CEstimated[j])
+                else if (_mNotamContainerList[i].CEstimated[j])
                 {
                     myEndTimeString = myTimeEnd.ToString("dd") + "-" +
                            myTimeEnd.ToString("MMM") + "-" +
@@ -703,7 +716,7 @@ namespace Cavokator
                            myTimeEnd.ToString("HH") + ":" +
                            myTimeEnd.ToString("mm") + " (ESTIMATED)";
                 }
-                else if (mNotamContainerList[i].CPermanent[j])
+                else if (_mNotamContainerList[i].CPermanent[j])
                 {
                     myEndTimeString = "PERMANENT";
                 }
@@ -716,6 +729,47 @@ namespace Cavokator
 
                 return myBaseTimeLayout;
             }
+
+            RelativeLayout LocalTimeSpan()
+            {
+                RelativeLayout myBaseSpanLayout = new RelativeLayout(Activity);
+
+                if (_mNotamContainerList[i].Span[j] != String.Empty)
+                {
+                    LinearLayout.LayoutParams myBaseSpanLayoutParams = 
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
+                    myBaseSpanLayoutParams.SetMargins(30, 20, 0, 0);
+                    myBaseSpanLayout.LayoutParameters = myBaseSpanLayoutParams;
+
+                    ImageView spanClockIcon = new ImageView(Activity);
+                    spanClockIcon.SetImageResource(Resource.Drawable.ic_clock_black_48dp);
+                    spanClockIcon.Id = 1;
+                    RelativeLayout.LayoutParams spanClockIconParams =
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    spanClockIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                    spanClockIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                    spanClockIconParams.SetMargins(0, 0, 20, 0);
+                    spanClockIconParams.AddRule(LayoutRules.CenterVertical);
+                    spanClockIcon.LayoutParameters = spanClockIconParams;
+
+                    TextView spanText = new TextView(Activity);
+                    spanText.Id = 2;
+                    spanText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+                    spanText.SetTextSize(ComplexUnitType.Dip, 11);
+                    RelativeLayout.LayoutParams spanTextParams =
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                    spanTextParams.SetMargins(0, 0, 0, 0);
+                    spanTextParams.AddRule(LayoutRules.RightOf,spanClockIcon.Id);
+                    spanTextParams.AddRule(LayoutRules.CenterVertical);
+                    spanText.LayoutParameters = spanTextParams;
+                    spanText.Text = _mNotamContainerList[i].Span[j];
+
+                    myBaseSpanLayout.AddView(spanClockIcon);
+                    myBaseSpanLayout.AddView(spanText);
+                }
+
+                return myBaseSpanLayout;
+            }
         }
 
         private void AddRawNotamsCards(int i, int j)
@@ -723,7 +777,7 @@ namespace Cavokator
             CardView notamCard = new CardView(Activity);
             TextView notamLine = new TextView(Activity);
 
-            notamLine.Text = mNotamContainerList[i].NotamRaw[j];
+            notamLine.Text = _mNotamContainerList[i].NotamRaw[j];
 
             // Styling text
             notamLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
@@ -747,21 +801,21 @@ namespace Cavokator
 
         private void StyleViews()
         {
-            _coordinatorLayout = thisView.FindViewById<CoordinatorLayout>(Resource.Id.cl);
+            _coordinatorLayout = _thisView.FindViewById<CoordinatorLayout>(Resource.Id.cl);
             _fabScrollTop = new FloatingActionButton(Activity);
             _fabScrollTop.SetImageResource(Resource.Drawable.ic_arrow_up_bold_white_48dp);
-            _scrollViewContainer = thisView.FindViewById<ScrollView>(Resource.Id.notam_fragment_container);
+            _scrollViewContainer = _thisView.FindViewById<ScrollView>(Resource.Id.notam_fragment_container);
 
-            _linearlayoutBottom = thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_bottom);
+            _linearlayoutBottom = _thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_bottom);
             _linearlayoutBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
             
-            _chooseIDtextview = thisView.FindViewById<TextView>(Resource.Id.notam_choose_id_textview);
+            _chooseIDtextview = _thisView.FindViewById<TextView>(Resource.Id.notam_choose_id_textview);
             _chooseIDtextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
 
-            _airportEntryEditText = thisView.FindViewById<EditText>(Resource.Id.notam_airport_entry);
-            _notamRequestButton = thisView.FindViewById<Button>(Resource.Id.notam_request_button);
-            _notamClearButton = thisView.FindViewById<Button>(Resource.Id.notam_clear_button);
-            _linearLayoutNotamLines = thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_lines);
+            _airportEntryEditText = _thisView.FindViewById<EditText>(Resource.Id.notam_airport_entry);
+            _notamRequestButton = _thisView.FindViewById<Button>(Resource.Id.notam_request_button);
+            _notamClearButton = _thisView.FindViewById<Button>(Resource.Id.notam_clear_button);
+            _linearLayoutNotamLines = _thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_lines);
 
             _notamRequestButton.Text = Resources.GetString(Resource.String.Send_button);
             _notamClearButton.Text = Resources.GetString(Resource.String.Clear_button);
@@ -777,16 +831,16 @@ namespace Cavokator
             notamDestroy.Edit().PutString("_airportEntryEditText", _airportEntryEditText.Text).Apply();
 
             // Save AIRPORT IDs
-            var notamContainer = JsonConvert.SerializeObject(mNotamContainerList);
+            var notamContainer = JsonConvert.SerializeObject(_mNotamContainerList);
             notamDestroy.Edit().PutString("notamContainer", notamContainer).Apply();
 
-            var requestedUtc = JsonConvert.SerializeObject(mUtcRequestTime);
+            var requestedUtc = JsonConvert.SerializeObject(_mUtcRequestTime);
             notamDestroy.Edit().PutString("requestedUtc", requestedUtc).Apply();
 
-            var airportsByIcao = JsonConvert.SerializeObject(mRequestedAirportsByIcao);
+            var airportsByIcao = JsonConvert.SerializeObject(_mRequestedAirportsByIcao);
             notamDestroy.Edit().PutString("airportsICAO", airportsByIcao).Apply();
 
-            var airportsRaw = JsonConvert.SerializeObject(mRequestedAirportsRawString);
+            var airportsRaw = JsonConvert.SerializeObject(_mRequestedAirportsRawString);
             notamDestroy.Edit().PutString("airportsRaw", airportsRaw).Apply();
         }
 
@@ -808,16 +862,16 @@ namespace Cavokator
             var deserializeNotamContainer = JsonConvert.DeserializeObject<List<NotamContainer>>(notamPrefs.GetString("notamContainer", string.Empty));
             if (deserializeNotamContainer != null)
             {
-                mNotamContainerList = deserializeNotamContainer;
+                _mNotamContainerList = deserializeNotamContainer;
 
                 var deserializeRequestedUtc = JsonConvert.DeserializeObject<DateTime>(notamPrefs.GetString("requestedUtc", string.Empty));
-                mUtcRequestTime = deserializeRequestedUtc;
+                _mUtcRequestTime = deserializeRequestedUtc;
 
                 var deserializeAirportsByIcao = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsICAO", string.Empty));
-                mRequestedAirportsByIcao = deserializeAirportsByIcao;
+                _mRequestedAirportsByIcao = deserializeAirportsByIcao;
 
                 var deserializeAirportsRawString = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsRaw", string.Empty));
-                mRequestedAirportsRawString = deserializeAirportsRawString;
+                _mRequestedAirportsRawString = deserializeAirportsRawString;
 
                 ShowNotams();
             }
@@ -834,10 +888,10 @@ namespace Cavokator
         private void UpdateRequestedTime(object state)
         {
             // Make sure were are finding the TextView
-            if (thisView.IsAttachedToWindow && mUtcTextView != null)
+            if (_thisView.IsAttachedToWindow && _mUtcTextView != null)
             {
                 var utcNow = DateTime.UtcNow;
-                var timeComparison = utcNow - mUtcRequestTime;
+                var timeComparison = utcNow - _mUtcRequestTime;
 
                 string utcStringBeginning = "* " + Resources.GetString(Resource.String.NOTAM_requested);
                 string utcStringEnd = Resources.GetString(Resource.String.Ago) + " *";
@@ -883,15 +937,15 @@ namespace Cavokator
                 // Adding view
                 Activity.RunOnUiThread(() =>
                 {
-                    mUtcTextView.Text = utcString;
+                    _mUtcTextView.Text = utcString;
 
                     // Styling
                     if (timeComparison.Hours >= 6)
-                        mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
+                        _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
                     else if (timeComparison.Hours >= 2)
-                        mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
+                        _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
                     else
-                        mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
+                        _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
                 });
             }
         }
