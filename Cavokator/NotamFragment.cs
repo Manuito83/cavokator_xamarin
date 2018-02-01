@@ -519,6 +519,8 @@ namespace Cavokator
 
             RelativeLayout spanRelativeLayout = LocalTimeSpan();
 
+            RelativeLayout bottomToTopRelativeLayout = LocalBottomToTop();
+
             // Adding view
             Activity.RunOnUiThread(() =>
             {
@@ -527,6 +529,7 @@ namespace Cavokator
                 notamLayoutContainer.AddView(notamFreeTextLayout);
                 notamLayoutContainer.AddView(toFromRelativeLayout);
                 notamLayoutContainer.AddView(spanRelativeLayout);
+                notamLayoutContainer.AddView(bottomToTopRelativeLayout);
                 _linearLayoutNotamLines.AddView(notamCard);
             });
 
@@ -769,6 +772,78 @@ namespace Cavokator
                 }
 
                 return myBaseSpanLayout;
+            }
+
+            RelativeLayout LocalBottomToTop()
+            {
+                RelativeLayout myBottomTopLayout = new RelativeLayout(Activity);
+
+                if (_mNotamContainerList[i].BottomLimit[j] != String.Empty ||
+                    _mNotamContainerList[i].TopLimit[j] != String.Empty)
+                {
+                    
+                    LinearLayout.LayoutParams myBottomTopLayoutParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
+                    myBottomTopLayoutParams.SetMargins(30, 20, 0, 0);
+                    myBottomTopLayout.LayoutParameters = myBottomTopLayoutParams;
+
+                    ImageView bottomIcon = new ImageView(Activity);
+                    bottomIcon.Id = 1;
+                    bottomIcon.SetImageResource(Resource.Drawable.ic_format_vertical_align_bottom_black_48dp);
+                    RelativeLayout.LayoutParams bottomIconParams =
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    bottomIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                    bottomIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                    bottomIconParams.SetMargins(0, 0, 0, 0);
+                    bottomIconParams.AddRule(LayoutRules.CenterVertical);
+                    bottomIcon.LayoutParameters = bottomIconParams;
+
+                    TextView myBottomTextView = new TextView(Activity);
+                    myBottomTextView.Id = 2;
+                    myBottomTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+                    myBottomTextView.SetTextSize(ComplexUnitType.Dip, 11);
+                    RelativeLayout.LayoutParams myBottomTextViewParams =
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                    myBottomTextViewParams.SetMargins(10, 0, 0, 0);
+                    myBottomTextViewParams.AddRule(LayoutRules.RightOf, bottomIcon.Id);
+                    myBottomTextViewParams.AddRule(LayoutRules.CenterVertical);
+                    myBottomTextView.LayoutParameters = myBottomTextViewParams;
+                    myBottomTextView.Text = _mNotamContainerList[i].BottomLimit[j];
+
+                    ImageView topIcon = new ImageView(Activity);
+                    topIcon.Id = 3;
+                    topIcon.SetImageResource(Resource.Drawable.ic_format_vertical_align_top_black_48dp);
+                    RelativeLayout.LayoutParams topIconParams =
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    topIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                    topIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                    topIconParams.SetMargins(40, 0, 0, 0);
+                    topIconParams.AddRule(LayoutRules.RightOf, myBottomTextView.Id);
+                    topIconParams.AddRule(LayoutRules.CenterVertical);
+                    topIcon.LayoutParameters = topIconParams;
+
+                    TextView myTopTextView = new TextView(Activity);
+                    myTopTextView.Id = 4;
+                    myTopTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+                    myTopTextView.SetTextSize(ComplexUnitType.Dip, 11);
+                    RelativeLayout.LayoutParams myTopTextViewParams =
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                    myTopTextViewParams.SetMargins(10, 0, 0, 0);
+                    myTopTextViewParams.AddRule(LayoutRules.RightOf, topIcon.Id);
+                    myTopTextViewParams.AddRule(LayoutRules.CenterVertical);
+                    myTopTextView.LayoutParameters = myTopTextViewParams;
+                    myTopTextView.Text = _mNotamContainerList[i].TopLimit[j];
+
+
+                    myBottomTopLayout.AddView(bottomIcon);
+                    myBottomTopLayout.AddView(myBottomTextView);
+                    myBottomTopLayout.AddView(topIcon);
+                    myBottomTopLayout.AddView(myTopTextView);
+
+                    return myBottomTopLayout;
+                }
+
+                return myBottomTopLayout;
             }
         }
 

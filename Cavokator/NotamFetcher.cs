@@ -137,7 +137,7 @@ namespace Cavokator
                         Match dMatch = dRegex.Match(line);
                         if (dMatch.Success)
                         {
-                            string spanTimeRaw = dMatch.Groups["SPAN"].Value;
+                            string spanTimeRaw = dMatch.Groups["SPAN"].Value.Replace('\n', ' ');
                             myNotamTypeQ.SpanTime = spanTimeRaw;
                         }
                     }
@@ -149,6 +149,24 @@ namespace Cavokator
                         Match eMatch = eRegex.Match(line);
                         if (eMatch.Success)
                             myNotamTypeQ.EText = eMatch.Groups["FREE_TEXT"].Value;
+                    }
+
+                    // GROUP F)
+                    else if (Regex.IsMatch(line, @"(^|\s)F\) ([.\n|\W|\w]*)"))
+                    {
+                        Regex fRegex = new Regex(@"(^|\s)F\) (?<BOTTOM_LIMIT>[.\n|\W|\w]*)");
+                        Match fMatch = fRegex.Match(line);
+                        if (fMatch.Success)
+                            myNotamTypeQ.BottomLimit = fMatch.Groups["BOTTOM_LIMIT"].Value.Replace('\n', ' ');
+                    }
+
+                    // GROUP G)
+                    else if (Regex.IsMatch(line, @"(^|\s)G\) ([.\n|\W|\w]*)"))
+                    {
+                        Regex gRegex = new Regex(@"(^|\s)G\) (?<TOP_LIMIT>[.\n|\W|\w]*)");
+                        Match gMatch = gRegex.Match(line);
+                        if (gMatch.Success)
+                            myNotamTypeQ.TopLimit = gMatch.Groups["TOP_LIMIT"].Value.Replace('\n', ' ');
                     }
                 }
             }
@@ -181,16 +199,19 @@ namespace Cavokator
             DecodedNotam.NotamRaw.Add(singleNotam);
             
             // TODO: fill all!
+            DecodedNotam.NotamId.Add(String.Empty);
+            DecodedNotam.Latitude.Add(0);
+            DecodedNotam.Longitude.Add(0);
+            DecodedNotam.Radius.Add(0);
+            DecodedNotam.NotamFreeText.Add(String.Empty);
             DecodedNotam.StartTime.Add(DateTime.MinValue);
             DecodedNotam.EndTime.Add(DateTime.MinValue);
             DecodedNotam.CEstimated.Add(false);
             DecodedNotam.CPermanent.Add(false);
             DecodedNotam.Span.Add(String.Empty);
-            DecodedNotam.Latitude.Add(0);
-            DecodedNotam.Longitude.Add(0);
-            DecodedNotam.Radius.Add(0);
-            DecodedNotam.NotamFreeText.Add(String.Empty);
-            DecodedNotam.NotamId.Add(String.Empty);
+            DecodedNotam.BottomLimit.Add(String.Empty);
+            DecodedNotam.TopLimit.Add(String.Empty);
+
             DecodedNotam.NotamQ.Add(false);
             DecodedNotam.NotamD.Add(false);
             
@@ -206,28 +227,8 @@ namespace Cavokator
             DecodedNotam.Span.Add(myNotamQ.SpanTime);
             DecodedNotam.NotamFreeText.Add(myNotamQ.EText);
             
+            // Try to pass coordinates
             try
-            {
-                LocalPassCoordinates();
-            }
-            catch
-            {
-                DecodedNotam.Latitude.Add(9999);
-                DecodedNotam.Longitude.Add(9999);
-                DecodedNotam.Radius.Add(9999);
-            }
-
-            if (myNotamQ.CEstimated)
-                DecodedNotam.CEstimated.Add(true);
-            else
-                DecodedNotam.CEstimated.Add(false);
-
-            if (myNotamQ.CPermanent)
-                DecodedNotam.CPermanent.Add(true);
-            else
-                DecodedNotam.CPermanent.Add(false);
-
-            void LocalPassCoordinates()
             {
                 string latitude = myNotamQ.QMatch.Groups["LAT"].Value + myNotamQ.QMatch.Groups["LAT_CODE"].Value;
                 string latitudeCode = myNotamQ.QMatch.Groups["LAT_CODE"].Value;
@@ -257,6 +258,49 @@ namespace Cavokator
                     finalLon = -finalLon;
                 DecodedNotam.Longitude.Add(finalLon);
             }
+            catch
+            {
+                DecodedNotam.Latitude.Add(9999);
+                DecodedNotam.Longitude.Add(9999);
+                DecodedNotam.Radius.Add(9999);
+            }
+
+            if (myNotamQ.CEstimated)
+                DecodedNotam.CEstimated.Add(true);
+            else
+                DecodedNotam.CEstimated.Add(false);
+
+            if (myNotamQ.CPermanent)
+                DecodedNotam.CPermanent.Add(true);
+            else
+                DecodedNotam.CPermanent.Add(false);
+
+            if (myNotamQ.BottomLimit != String.Empty || myNotamQ.TopLimit != String.Empty)
+            {
+                if (myNotamQ.BottomLimit != String.Empty)
+                {
+                    DecodedNotam.BottomLimit.Add(myNotamQ.BottomLimit);
+                }
+                else
+                {
+                    DecodedNotam.BottomLimit.Add("(not reported)");
+                }
+
+                if (myNotamQ.TopLimit != String.Empty)
+                {
+                    DecodedNotam.TopLimit.Add(myNotamQ.TopLimit);
+                }
+                else
+                {
+                    DecodedNotam.TopLimit.Add("(not reported)");
+                }
+            }
+            else
+            {
+                DecodedNotam.BottomLimit.Add(String.Empty);
+                DecodedNotam.TopLimit.Add(String.Empty);
+            }
+        
         }
 
         private List<string> Fetch(string icao)

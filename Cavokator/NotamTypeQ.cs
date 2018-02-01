@@ -21,20 +21,22 @@ namespace Cavokator
 {
     internal class NotamTypeQ
     {
-        public string NotamId { get; set; } = String.Empty;
+        
 
         public Match QMatch { get; set; } = Match.Empty;
 
+        public string NotamId { get; set; } = String.Empty;
+
+        public string EText { get; set; } = String.Empty;
+
         public DateTime StartTime { get; set; } = DateTime.MinValue;
-
         public DateTime EndTime { get; set; } = DateTime.MinValue;
-
         public bool CEstimated { get; set; }
-
         public bool CPermanent { get; set; }
 
         public string SpanTime { get; set; } = String.Empty;
 
-        public string EText { get; set; } = String.Empty;
+        public string BottomLimit { get; set; } = String.Empty;
+        public string TopLimit { get; set; } = String.Empty;
     }
 }

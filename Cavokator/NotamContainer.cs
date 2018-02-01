@@ -23,13 +23,16 @@ namespace Cavokator
         public readonly List<float> Longitude = new List<float>();
         public readonly List<int> Radius = new List<int>();
 
+        public readonly List<string> NotamFreeText = new List<string>();
+
         public readonly List<DateTime> StartTime = new List<DateTime>();
         public readonly List<DateTime> EndTime = new List<DateTime>();
         public readonly List<bool> CEstimated = new List<bool>();
         public readonly List<bool> CPermanent = new List<bool>();
         public readonly List<string> Span = new List<string>();
 
-        public readonly List<string> NotamFreeText = new List<string>();
+        public readonly List<string> BottomLimit = new List<string>();
+        public readonly List<string> TopLimit = new List<string>();
 
         public readonly List<string> NotamRaw = new List<string>();
 
