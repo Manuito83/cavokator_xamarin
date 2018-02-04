@@ -229,7 +229,7 @@ namespace Cavokator
             DecodedNotam.CodeSecondThird.Add(secondThird);
 
             string fourthFifth = myNotamQ.QMatch.Groups["CODE"].Value.Substring(3, 2);
-            DecodedNotam.CodeSecondThird.Add(fourthFifth);
+            DecodedNotam.CodeFourthFifth.Add(fourthFifth);
 
 
             // Try to pass coordinates

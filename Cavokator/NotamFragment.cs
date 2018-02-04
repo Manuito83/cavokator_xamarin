@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -97,9 +98,6 @@ namespace Cavokator
 
             StyleViews();
 
-            // TODO: change after implementation
-            RecallSavedData();
-
             // Events
             _linearlayoutBottom.Touch += OnBackgroundTouch;
             _notamRequestButton.Click += OnRequestButtonClicked;
@@ -109,6 +107,17 @@ namespace Cavokator
             _scrollViewContainer.ScrollChange += OnScrollMoved;
             _fabScrollTop.Click += ScrollToTop;
 
+            // TODO: do try/catch for weather as well?
+            try
+            {
+                RecallSavedData();
+            }
+            catch
+            {
+                // Encountered new null fields
+                _notamClearButton.CallOnClick();
+            }
+            
             // Add FAB and hide
             _coordinatorLayout.AddView(_fabScrollTop);
             _fabScrollTop.Hide();
@@ -378,32 +387,137 @@ namespace Cavokator
                             break;
                         }
 
+
+
+
+
+
+                        // TODO: vvvvvvvvvv
+
+
+                        bool qNotam = false;
+                        bool categoryL = false;
+                        bool categoryM = false;
+                        bool categoryOther = false;
+                        List<int> positionL = new List<int>();
+                        List<int> positionM = new List<int>();
+                        List<int> positionOther = new List<int>();
+
                         for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
-                        { 
-                            // It's Q
+                        {
+                            // NOTAM Q
                             if (_mNotamContainerList[i].NotamQ[j])
                             {
-                                try
+                                qNotam = true;
+                                
+                                if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "L")
                                 {
-                                    AddNotamQCard(i, j);
+                                    categoryL = true;
+                                    positionL.Add(j);
                                 }
-                                catch
+                                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "M")
                                 {
-                                    // If error showing Q, show Raw
-                                    AddRawNotamsCard(i, j);
+                                    categoryM = true;
+                                    positionM.Add(j);
+                                }
+                                else
+                                {
+                                    categoryOther = true;
+                                    positionOther.Add(j);
                                 }
                             }
-                            // It's D
-                            else if (_mNotamContainerList[i].NotamD[j])
-                            {
-                                // Placeholder for USA D NOTAMS
-                            }
-                            // It's raw
-                            else
-                            {
-                                AddRawNotamsCard(i, j);
-                            }
+
                         }
+
+
+                        if (qNotam)
+                        {
+                            
+
+                            if (categoryL)
+                            {
+                                TextView categoryTitleTextView = new TextView(Activity);
+                                categoryTitleTextView.Text = "Lightning facilities";
+                                
+                                Activity.RunOnUiThread(() =>
+                                {
+                                    _linearLayoutNotamLines.AddView(categoryTitleTextView);
+                                });
+
+                                for (int l = 0; l < positionL.Count; l++)
+                                {
+                                    AddNotamQCard(i, l);
+                                }
+                                
+                            }
+
+                            if (categoryM)
+                            {
+                                TextView categoryTitleTextView = new TextView(Activity);
+                                categoryTitleTextView.Text = "Movement and landing area";
+
+                                Activity.RunOnUiThread(() =>
+                                {
+                                    _linearLayoutNotamLines.AddView(categoryTitleTextView);
+                                });
+
+                                for (int m = 0; m < positionM.Count; m++)
+                                {
+                                    AddNotamQCard(i, m);
+                                }
+
+                            }
+
+                            if (categoryOther)
+                            {
+                                TextView categoryTitleTextView = new TextView(Activity);
+                                categoryTitleTextView.Text = "OTHERRRR";
+
+                                Activity.RunOnUiThread(() =>
+                                {
+                                    _linearLayoutNotamLines.AddView(categoryTitleTextView);
+                                });
+
+                                foreach (var x in positionOther)
+                                {
+                                    AddNotamQCard(i, x);
+                                }
+                                
+                            }
+
+                        }
+
+
+
+
+
+
+                        //for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                        //{ 
+                        //    // It's Q
+                        //    if (_mNotamContainerList[i].NotamQ[j])
+                        //    {
+                        //        try
+                        //        {
+                        //            AddNotamQCard(i, j);
+                        //        }
+                        //        catch
+                        //        {
+                        //            // If error showing Q, show Raw
+                        //            AddRawNotamsCard(i, j);
+                        //        }
+                        //    }
+                        //    // It's D
+                        //    else if (_mNotamContainerList[i].NotamD[j])
+                        //    {
+                        //        // Placeholder for USA D NOTAMS
+                        //    }
+                        //    // It's raw
+                        //    else
+                        //    {
+                        //        AddRawNotamsCard(i, j);
+                        //    }
+                        //}
                     }
                 }
                 else
