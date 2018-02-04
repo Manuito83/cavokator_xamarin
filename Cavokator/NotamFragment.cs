@@ -32,6 +32,10 @@ namespace Cavokator
 {
     class NotamFragment : Android.Support.V4.App.Fragment
     {
+
+        // TODO: implement as option
+        private bool sortByCategory = true;
+        
         // Floating action button
         private CoordinatorLayout _coordinatorLayout;
         private FloatingActionButton _fabScrollTop;
@@ -286,7 +290,7 @@ namespace Cavokator
             }
         }
 
-        /// Populate "requestedAirports" lists
+        // Populate "requestedAirports" lists
         private void SanitizeRequestedNotams(string requestedNotamsString)
         {
             // Split airport list entered
@@ -331,7 +335,7 @@ namespace Cavokator
             }
         }
 
-        /// Populate list with notams for every airport requested
+        // Populate list with notams for every airport requested
         private void GetNotams()
         {
             for (int i = 0; i < _mRequestedAirportsByIcao.Count; i++) 
@@ -381,24 +385,23 @@ namespace Cavokator
                             {
                                 try
                                 {
-                                    AddNotamQCards(i, j);
+                                    AddNotamQCard(i, j);
                                 }
                                 catch
                                 {
                                     // If error showing Q, show Raw
-                                    AddRawNotamsCards(i, j);
+                                    AddRawNotamsCard(i, j);
                                 }
-                                
                             }
                             // It's D
                             else if (_mNotamContainerList[i].NotamD[j])
                             {
-                                //
+                                // Placeholder for USA D NOTAMS
                             }
                             // It's raw
                             else
                             {
-                                AddRawNotamsCards(i, j);
+                                AddRawNotamsCard(i, j);
                             }
                         }
                     }
@@ -514,7 +517,7 @@ namespace Cavokator
             });
         }
 
-        private void AddNotamQCards(int i, int j)
+        private void AddNotamQCard(int i, int j)
         {
             // Style card and RelativeLayout
             CardView notamCard = LocalStyleCard();
@@ -874,7 +877,7 @@ namespace Cavokator
             }
         }
 
-        private void AddRawNotamsCards(int i, int j)
+        private void AddRawNotamsCard(int i, int j)
         {
             CardView notamCard = new CardView(Activity);
             TextView notamLine = new TextView(Activity);
@@ -1018,7 +1021,6 @@ namespace Cavokator
                 }
             }
         }
-
 
         // Update requested UTC time on timer tick
         private void UpdateRequestedTime(object state)

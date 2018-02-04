@@ -19,6 +19,9 @@ namespace Cavokator
 
         public readonly List<string> NotamId = new List<string>();
 
+        public readonly List<string> CodeSecondThird = new List<string>();
+        public readonly List<string> CodeFourthFifth = new List<string>();
+
         public readonly List<float> Latitude = new List<float>();
         public readonly List<float> Longitude = new List<float>();
         public readonly List<int> Radius = new List<int>();

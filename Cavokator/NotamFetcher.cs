@@ -50,7 +50,7 @@ namespace Cavokator
                 }
                 else if (dNotamContainer != null)
                 {
-                    // TODO
+                    // Placeholder for implementation of USA Notams
                     // FillContainerWithNotamD(dNotamContainer);
                     // DecodedNotam.NotamRaw.Add(singleNotam);
                 }
@@ -188,11 +188,6 @@ namespace Cavokator
             return null;
         }
 
-        private NotamTypeD AssessNotamTypeD(string singleNotam)
-        {
-            return null;
-        }
-
         private void FillContainerWithRawLines(string singleNotam)
         {
             // Valid values
@@ -200,6 +195,8 @@ namespace Cavokator
             
             // TODO: fill all!
             DecodedNotam.NotamId.Add(String.Empty);
+            DecodedNotam.CodeSecondThird.Add(String.Empty);
+            DecodedNotam.CodeFourthFifth.Add(String.Empty);
             DecodedNotam.Latitude.Add(0);
             DecodedNotam.Longitude.Add(0);
             DecodedNotam.Radius.Add(0);
@@ -226,7 +223,15 @@ namespace Cavokator
             DecodedNotam.EndTime.Add(myNotamQ.EndTime);
             DecodedNotam.Span.Add(myNotamQ.SpanTime);
             DecodedNotam.NotamFreeText.Add(myNotamQ.EText);
-            
+
+            // Notam Codes
+            string secondThird = myNotamQ.QMatch.Groups["CODE"].Value.Substring(1, 2);
+            DecodedNotam.CodeSecondThird.Add(secondThird);
+
+            string fourthFifth = myNotamQ.QMatch.Groups["CODE"].Value.Substring(3, 2);
+            DecodedNotam.CodeSecondThird.Add(fourthFifth);
+
+
             // Try to pass coordinates
             try
             {
@@ -265,16 +270,19 @@ namespace Cavokator
                 DecodedNotam.Radius.Add(9999);
             }
 
+            // Estimated time?
             if (myNotamQ.CEstimated)
                 DecodedNotam.CEstimated.Add(true);
             else
                 DecodedNotam.CEstimated.Add(false);
 
+            // Permanent time?
             if (myNotamQ.CPermanent)
                 DecodedNotam.CPermanent.Add(true);
             else
                 DecodedNotam.CPermanent.Add(false);
 
+            // Top and bottom limits?
             if (myNotamQ.BottomLimit != String.Empty || myNotamQ.TopLimit != String.Empty)
             {
                 if (myNotamQ.BottomLimit != String.Empty)
@@ -301,6 +309,12 @@ namespace Cavokator
                 DecodedNotam.TopLimit.Add(String.Empty);
             }
         
+        }
+
+        private NotamTypeD AssessNotamTypeD(string singleNotam)
+        {
+            // Placeholder for implementation of USA Notams
+            return null;
         }
 
         private List<string> Fetch(string icao)

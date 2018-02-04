@@ -27,6 +27,8 @@ namespace Cavokator
 
         public string NotamId { get; set; } = String.Empty;
 
+        
+
         public string EText { get; set; } = String.Empty;
 
         public DateTime StartTime { get; set; } = DateTime.MinValue;
