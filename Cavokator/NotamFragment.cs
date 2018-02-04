@@ -58,6 +58,11 @@ namespace Cavokator
         private DateTime _mUtcRequestTime;
         private TextView _mUtcTextView;
 
+        // Views for calendar color
+        private List<ImageView> _mCalendarViews = new List<ImageView>();
+        private List<DateTime> mStartDateTimes = new List<DateTime>();
+        private List<DateTime> mEnDateTimes = new List<DateTime>();
+
         private List<NotamContainer> _mNotamContainerList = new List<NotamContainer>();
 
         // List of actual ICAO (as entered) airports that we are going to request
@@ -89,7 +94,7 @@ namespace Cavokator
             StyleViews();
 
             // TODO: change after implementation
-            //RecallSavedData();
+            RecallSavedData();
 
             // Events
             _linearlayoutBottom.Touch += OnBackgroundTouch;
@@ -205,6 +210,10 @@ namespace Cavokator
             _mNotamContainerList.Clear();
             _mUtcTextView = null;
 
+            _mCalendarViews.Clear();
+            mStartDateTimes.Clear();
+            mEnDateTimes.Clear();
+
             _connectionError = false;
 
             _airportEntryEditText.Text = "";
@@ -224,6 +233,11 @@ namespace Cavokator
             _airportEntryEditText.ClearFocus();
 
             _mNotamContainerList.Clear();
+            _mUtcTextView = null;
+
+            _mCalendarViews.Clear();
+            mStartDateTimes.Clear();
+            mEnDateTimes.Clear();
 
             // Remove all previous views from the linear layout
             _linearLayoutNotamLines.RemoveAllViews();
@@ -588,7 +602,7 @@ namespace Cavokator
                 notamIdTextView.TextFormatted = idSpan;
                 notamIdTextView.MovementMethod = new LinkMovementMethod();
 
-                notamIdTextView.SetTextSize(ComplexUnitType.Dip, 12);
+                notamIdTextView.SetTextSize(ComplexUnitType.Dip, 13);
                 notamIdTextView.SetPadding(30, 30, 15, 0);
 
                 myTopLayout.AddView(notamIdTextView);
@@ -652,7 +666,7 @@ namespace Cavokator
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
                 myBaseTimeLayoutParams.SetMargins(30, 20, 0, 0);
                 myBaseTimeLayout.LayoutParameters = myBaseTimeLayoutParams;
-
+                
                 ImageView calendarIcon = new ImageView(Activity);
                 calendarIcon.Id = 1;
                 calendarIcon.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
@@ -663,6 +677,19 @@ namespace Cavokator
                 calendarIconParams.SetMargins(0, 0, 20, 0);
                 calendarIconParams.AddRule(LayoutRules.CenterVertical);
                 calendarIcon.LayoutParameters = calendarIconParams;
+                DateTime timeNow = DateTime.UtcNow;
+                if (timeNow > myTimeStart && timeNow < myTimeEnd)
+                {
+                    calendarIcon.SetImageResource(Resource.Drawable.ic_calendar_multiple_red_48dp);
+                }
+                else
+                {
+                    calendarIcon.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
+                }
+                // Save view in order to update the calendar color later
+                _mCalendarViews.Add(calendarIcon);
+                mStartDateTimes.Add(myTimeStart);
+                mEnDateTimes.Add(myTimeEnd);
 
                 TextView myStartTimeEditText = new TextView(Activity);
                 myStartTimeEditText.Id = 2;
@@ -930,7 +957,7 @@ namespace Cavokator
             // the event "aftertextchanged" for _airportEntryEditText and we would like to avoid that
             if (airportEntryEditText != string.Empty)
             {
-                _airportEntryEditText.Text = airportEntryEditText;
+                _airportEntryEditText.Text = airportEntryEditText.ToUpper();
             }
 
             // Make sure there are values != null, in order to avoid assigning null!
@@ -957,9 +984,43 @@ namespace Cavokator
             // Update requested UTC time
             var timerDelegate = new TimerCallback(UpdateRequestedTime);
             var utcUpdateTimer = new Timer(timerDelegate, null, 0, 30000);
+
+            var timerDelegateCalendar = new TimerCallback(UpdateCalendarColors);
+            var utcUpdateTimerCalendar = new Timer(timerDelegateCalendar, null, 0, 60000);
         }
 
-        /// Update requested UTC time
+        // Update calendar colors on timer tick
+        private void UpdateCalendarColors(object state)
+        {
+            if (_thisView.IsAttachedToWindow && _mCalendarViews.Count > 0)
+            {
+                try
+                {
+                    Activity.RunOnUiThread(() =>
+                    {
+                        DateTime timeNow = DateTime.UtcNow;
+                        for (int i = 0; i < _mCalendarViews.Count; i++)
+                        {
+                            if (timeNow > mStartDateTimes[i] && timeNow < mEnDateTimes[i])
+                            {
+                                _mCalendarViews[i].SetImageResource(Resource.Drawable.ic_calendar_multiple_red_48dp);
+                            }
+                            else
+                            {
+                                _mCalendarViews[i].SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
+                            }
+                        }
+                    });
+                }
+                catch
+                {
+                    // Calendar colors won't update 
+                }
+            }
+        }
+
+
+        // Update requested UTC time on timer tick
         private void UpdateRequestedTime(object state)
         {
             // Make sure were are finding the TextView
