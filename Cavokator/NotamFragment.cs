@@ -387,142 +387,420 @@ namespace Cavokator
                             break;
                         }
 
-
-
-
-
-
-                        // TODO: vvvvvvvvvv
-
-
-                        bool qNotam = false;
-                        bool categoryL = false;
-                        bool categoryM = false;
-                        bool categoryOther = false;
-                        List<int> positionL = new List<int>();
-                        List<int> positionM = new List<int>();
-                        List<int> positionOther = new List<int>();
-
-                        for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                        if (sortByCategory)
                         {
-                            // NOTAM Q
-                            if (_mNotamContainerList[i].NotamQ[j])
-                            {
-                                qNotam = true;
-                                
-                                if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "L")
-                                {
-                                    categoryL = true;
-                                    positionL.Add(j);
-                                }
-                                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "M")
-                                {
-                                    categoryM = true;
-                                    positionM.Add(j);
-                                }
-                                else
-                                {
-                                    categoryOther = true;
-                                    positionOther.Add(j);
-                                }
-                            }
-
+                            LocalAddNotamsByCategory(i);
                         }
-
-
-                        if (qNotam)
+                        else
                         {
-                            
-
-                            if (categoryL)
-                            {
-                                TextView categoryTitleTextView = new TextView(Activity);
-                                categoryTitleTextView.Text = "Lightning facilities";
-                                
-                                Activity.RunOnUiThread(() =>
-                                {
-                                    _linearLayoutNotamLines.AddView(categoryTitleTextView);
-                                });
-
-                                for (int l = 0; l < positionL.Count; l++)
-                                {
-                                    AddNotamQCard(i, l);
-                                }
-                                
-                            }
-
-                            if (categoryM)
-                            {
-                                TextView categoryTitleTextView = new TextView(Activity);
-                                categoryTitleTextView.Text = "Movement and landing area";
-
-                                Activity.RunOnUiThread(() =>
-                                {
-                                    _linearLayoutNotamLines.AddView(categoryTitleTextView);
-                                });
-
-                                for (int m = 0; m < positionM.Count; m++)
-                                {
-                                    AddNotamQCard(i, m);
-                                }
-
-                            }
-
-                            if (categoryOther)
-                            {
-                                TextView categoryTitleTextView = new TextView(Activity);
-                                categoryTitleTextView.Text = "OTHERRRR";
-
-                                Activity.RunOnUiThread(() =>
-                                {
-                                    _linearLayoutNotamLines.AddView(categoryTitleTextView);
-                                });
-
-                                foreach (var x in positionOther)
-                                {
-                                    AddNotamQCard(i, x);
-                                }
-                                
-                            }
-
+                            LocalAddNotamsByDate(i);
                         }
-
-
-
-
-
-
-                        //for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
-                        //{ 
-                        //    // It's Q
-                        //    if (_mNotamContainerList[i].NotamQ[j])
-                        //    {
-                        //        try
-                        //        {
-                        //            AddNotamQCard(i, j);
-                        //        }
-                        //        catch
-                        //        {
-                        //            // If error showing Q, show Raw
-                        //            AddRawNotamsCard(i, j);
-                        //        }
-                        //    }
-                        //    // It's D
-                        //    else if (_mNotamContainerList[i].NotamD[j])
-                        //    {
-                        //        // Placeholder for USA D NOTAMS
-                        //    }
-                        //    // It's raw
-                        //    else
-                        //    {
-                        //        AddRawNotamsCard(i, j);
-                        //    }
-                        //}
                     }
                 }
                 else
                 {
                     ShowConnectionError();
+                }
+            }
+
+            void LocalAddNotamsByCategory(int i)
+            {
+                // TODO: vvvvvvvvvv
+
+                try
+                {
+                    bool anyQNotam = false;
+                    bool anyDNotam = false;
+                    bool anyRawNotam = false;
+
+                    bool anyCategoryL = false;
+                    bool anyCategoryM = false;
+                    bool anyCategoryF = false;
+                    bool anyCategoryA = false;
+                    bool anyCategoryS = false;
+                    bool anyCategoryP = false;
+                    bool anyCategoryC = false;
+                    bool anyCategoryI = false;
+                    bool anyCategoryG = false;
+                    bool anyCategoryN = false;
+                    bool anyCategoryR = false;
+                    bool anyCategoryW = false;
+                    bool anyCategoryO = false;
+                    bool anyCategoryNotReported = false;
+                    bool triggeredAnyCategory = false;
+
+                    List<int> positionL = new List<int>();
+                    List<int> positionM = new List<int>();
+                    List<int> positionF = new List<int>();
+                    List<int> positionA = new List<int>();
+                    List<int> positionS = new List<int>();
+                    List<int> positionP = new List<int>();
+                    List<int> positionC = new List<int>();
+                    List<int> positionI = new List<int>();
+                    List<int> positionG = new List<int>();
+                    List<int> positionN = new List<int>();
+                    List<int> positionR = new List<int>();
+                    List<int> positionW = new List<int>();
+                    List<int> positionO = new List<int>();
+                    List<int> positionUnknown = new List<int>();
+                    List<int> positionRaw = new List<int>();
+
+                    for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                    {
+                        // NOTAM Q
+                        if (_mNotamContainerList[i].NotamQ[j])
+                        {
+                            anyQNotam = true;
+
+                            if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "L")
+                            {
+                                anyCategoryL = true;
+                                triggeredAnyCategory = true;
+                                positionL.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "M")
+                            {
+                                anyCategoryM = true;
+                                triggeredAnyCategory = true;
+                                positionM.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "F")
+                            {
+                                anyCategoryF = true;
+                                triggeredAnyCategory = true;
+                                positionF.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "A")
+                            {
+                                anyCategoryA = true;
+                                triggeredAnyCategory = true;
+                                positionA.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "S")
+                            {
+                                anyCategoryS = true;
+                                triggeredAnyCategory = true;
+                                positionS.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "P")
+                            {
+                                anyCategoryP = true;
+                                triggeredAnyCategory = true;
+                                positionP.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "C")
+                            {
+                                anyCategoryC = true;
+                                triggeredAnyCategory = true;
+                                positionC.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "I")
+                            {
+                                anyCategoryI = true;
+                                triggeredAnyCategory = true;
+                                positionI.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "G")
+                            {
+                                anyCategoryG = true;
+                                triggeredAnyCategory = true;
+                                positionG.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "N")
+                            {
+                                anyCategoryN = true;
+                                triggeredAnyCategory = true;
+                                positionN.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "R")
+                            {
+                                anyCategoryR = true;
+                                triggeredAnyCategory = true;
+                                positionR.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "W")
+                            {
+                                anyCategoryW = true;
+                                triggeredAnyCategory = true;
+                                positionW.Add(j);
+                            }
+                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "O")
+                            {
+                                anyCategoryO = true;
+                                triggeredAnyCategory = true;
+                                positionO.Add(j);
+                            }
+                            else
+                            {
+                                anyCategoryNotReported = true;
+                                triggeredAnyCategory = true;
+                                positionUnknown.Add(j);
+                            }
+                        }
+                        else if (_mNotamContainerList[i].NotamD[j])
+                        {
+                            // Placeholder for USA D NOTAMS
+                        }
+                        else
+                        {
+                            // Raw Notams
+                            anyRawNotam = true;
+                            positionRaw.Add(j);
+                        }
+                    }
+
+
+                    if (anyQNotam)
+                    {
+                        if (anyCategoryL)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Lightning facilities";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionL)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryM)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Movement and landing area";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionM)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryF)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Facilities and services";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionF)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryA)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Airspace organization";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionA)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryS)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Air traffic and VOLMET";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionS)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryP)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Air traffic procedures";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionP)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryC)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Communications and surveillance";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionC)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryI)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Instrument landing system";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionI)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryG)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "GNSS services";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionG)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryN)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Terminal and en-route navaids";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionN)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryR)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Airspace restrictions";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionR)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryW)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Warnings";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionW)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryO)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "Other information";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionO)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyCategoryNotReported)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "(category not reported)";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionUnknown)
+                            {
+                                AddNotamQCard(i, p);
+                            }
+                        }
+
+                        if (anyRawNotam)
+                        {
+                            TextView categoryTitleTextView = new TextView(Activity);
+                            categoryTitleTextView.Text = "(raw NOTAM)";
+
+                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+                            foreach (var p in positionRaw)
+                            {
+                                AddRawNotamsCard(i, p);
+                            }
+                        }
+
+                    }
+                    else if (anyDNotam)
+                    {
+                        // Placeholder for USA D NOTAMS
+                    }
+                    else
+                    {
+                        // Raw Notam
+                        TextView categoryTitleTextView = new TextView(Activity);
+                        categoryTitleTextView.Text = "(raw NOTAM)";
+
+                        Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+                        
+                        foreach (var p in positionRaw)
+                        {
+                            AddRawNotamsCard(i, p);
+                        }
+                    }
+                }
+                catch
+                {
+                    // If error showing, show Raw
+                    for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                        AddRawNotamsCard(i, j);
+                }
+            }
+
+            void LocalAddNotamsByDate(int i)
+            {
+                for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                {
+                    // It's Q
+                    if (_mNotamContainerList[i].NotamQ[j])
+                    {
+                        try
+                        {
+                            AddNotamQCard(i, j);
+                        }
+                        catch
+                        {
+                            // If error showing Q, show Raw
+                            AddRawNotamsCard(i, j);
+                        }
+                    }
+                    // It's D
+                    else if (_mNotamContainerList[i].NotamD[j])
+                    {
+                        // Placeholder for USA D NOTAMS
+                    }
+                    // It's raw
+                    else
+                    {
+                        AddRawNotamsCard(i, j);
+                    }
                 }
             }
         }

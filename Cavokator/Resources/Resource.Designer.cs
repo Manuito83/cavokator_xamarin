@@ -2491,26 +2491,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f020092
-			public const int avd_hide_password_1 = 2130837650;
-			
-			// aapt resource value: 0x7f020093
-			public const int avd_hide_password_2 = 2130837651;
-			
-			// aapt resource value: 0x7f020094
-			public const int avd_hide_password_3 = 2130837652;
-			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
-			
-			// aapt resource value: 0x7f020095
-			public const int avd_show_password_1 = 2130837653;
-			
-			// aapt resource value: 0x7f020096
-			public const int avd_show_password_2 = 2130837654;
-			
-			// aapt resource value: 0x7f020097
-			public const int avd_show_password_3 = 2130837655;
 			
 			// aapt resource value: 0x7f020055
 			public const int changelog_13img1 = 2130837589;
