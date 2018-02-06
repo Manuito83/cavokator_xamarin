@@ -35,8 +35,7 @@ namespace Cavokator
     class NotamFragment : Android.Support.V4.App.Fragment
     {
 
-        // TODO: implement as option
-        private bool sortByCategory = true;
+        private string mSortByCategory;
         
         // Floating action button
         private CoordinatorLayout _coordinatorLayout;
@@ -48,6 +47,7 @@ namespace Cavokator
         private EditText _airportEntryEditText;
         private Button _notamRequestButton;
         private Button _notamClearButton;
+        private ImageButton _notamOptionsButton;
         private TextView _chooseIDtextview;
         private LinearLayout _linearLayoutNotamLines;
 
@@ -103,6 +103,7 @@ namespace Cavokator
             _linearlayoutBottom.Touch += OnBackgroundTouch;
             _notamRequestButton.Click += OnRequestButtonClicked;
             _notamClearButton.Click += OnClearButtonClicked;
+            _notamOptionsButton.Click += OnOptionsButtonClicked;
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
             _scrollViewContainer.ScrollChange += OnScrollMoved;
@@ -236,6 +237,14 @@ namespace Cavokator
             _airportEntryEditText.SetTypeface(null, TypefaceStyle.Italic);
         }
 
+        private void OnOptionsButtonClicked(object sender, EventArgs e)
+        {
+            // Pull up dialog
+            var transaction = FragmentManager.BeginTransaction();
+            var notamOptionsDialog = new NotamOptionsDialog(mSortByCategory);
+            notamOptionsDialog.Show(transaction, "options_dialog");
+        }
+
         private void OnRequestButtonClicked(object sender, EventArgs e)
         {
             // Close keyboard when button pressed
@@ -300,9 +309,10 @@ namespace Cavokator
             }
         }
 
-        // Populate "requestedAirports" lists
         private void SanitizeRequestedNotams(string requestedNotamsString)
         {
+            // Populate "requestedAirports" lists
+            
             // Split airport list entered
             // We perform the same operation to both lists, the user one and the ICAO one
             _mRequestedAirportsByIcao = requestedNotamsString.Split(' ', '\n', ',').ToList();
@@ -344,10 +354,11 @@ namespace Cavokator
                 }
             }
         }
-
-        // Populate list with notams for every airport requested
+        
         private void GetNotams()
         {
+            // Populate list with notams for every airport requested
+
             for (int i = 0; i < _mRequestedAirportsByIcao.Count; i++) 
             {
                 string currentAirport = _mRequestedAirportsByIcao[i];
@@ -388,7 +399,7 @@ namespace Cavokator
                             break;
                         }
 
-                        if (sortByCategory)
+                        if (mSortByCategory == "category")
                         {
                             LocalAddNotamsByCategory(i);
                         }
@@ -1491,6 +1502,7 @@ namespace Cavokator
             _airportEntryEditText = _thisView.FindViewById<EditText>(Resource.Id.notam_airport_entry);
             _notamRequestButton = _thisView.FindViewById<Button>(Resource.Id.notam_request_button);
             _notamClearButton = _thisView.FindViewById<Button>(Resource.Id.notam_clear_button);
+            _notamOptionsButton = _thisView.FindViewById<ImageButton>(Resource.Id.notam_options_button);
             _linearLayoutNotamLines = _thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_lines);
 
             _notamRequestButton.Text = Resources.GetString(Resource.String.Send_button);
@@ -1522,10 +1534,26 @@ namespace Cavokator
 
         private void RecallSavedData()
         {
-            ISharedPreferences notamPrefs = Application.Context.GetSharedPreferences("NOTAM_OnPause", FileCreationMode.Private);
+            // Get options from options dialog
+            ISharedPreferences notamOptionsPreferences = Application.Context.GetSharedPreferences("NOTAM_Options", FileCreationMode.Private);
+
+            // First initialization _metarOrTafor
+            mSortByCategory = notamOptionsPreferences.GetString("sortByPREF", String.Empty);
+            if (mSortByCategory == String.Empty)
+            {
+                notamOptionsPreferences.Edit().PutString("sortByPREF", "category").Apply();
+                mSortByCategory = "category";
+            }
+            else
+            {
+                mSortByCategory = notamOptionsPreferences.GetString("sortByPREF", String.Empty);
+            }
+
+            // Get fragment's saved state
+            ISharedPreferences notamFragmentPreferences = Application.Context.GetSharedPreferences("NOTAM_OnPause", FileCreationMode.Private);
 
             // Airport Text
-            var airportEntryEditText = notamPrefs.GetString("_airportEntryEditText", String.Empty);
+            var airportEntryEditText = notamFragmentPreferences.GetString("_airportEntryEditText", String.Empty);
 
             // We will only get saved data if it exists at all, otherwise we could trigger
             // the event "aftertextchanged" for _airportEntryEditText and we would like to avoid that
@@ -1535,18 +1563,18 @@ namespace Cavokator
             }
 
             // Make sure there are values != null, in order to avoid assigning null!
-            var deserializeNotamContainer = JsonConvert.DeserializeObject<List<NotamContainer>>(notamPrefs.GetString("notamContainer", string.Empty));
+            var deserializeNotamContainer = JsonConvert.DeserializeObject<List<NotamContainer>>(notamFragmentPreferences.GetString("notamContainer", string.Empty));
             if (deserializeNotamContainer != null)
             {
                 _mNotamContainerList = deserializeNotamContainer;
 
-                var deserializeRequestedUtc = JsonConvert.DeserializeObject<DateTime>(notamPrefs.GetString("requestedUtc", string.Empty));
+                var deserializeRequestedUtc = JsonConvert.DeserializeObject<DateTime>(notamFragmentPreferences.GetString("requestedUtc", string.Empty));
                 _mUtcRequestTime = deserializeRequestedUtc;
 
-                var deserializeAirportsByIcao = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsICAO", string.Empty));
+                var deserializeAirportsByIcao = JsonConvert.DeserializeObject<List<String>>(notamFragmentPreferences.GetString("airportsICAO", string.Empty));
                 _mRequestedAirportsByIcao = deserializeAirportsByIcao;
 
-                var deserializeAirportsRawString = JsonConvert.DeserializeObject<List<String>>(notamPrefs.GetString("airportsRaw", string.Empty));
+                var deserializeAirportsRawString = JsonConvert.DeserializeObject<List<String>>(notamFragmentPreferences.GetString("airportsRaw", string.Empty));
                 _mRequestedAirportsRawString = deserializeAirportsRawString;
 
                 ShowNotams();

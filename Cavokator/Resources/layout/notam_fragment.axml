@@ -58,6 +58,13 @@
             android:layout_height="50dp"
             android:elevation="4dp"
             android:id="@+id/notam_clear_button" />
+          <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/notam_options_button"
+            android:scaleType="centerInside"
+            android:elevation="4dp"
+            android:src="@drawable/options_button" />
       </LinearLayout>
       <LinearLayout
           android:id="@+id/notam_linearlayout_lines"

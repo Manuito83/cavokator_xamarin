@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/notam_options_linearlayoutBottom">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:id="@+id/notam_options_mainRelativeLayout"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:id="@+id/notam_options_configuration_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONFIGURATION"
+            android:textColor="?attr/colorAccent"
+            android:textSize="18dp" />
+        <TextView
+            android:id="@+id/notam_options_sortBy_textView"
+            android:text="Sort by..."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentLeft="true"
+            android:textSize="13dp" />
+        <fr.ganfra.materialspinner.MaterialSpinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/notam_options_sortBy_spinner"
+            app:ms_arrowColor="#bc477b"
+            app:ms_baseColor="@color/spinnerBaseColor"
+            app:ms_highlightColor="@color/spinnerBaseColor"
+            app:ms_hintColor="@color/spinnerBaseColor"
+            app:ms_arrowSize="16dp"
+            app:ms_multiline="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/notam_options_sortBy_textView" />
+    </RelativeLayout>    
+    <RelativeLayout
+        android:id="@+id/notam_options_closeRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:text="Close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/notam_option_closeButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20.0dp" />
+    </RelativeLayout>
+</LinearLayout>
