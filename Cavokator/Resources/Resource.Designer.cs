@@ -2491,8 +2491,26 @@ namespace Cavokator
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
+			// aapt resource value: 0x7f020092
+			public const int avd_hide_password_1 = 2130837650;
+			
+			// aapt resource value: 0x7f020093
+			public const int avd_hide_password_2 = 2130837651;
+			
+			// aapt resource value: 0x7f020094
+			public const int avd_hide_password_3 = 2130837652;
+			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
+			
+			// aapt resource value: 0x7f020095
+			public const int avd_show_password_1 = 2130837653;
+			
+			// aapt resource value: 0x7f020096
+			public const int avd_show_password_2 = 2130837654;
+			
+			// aapt resource value: 0x7f020097
+			public const int avd_show_password_3 = 2130837655;
 			
 			// aapt resource value: 0x7f020055
 			public const int changelog_13img1 = 2130837589;
@@ -3921,8 +3939,8 @@ namespace Cavokator
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f070077
-			public const int Ago = 2131165303;
+			// aapt resource value: 0x7f070079
+			public const int Ago = 2131165305;
 			
 			// aapt resource value: 0x7f070059
 			public const int Airport_ID_TextView = 2131165273;
@@ -3930,8 +3948,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f070056
 			public const int ApplicationName = 2131165270;
 			
-			// aapt resource value: 0x7f0700a7
-			public const int CLRD = 2131165351;
+			// aapt resource value: 0x7f0700a9
+			public const int CLRD = 2131165353;
 			
 			// aapt resource value: 0x7f070058
 			public const int Clear_button = 2131165272;
@@ -3939,122 +3957,122 @@ namespace Cavokator
 			// aapt resource value: 0x7f07005c
 			public const int Connection_Error = 2131165276;
 			
-			// aapt resource value: 0x7f07007b
-			public const int Day = 2131165307;
+			// aapt resource value: 0x7f07007d
+			public const int Day = 2131165309;
 			
-			// aapt resource value: 0x7f070078
-			public const int Days = 2131165304;
-			
-			// aapt resource value: 0x7f070085
-			public const int Deposit0 = 2131165317;
-			
-			// aapt resource value: 0x7f070086
-			public const int Deposit1 = 2131165318;
+			// aapt resource value: 0x7f07007a
+			public const int Days = 2131165306;
 			
 			// aapt resource value: 0x7f070087
-			public const int Deposit2 = 2131165319;
+			public const int Deposit0 = 2131165319;
 			
 			// aapt resource value: 0x7f070088
-			public const int Deposit3 = 2131165320;
+			public const int Deposit1 = 2131165320;
 			
 			// aapt resource value: 0x7f070089
-			public const int Deposit4 = 2131165321;
+			public const int Deposit2 = 2131165321;
 			
 			// aapt resource value: 0x7f07008a
-			public const int Deposit5 = 2131165322;
+			public const int Deposit3 = 2131165322;
 			
 			// aapt resource value: 0x7f07008b
-			public const int Deposit6 = 2131165323;
+			public const int Deposit4 = 2131165323;
 			
 			// aapt resource value: 0x7f07008c
-			public const int Deposit7 = 2131165324;
+			public const int Deposit5 = 2131165324;
 			
 			// aapt resource value: 0x7f07008d
-			public const int Deposit8 = 2131165325;
+			public const int Deposit6 = 2131165325;
 			
 			// aapt resource value: 0x7f07008e
-			public const int Deposit9 = 2131165326;
+			public const int Deposit7 = 2131165326;
 			
 			// aapt resource value: 0x7f07008f
-			public const int DepositNO = 2131165327;
+			public const int Deposit8 = 2131165327;
 			
 			// aapt resource value: 0x7f070090
-			public const int Deposit_Error = 2131165328;
+			public const int Deposit9 = 2131165328;
 			
-			// aapt resource value: 0x7f070099
-			public const int Depth = 2131165337;
+			// aapt resource value: 0x7f070091
+			public const int DepositNO = 2131165329;
 			
-			// aapt resource value: 0x7f070097
-			public const int Depth00 = 2131165335;
-			
-			// aapt resource value: 0x7f070098
-			public const int Depth99 = 2131165336;
-			
-			// aapt resource value: 0x7f07009a
-			public const int DepthMORE = 2131165338;
-			
-			// aapt resource value: 0x7f07009c
-			public const int DepthNO = 2131165340;
+			// aapt resource value: 0x7f070092
+			public const int Deposit_Error = 2131165330;
 			
 			// aapt resource value: 0x7f07009b
-			public const int Depth_Error = 2131165339;
+			public const int Depth = 2131165339;
+			
+			// aapt resource value: 0x7f070099
+			public const int Depth00 = 2131165337;
+			
+			// aapt resource value: 0x7f07009a
+			public const int Depth99 = 2131165338;
+			
+			// aapt resource value: 0x7f07009c
+			public const int DepthMORE = 2131165340;
+			
+			// aapt resource value: 0x7f07009e
+			public const int DepthNO = 2131165342;
+			
+			// aapt resource value: 0x7f07009d
+			public const int Depth_Error = 2131165341;
 			
 			// aapt resource value: 0x7f07005e
 			public const int Error_fetching_airport = 2131165278;
 			
-			// aapt resource value: 0x7f070091
-			public const int Extent1 = 2131165329;
-			
-			// aapt resource value: 0x7f070092
-			public const int Extent2 = 2131165330;
-			
 			// aapt resource value: 0x7f070093
-			public const int Extent5 = 2131165331;
+			public const int Extent1 = 2131165331;
 			
 			// aapt resource value: 0x7f070094
-			public const int Extent9 = 2131165332;
+			public const int Extent2 = 2131165332;
 			
 			// aapt resource value: 0x7f070095
-			public const int ExtentNO = 2131165333;
+			public const int Extent5 = 2131165333;
 			
 			// aapt resource value: 0x7f070096
-			public const int Extent_Error = 2131165334;
+			public const int Extent9 = 2131165334;
+			
+			// aapt resource value: 0x7f070097
+			public const int ExtentNO = 2131165335;
+			
+			// aapt resource value: 0x7f070098
+			public const int Extent_Error = 2131165336;
 			
 			// aapt resource value: 0x7f07006a
 			public const int Fetching = 2131165290;
 			
-			// aapt resource value: 0x7f0700a3
-			public const int Friction99 = 2131165347;
-			
-			// aapt resource value: 0x7f07009e
-			public const int FrictionBA91 = 2131165342;
-			
-			// aapt resource value: 0x7f07009f
-			public const int FrictionBA92 = 2131165343;
+			// aapt resource value: 0x7f0700a5
+			public const int Friction99 = 2131165349;
 			
 			// aapt resource value: 0x7f0700a0
-			public const int FrictionBA93 = 2131165344;
+			public const int FrictionBA91 = 2131165344;
 			
 			// aapt resource value: 0x7f0700a1
-			public const int FrictionBA94 = 2131165345;
+			public const int FrictionBA92 = 2131165345;
 			
 			// aapt resource value: 0x7f0700a2
-			public const int FrictionBA95 = 2131165346;
+			public const int FrictionBA93 = 2131165346;
 			
-			// aapt resource value: 0x7f07009d
-			public const int FrictionCoefficient = 2131165341;
+			// aapt resource value: 0x7f0700a3
+			public const int FrictionBA94 = 2131165347;
 			
 			// aapt resource value: 0x7f0700a4
-			public const int FrictionNO = 2131165348;
+			public const int FrictionBA95 = 2131165348;
 			
-			// aapt resource value: 0x7f0700a5
-			public const int Friction_Error = 2131165349;
+			// aapt resource value: 0x7f07009f
+			public const int FrictionCoefficient = 2131165343;
 			
-			// aapt resource value: 0x7f07007c
-			public const int Hour = 2131165308;
+			// aapt resource value: 0x7f0700a6
+			public const int FrictionNO = 2131165350;
 			
-			// aapt resource value: 0x7f070079
-			public const int Hours = 2131165305;
+			// aapt resource value: 0x7f0700a7
+			public const int Friction_Error = 2131165351;
+			
+			// aapt resource value: 0x7f07007e
+			public const int Hour = 2131165310;
+			
+			// aapt resource value: 0x7f07007b
+			public const int Hours = 2131165307;
 			
 			// aapt resource value: 0x7f07005a
 			public const int Icao_Or_Iata = 2131165274;
@@ -4062,26 +4080,32 @@ namespace Cavokator
 			// aapt resource value: 0x7f07005d
 			public const int Internet_Error = 2131165277;
 			
-			// aapt resource value: 0x7f070080
-			public const int Main_Error = 2131165312;
+			// aapt resource value: 0x7f070082
+			public const int Main_Error = 2131165314;
 			
 			// aapt resource value: 0x7f070068
 			public const int Metar_Issued = 2131165288;
 			
-			// aapt resource value: 0x7f07007d
-			public const int Minute = 2131165309;
+			// aapt resource value: 0x7f07007f
+			public const int Minute = 2131165311;
 			
-			// aapt resource value: 0x7f07007a
-			public const int Minutes = 2131165306;
+			// aapt resource value: 0x7f07007c
+			public const int Minutes = 2131165308;
 			
 			// aapt resource value: 0x7f07006d
 			public const int NOTAM_ID_TextView = 2131165293;
+			
+			// aapt resource value: 0x7f070073
+			public const int NOTAM_categorySort = 2131165299;
 			
 			// aapt resource value: 0x7f070071
 			public const int NOTAM_configuration = 2131165297;
 			
 			// aapt resource value: 0x7f070070
 			public const int NOTAM_connectionError = 2131165296;
+			
+			// aapt resource value: 0x7f070074
+			public const int NOTAM_dateSort = 2131165300;
 			
 			// aapt resource value: 0x7f07006f
 			public const int NOTAM_requested = 2131165295;
@@ -4092,8 +4116,8 @@ namespace Cavokator
 			// aapt resource value: 0x7f07006e
 			public const int Notam_not_found = 2131165294;
 			
-			// aapt resource value: 0x7f07007f
-			public const int OK = 2131165311;
+			// aapt resource value: 0x7f070081
+			public const int OK = 2131165313;
 			
 			// aapt resource value: 0x7f070060
 			public const int Option_ChooseMetarOrTaforText = 2131165280;
@@ -4125,20 +4149,20 @@ namespace Cavokator
 			// aapt resource value: 0x7f07005b
 			public const int Requesting_METAR_Information = 2131165275;
 			
-			// aapt resource value: 0x7f070082
-			public const int Runway_AllRunways = 2131165314;
-			
 			// aapt resource value: 0x7f070084
-			public const int Runway_Error = 2131165316;
+			public const int Runway_AllRunways = 2131165316;
 			
-			// aapt resource value: 0x7f070081
-			public const int Runway_Indicator = 2131165313;
+			// aapt resource value: 0x7f070086
+			public const int Runway_Error = 2131165318;
 			
 			// aapt resource value: 0x7f070083
-			public const int Runway_ReportRepeated = 2131165315;
+			public const int Runway_Indicator = 2131165315;
 			
-			// aapt resource value: 0x7f0700a6
-			public const int SNOCLO = 2131165350;
+			// aapt resource value: 0x7f070085
+			public const int Runway_ReportRepeated = 2131165317;
+			
+			// aapt resource value: 0x7f0700a8
+			public const int SNOCLO = 2131165352;
 			
 			// aapt resource value: 0x7f070057
 			public const int Send_button = 2131165271;
@@ -4404,23 +4428,23 @@ namespace Cavokator
 			// aapt resource value: 0x7f070024
 			public const int search_menu_title = 2131165220;
 			
-			// aapt resource value: 0x7f070073
-			public const int settings_settingsTitle = 2131165299;
-			
-			// aapt resource value: 0x7f070074
-			public const int settings_textTheme = 2131165300;
+			// aapt resource value: 0x7f070075
+			public const int settings_settingsTitle = 2131165301;
 			
 			// aapt resource value: 0x7f070076
-			public const int settings_themeSwitchDark = 2131165302;
+			public const int settings_textTheme = 2131165302;
 			
-			// aapt resource value: 0x7f070075
-			public const int settings_themeSwitchLight = 2131165301;
+			// aapt resource value: 0x7f070078
+			public const int settings_themeSwitchDark = 2131165304;
+			
+			// aapt resource value: 0x7f070077
+			public const int settings_themeSwitchLight = 2131165303;
 			
 			// aapt resource value: 0x7f070025
 			public const int status_bar_notification_info_overflow = 2131165221;
 			
-			// aapt resource value: 0x7f07007e
-			public const int time_just_now = 2131165310;
+			// aapt resource value: 0x7f070080
+			public const int time_just_now = 2131165312;
 			
 			// aapt resource value: 0x7f07006c
 			public const int weather = 2131165292;

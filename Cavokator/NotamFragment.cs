@@ -243,6 +243,8 @@ namespace Cavokator
             var transaction = FragmentManager.BeginTransaction();
             var notamOptionsDialog = new NotamOptionsDialog(mSortByCategory);
             notamOptionsDialog.Show(transaction, "options_dialog");
+
+            notamOptionsDialog.SortBySpinnerChanged += OnSortSpinnedChanged; 
         }
 
         private void OnRequestButtonClicked(object sender, EventArgs e)
@@ -1061,7 +1063,7 @@ namespace Cavokator
             airportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             airportName.SetTextSize(ComplexUnitType.Dip, 16);
             LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            airportTextViewParams.SetMargins(0, 50, 0, 20);
+            airportTextViewParams.SetMargins(0, 80, 0, 20);
             airportName.LayoutParameters = airportTextViewParams;
 
             // Adding view
@@ -1706,6 +1708,21 @@ namespace Cavokator
                 await Task.Delay(750);
                 _notamFetchingAlertDialog.Dismiss();
             }
+        }
+
+        private void OnSortSpinnedChanged(object sender, NotamOptionsDialogEventArgs e)
+        {
+            if (e.SortBy == "category")
+            {
+                mSortByCategory = "category";
+            }
+            else
+            {
+                mSortByCategory = "date";
+            }
+
+            _linearLayoutNotamLines.RemoveAllViews();
+            ShowNotams();
         }
     }
 }

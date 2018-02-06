@@ -59,7 +59,7 @@ namespace Cavokator
             _dismissDialogButton.Click += OnDismissButtonClicked;
 
             // SPINNER ADAPTER CONFIG
-            string[] items = { "category", "date" };
+            string[] items = { Resources.GetString(Resource.String.NOTAM_categorySort) + "  ", Resources.GetString(Resource.String.NOTAM_dateSort) + "  "};
             var adapter = new ArrayAdapter<String>(Activity, Resource.Layout.notam_dialog_optionsSpinner, items);
             adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             _sortBySpinner.Adapter = adapter;

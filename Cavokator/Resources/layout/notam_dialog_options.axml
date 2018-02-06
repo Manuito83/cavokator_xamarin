@@ -4,7 +4,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:id="@+id/notam_options_linearlayoutBottom">
+    android:id="@+id/notam_options_linearlayoutBottom"
+    android:minWidth="300dp"
+    android:focusableInTouchMode="true">
     <RelativeLayout
         android:layout_width="wrap_content"
         android:paddingLeft="10dp"
@@ -27,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
             android:textSize="13dp" />
         <fr.ganfra.materialspinner.MaterialSpinner
             android:layout_width="wrap_content"
@@ -39,7 +41,8 @@
             app:ms_hintColor="@color/spinnerBaseColor"
             app:ms_arrowSize="16dp"
             app:ms_multiline="true"
-            android:layout_alignParentRight="true"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/notam_options_sortBy_textView"
             android:layout_alignBaseline="@id/notam_options_sortBy_textView" />
     </RelativeLayout>    
     <RelativeLayout

@@ -7,4 +7,6 @@
 
   <string name="NOTAM_configuration">NOTAM CONFIGURATION</string>
   <string name="NOTAM_sortBy">Sort by...</string>
+  <string name="NOTAM_categorySort">category </string>
+  <string name="NOTAM_dateSort">date </string>
 </resources>
