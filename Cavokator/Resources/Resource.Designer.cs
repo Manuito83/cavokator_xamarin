@@ -3848,19 +3848,22 @@ namespace Cavokator
 			public const int support_simple_spinner_dropdown_item = 2130903109;
 			
 			// aapt resource value: 0x7f030046
-			public const int tooltip = 2130903110;
+			public const int title_background = 2130903110;
 			
 			// aapt resource value: 0x7f030047
-			public const int wx_metar_fragment = 2130903111;
+			public const int tooltip = 2130903111;
 			
 			// aapt resource value: 0x7f030048
-			public const int wx_options_dialog = 2130903112;
+			public const int wx_metar_fragment = 2130903112;
 			
 			// aapt resource value: 0x7f030049
-			public const int wx_options_spinner = 2130903113;
+			public const int wx_options_dialog = 2130903113;
 			
 			// aapt resource value: 0x7f03004a
-			public const int wx_rwycond_dialog = 2130903114;
+			public const int wx_options_spinner = 2130903114;
+			
+			// aapt resource value: 0x7f03004b
+			public const int wx_rwycond_dialog = 2130903115;
 			
 			static Layout()
 			{

@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Android.Support.V7.Widget;
 using Android.Util;
 using System.Threading;
+using Android.Graphics.Drawables;
 using Android.Support.V7.App;
 using Android.Text.Method;
 using Android.Text.Style;
@@ -405,7 +406,6 @@ namespace Cavokator
 
             void LocalAddNotamsByCategory(int i)
             {
-                // TODO: vvvvvvvvvv
 
                 try
                 {
@@ -427,7 +427,6 @@ namespace Cavokator
                     bool anyCategoryW = false;
                     bool anyCategoryO = false;
                     bool anyCategoryNotReported = false;
-                    bool triggeredAnyCategory = false;
 
                     List<int> positionL = new List<int>();
                     List<int> positionM = new List<int>();
@@ -455,85 +454,71 @@ namespace Cavokator
                             if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "L")
                             {
                                 anyCategoryL = true;
-                                triggeredAnyCategory = true;
                                 positionL.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "M")
                             {
                                 anyCategoryM = true;
-                                triggeredAnyCategory = true;
                                 positionM.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "F")
                             {
                                 anyCategoryF = true;
-                                triggeredAnyCategory = true;
                                 positionF.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "A")
                             {
                                 anyCategoryA = true;
-                                triggeredAnyCategory = true;
                                 positionA.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "S")
                             {
                                 anyCategoryS = true;
-                                triggeredAnyCategory = true;
                                 positionS.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "P")
                             {
                                 anyCategoryP = true;
-                                triggeredAnyCategory = true;
                                 positionP.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "C")
                             {
                                 anyCategoryC = true;
-                                triggeredAnyCategory = true;
                                 positionC.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "I")
                             {
                                 anyCategoryI = true;
-                                triggeredAnyCategory = true;
                                 positionI.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "G")
                             {
                                 anyCategoryG = true;
-                                triggeredAnyCategory = true;
                                 positionG.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "N")
                             {
                                 anyCategoryN = true;
-                                triggeredAnyCategory = true;
                                 positionN.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "R")
                             {
                                 anyCategoryR = true;
-                                triggeredAnyCategory = true;
                                 positionR.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "W")
                             {
                                 anyCategoryW = true;
-                                triggeredAnyCategory = true;
                                 positionW.Add(j);
                             }
                             else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "O")
                             {
                                 anyCategoryO = true;
-                                triggeredAnyCategory = true;
                                 positionO.Add(j);
                             }
                             else
                             {
                                 anyCategoryNotReported = true;
-                                triggeredAnyCategory = true;
                                 positionUnknown.Add(j);
                             }
                         }
@@ -548,7 +533,6 @@ namespace Cavokator
                             positionRaw.Add(j);
                         }
                     }
-
 
                     if (anyQNotam)
                     {
@@ -567,8 +551,21 @@ namespace Cavokator
 
                         if (anyCategoryM)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Movement and landing area";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -580,8 +577,21 @@ namespace Cavokator
 
                         if (anyCategoryF)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Facilities and services";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -593,8 +603,21 @@ namespace Cavokator
 
                         if (anyCategoryA)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Airspace organization";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -606,8 +629,21 @@ namespace Cavokator
 
                         if (anyCategoryS)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Air traffic and VOLMET";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -619,8 +655,21 @@ namespace Cavokator
 
                         if (anyCategoryP)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Air traffic procedures";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -632,8 +681,21 @@ namespace Cavokator
 
                         if (anyCategoryC)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Communications and surveillance";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -645,8 +707,21 @@ namespace Cavokator
 
                         if (anyCategoryI)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Instrument landing system";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -658,8 +733,21 @@ namespace Cavokator
 
                         if (anyCategoryG)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "GNSS services";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -671,8 +759,21 @@ namespace Cavokator
 
                         if (anyCategoryN)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Terminal and en-route navaids";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -684,8 +785,21 @@ namespace Cavokator
 
                         if (anyCategoryR)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Airspace restrictions";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -697,8 +811,21 @@ namespace Cavokator
 
                         if (anyCategoryW)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Warnings";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -710,8 +837,21 @@ namespace Cavokator
 
                         if (anyCategoryO)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "Other information";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -723,8 +863,21 @@ namespace Cavokator
 
                         if (anyCategoryNotReported)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "(category not reported)";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -736,8 +889,21 @@ namespace Cavokator
 
                         if (anyRawNotam)
                         {
+                            GradientDrawable categoryTitleBackground = new GradientDrawable();
+                            categoryTitleBackground.SetCornerRadius(8);
+                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                            categoryTitleBackground.SetStroke(3, Color.Black);
+
                             TextView categoryTitleTextView = new TextView(Activity);
                             categoryTitleTextView.Text = "(raw NOTAM)";
+                            categoryTitleTextView.Background = categoryTitleBackground;
+                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                            var categoryTitleTextViewParams =
+                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                             Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
 
@@ -755,8 +921,21 @@ namespace Cavokator
                     else
                     {
                         // Raw Notam
+                        GradientDrawable categoryTitleBackground = new GradientDrawable();
+                        categoryTitleBackground.SetCornerRadius(8);
+                        categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                        categoryTitleBackground.SetStroke(3, Color.Black);
+
                         TextView categoryTitleTextView = new TextView(Activity);
                         categoryTitleTextView.Text = "(raw NOTAM)";
+                        categoryTitleTextView.Background = categoryTitleBackground;
+                        categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                        categoryTitleTextView.SetPadding(20, 5, 20, 5);
+                        var categoryTitleTextViewParams =
+                            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                        categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+                        categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+                        categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
                         Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
                         
