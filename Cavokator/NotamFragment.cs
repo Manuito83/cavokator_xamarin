@@ -1725,21 +1725,19 @@ namespace Cavokator
             ShowNotams();
         }
 
-
-
-        // TODO: !!
         private string ReturnMainCategory(string secondAndThirdLetters)
         {
 
             Dictionary<string, string> mainCategoriesDictionary = new Dictionary<string, string>
             {
-                // Lightning Facilities
+                // Lighting Facilities
                 { "LA", "APPR lighting system" },
                 { "LB", "Aerodrome beacon" },
                 { "LC", "RWY center line lights" },
                 { "LD", "Landing direction indicator lights" },
                 { "LE", "Runway edge lights" },
                 { "LF", "Sequenced flashing lights" },
+                { "LG", "Pilot-controlled lighting" },
                 { "LH", "High intensity RWY lights" },
                 { "LI", "RWY end identifier lights" },
                 { "LJ", "RWY alignment indicator lights" },
@@ -1767,6 +1765,7 @@ namespace Cavokator
                 { "MK", "Parking area" },
                 { "MM", "Daylight markings" },
                 { "MN", "Apron" },
+                { "MO", "Stop bar" },
                 { "MP", "Aircraft stands" },
                 { "MR", "Runway" },
                 { "MS", "Stopway" },
@@ -1774,6 +1773,7 @@ namespace Cavokator
                 { "MU", "Runway turning bay" },
                 { "MW", "Strip" },
                 { "MX", "Taxiway" },
+                { "MY", "Rapid exit taxiway" },
 
                 // Facilities and services
                 { "FA", "Aerodrome" },
@@ -1784,6 +1784,7 @@ namespace Cavokator
                 { "FF", "Firefighting and rescue" },
                 { "FG", "Ground movement control" },
                 { "FH", "Helicopter alighting area/platform" },
+                { "FI", "Aircraft de-icing" },
                 { "FJ", "Oils" },
                 { "FL", "Landing direction indicator" },
                 { "FM", "Meteorological service" },
@@ -1801,6 +1802,7 @@ namespace Cavokator
                 { "AD", "Air defense identification zone" },
                 { "AE", "Control area" },
                 { "AF", "Flight information region" },
+                { "AG", "General facility" },
                 { "AH", "Upper control area" },
                 { "AL", "Minimum usable flight level" },
                 { "AN", "Area navigation route" },
@@ -1813,12 +1815,235 @@ namespace Cavokator
                 { "AX", "Intersection" },
                 { "AZ", "Aerodrome traffic zone" },
 
+                // Air traffic and VOLMET
+                { "SA", "ATIS" },
+                { "SB", "ATS reporting office" },
+                { "SC", "Area control center" },
+                { "SE", "Flight information service" },
+                { "SF", "Airport flight information service" },
+                { "SL", "Flow control centre" },
+                { "SO", "Oceanic area control centre" },
+                { "SP", "Approach control service" },
+                { "SS", "Flight service station" },
+                { "ST", "Aerodrome control tower" },
+                { "SU", "Upper area control centre" },
+                { "SV", "VOLMET broadcast" },
+                { "SY", "Upper advisory service" },
 
+                // Air traffic procedures
+                { "PA", "Standard instrument arrival" },
+                { "PB", "Standard VFR arrival" },
+                { "PC", "Contingency procedures" },
+                { "PD", "Standard instrument departure" },
+                { "PE", "Stardard VFR departure" },
+                { "PF", "Flow control procedure" },
+                { "PH", "Holding procedure" },
+                { "PI", "Instrument approach procedure" },
+                { "PK", "VFR approach procedure" },
+                { "PL", "Obstacle clearance limit'" },
+                { "PM", "Aerodrome operating minima'" },
+                { "PN", "Noise operating restrictions'" },
+                { "PO", "Obstacle clearance altitude" },
+                { "PP", "Obstacle clearance height" },
+                { "PR", "Radio failure procedure" },
+                { "PT", "Transition altitude" },
+                { "PU", "Missed approach procedure" },
+                { "PX", "Minimum holding altitude" },
+                { "PZ", "ADIZ procedure" },
+
+                // Communications and surveillance facilities
+                { "CA", "Air/ground facility" },
+                { "CB", "Automatic dependent surv. broadcast" },
+                { "CC", "automatic dependent surv. contract" },
+                { "CD", "CPDLC" },
+                { "CE", "En-route surveillance radar" },
+                { "CG", "Ground controlled approach system" },
+                { "CL", "SELCAL" },
+                { "CM", "Surface movement radar" },
+                { "CP", "Precision approach radar (PAR)" },
+                { "CR", "Surveillance radar element of PAR" },
+                { "CS", "Secondary surveillance radar" },
+                { "CT", "Terminal area surveillance radar" },
+
+                // Instrument and microwave landing system
+                { "IC", "ILS" },
+                { "ID", "DME associated with ILS" },
+                { "IG", "Glide path (ILS)" },
+                { "II", "Inner marker (ILS)" },
+                { "IL", "Localizer (ILS)" },
+                { "IM", "Middle marker (ILS)" },
+                { "IN", "Localizer (non-ILS)" },
+                { "IO", "Outer marker (ILS)" },
+                { "IS", "ILS CAT I" },
+                { "IT", "ILS CAT II" },
+                { "IU", "ILS CAT III" },
+                { "IW", "Microwave landing system" },
+                { "IX", "Locator, outer (ILS)" },
+                { "IY", "Locator, middle (ILS)" },
+
+                // GNSS services
+                { "GA", "GNSS airfield-specidic operations" },
+                { "GW", "GNSS area-wide operations" },
+
+                // Terminal and en-route navigation facilities
+                { "NA", "All radio navigation facilities" },
+                { "NB", "NDB" },
+                { "NC", "DECCA" },
+                { "ND", "DME" },
+                { "NF", "Fan marker" },
+                { "NL", "Locator" },
+                { "NM", "VOR/DME" },
+                { "NN", "TACAN" },
+                { "NO", "OMEGA" },
+                { "NT", "VORTAC" },
+                { "NV", "VOR" },
+                { "NX", "Direction finding station" },
+
+                // Airspace restrictions
+                { "RA", "Airspace reservation" },
+                { "RD", "Danger area" },
+                { "RM", "Military operating area" },
+                { "RO", "Overflying" },
+                { "RP", "Prohibited area" },
+                { "RR", "Restricted area" },
+                { "RT", "Temporary restricted area" },
+
+                // Warnings
+                { "WA", "Air display" },
+                { "WB", "Aerobatics" },
+                { "WC", "Captive balloon or kite" },
+                { "WD", "Demolition of explosives" },
+                { "WE", "Exercises" },
+                { "WF", "Air refueling" },
+                { "WG", "Glider flying" },
+                { "WH", "Blasting" },
+                { "WJ", "Banner/target towing" },
+                { "WL", "Ascent of free balloon" },
+                { "WM", "Missile, gun or rocket firing" },
+                { "WP", "Parachute jumping exercise" },
+                { "WR", "Radioactive/toxic materials" },
+                { "WS", "Burning or blowing gas" },
+                { "WT", "Mass movement of aircraft" },
+                { "WU", "Unmanned aircraft" },
+                { "WV", "Formation flight" },
+                { "WW", "Significant volcanic activity" },
+                { "WY", "Aerial survey" },
+                { "WZ", "Model flying" },
+
+                // Other information
+                { "OA", "Aeronautical information service" },
+                { "OB", "Obstacle" },
+                { "OE", "Aircraft entry requirements" },
+                { "OL", "Obstacle lights on" },
+                { "OR", "Rescue coordination centre" },
             };
 
             foreach (KeyValuePair<string, string> entry in mainCategoriesDictionary)
             {
                 if (entry.Key == secondAndThirdLetters)
+                {
+                    return entry.Value;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private string ReturnSecondaryCategory(string fourthAndFifthLetters)
+        {
+
+            Dictionary<string, string> secondaryCategoriesDictionary = new Dictionary<string, string>
+            {
+                // Availability
+                { "AC", "Withdrawn from maintenance" },
+                { "AD", "Available for daylight operations" },
+                { "AF", "Flight checked and found reliable" },
+                { "AG", "Operating but awaiting flight check" },
+                { "AH", "Hours service change" },
+                { "AK", "Resumed normal operation" },
+                { "AL", "Operative subject to previous limitations" },
+                { "AM", "Military operations only" },
+                { "AN", "Available for night operations" },
+                { "AO", "Operational" },
+                { "AP", "Available, prior permission required" },
+                { "AR", "Available on request" },
+                { "AS", "Unserviceable" },
+                { "AU", "Not available" },
+                { "AW", "Completely withdrawn" },
+                { "AX", "Previous shutdown cancelled" },
+
+                // Availability
+                { "CA", "Activated" },
+                { "CC", "Completed" },
+                { "CD", "Deactivated" },
+                { "CE", "Erected" },
+                { "CF", "Operating frequency changed" },
+                { "CG", "Downgraded" },
+                { "CH", "Changed" },
+                { "CI", "Ident/callsign changed" },
+                { "CL", "Realigned" },
+                { "CM", "Displaced" },
+                { "CN", "Cancelled" },
+                { "CO", "Operating" },
+                { "CP", "Operating on reduced power" },
+                { "CR", "Temporarily replaced" },
+                { "CS", "Installed" },
+                { "CT", "On test, do not use" },
+
+                // Hazard conditions
+                { "HA", "Braking action" },
+                { "HB", "Friction coefficient" },
+                { "HC", "Covered by compacted snow" },
+                { "HD", "Covered by dry snow" },
+                { "HE", "Covered by water" },
+                { "HF", "Totally free of snow and ice" },
+                { "HG", "Grass cutting in progrss" },
+                { "HH", "Hazard" },
+                { "HI", "Covered by ice" },
+                { "HJ", "Launch planned" },
+                { "HK", "Bird migration" },
+                { "HL", "Snow clearance completed" },
+                { "HM", "Marked" },
+                { "HN", "Covered by wet snow/slush" },
+                { "HO", "Obscured by snow" },
+                { "HP", "Snow clearance in progress" },
+                { "HQ", "Operation cancelled" },
+                { "HR", "Standing water" },
+                { "HS", "Sanding in progress" },
+                { "HT", "Approach according to signal area" },
+                { "HU", "Launch in progress" },
+                { "HV", "Work completed" },
+                { "HW", "Work in progress" },
+                { "HX", "Concentration of birds" },
+                { "HY", "Snow banks exist" },
+                { "HZ", "Covered by frozen ruts/ridges" },
+
+                // Limitations
+                { "LA", "Operating on auxiliary power" },
+                { "LB", "Reserved for aircraft based therein" },
+                { "LC", "Closed" },
+                { "LD", "Unsafe" },
+                { "LE", "Operating without auxiliary power" },
+                { "LF", "Interference" },
+                { "LG", "Opeating without identification" },
+                { "LH", "Unserviceable for heavy aircraft" },
+                { "LI", "Closed to IFR operations" },
+                { "LK", "Operating as a fixed light" },
+                { "LL", "Unsafe for certain length/width" },
+                { "LN", "Closed to night operations" },
+                { "LP", "Prohibited" },
+                { "LR", "Aircraft restricted to runways/taxiways" },
+                { "LS", "Subject to interruption" },
+                { "LT", "Limited" },
+                { "LV", "Closed to VFR operations" },
+                { "LW", "Will take place" },
+                { "LX", "Operating but caution advised" },
+
+            };
+
+            foreach (KeyValuePair<string, string> entry in secondaryCategoriesDictionary)
+            {
+                if (entry.Key == fourthAndFifthLetters)
                 {
                     return entry.Value;
                 }
