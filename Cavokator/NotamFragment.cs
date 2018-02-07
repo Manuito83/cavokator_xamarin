@@ -1724,5 +1724,108 @@ namespace Cavokator
             _linearLayoutNotamLines.RemoveAllViews();
             ShowNotams();
         }
+
+
+
+        // TODO: !!
+        private string ReturnMainCategory(string secondAndThirdLetters)
+        {
+
+            Dictionary<string, string> mainCategoriesDictionary = new Dictionary<string, string>
+            {
+                // Lightning Facilities
+                { "LA", "APPR lighting system" },
+                { "LB", "Aerodrome beacon" },
+                { "LC", "RWY center line lights" },
+                { "LD", "Landing direction indicator lights" },
+                { "LE", "Runway edge lights" },
+                { "LF", "Sequenced flashing lights" },
+                { "LH", "High intensity RWY lights" },
+                { "LI", "RWY end identifier lights" },
+                { "LJ", "RWY alignment indicator lights" },
+                { "LK", "CAT II lighting components" },
+                { "LL", "Low intensity runway lights" },
+                { "LM", "Medium intensity runway lights" },
+                { "LP", "PAPI" },
+                { "LR", "All landing area lighting facilities" },
+                { "LS", "Stopway lights" },
+                { "LT", "Threshold lights" },
+                { "LU", "Helicopter approach path indicator" },
+                { "LV", "VASIS" },
+                { "LW", "Heliport lighting" },
+                { "LX", "Taxiway center line lights" },
+                { "LY", "Taxiway edge lights" },
+                { "LZ", "Runway touchdown zone lights" },
+
+                // Movement and landing area
+                { "MA", "Movement area" },
+                { "MB", "Bearing strength" },
+                { "MC", "Clearway" },
+                { "MD", "Declared distances" },
+                { "MG", "Taxiing guidance system" },
+                { "MH", "Runway arresting gear" },
+                { "MK", "Parking area" },
+                { "MM", "Daylight markings" },
+                { "MN", "Apron" },
+                { "MP", "Aircraft stands" },
+                { "MR", "Runway" },
+                { "MS", "Stopway" },
+                { "MT", "Threshold" },
+                { "MU", "Runway turning bay" },
+                { "MW", "Strip" },
+                { "MX", "Taxiway" },
+
+                // Facilities and services
+                { "FA", "Aerodrome" },
+                { "FB", "Friction measuring devide" },
+                { "FC", "Ceiling measurement equipment" },
+                { "FD", "Docking system" },
+                { "FE", "Oxygen" },
+                { "FF", "Firefighting and rescue" },
+                { "FG", "Ground movement control" },
+                { "FH", "Helicopter alighting area/platform" },
+                { "FJ", "Oils" },
+                { "FL", "Landing direction indicator" },
+                { "FM", "Meteorological service" },
+                { "FO", "Fog dispersal system" },
+                { "FP", "Heliport" },
+                { "FS", "Snow removal equipment" },
+                { "FT", "Transmissometer" },
+                { "FU", "Fuel availability" },
+                { "FW", "Wind direction indicator" },
+                { "FZ", "Customs" },
+
+                // Airspace organization
+                { "AA", "Minimum altitude" },
+                { "AC", "Control zone" },
+                { "AD", "Air defense identification zone" },
+                { "AE", "Control area" },
+                { "AF", "Flight information region" },
+                { "AH", "Upper control area" },
+                { "AL", "Minimum usable flight level" },
+                { "AN", "Area navigation route" },
+                { "AO", "Oceanic control area" },
+                { "AP", "Reporting point" },
+                { "AR", "ATS route" },
+                { "AT", "Terminal control area" },
+                { "AU", "Upper flight information region" },
+                { "AV", "Upper advisory area" },
+                { "AX", "Intersection" },
+                { "AZ", "Aerodrome traffic zone" },
+
+
+            };
+
+            foreach (KeyValuePair<string, string> entry in mainCategoriesDictionary)
+            {
+                if (entry.Key == secondAndThirdLetters)
+                {
+                    return entry.Value;
+                }
+            }
+
+            return string.Empty;
+        }
+
     }
 }
