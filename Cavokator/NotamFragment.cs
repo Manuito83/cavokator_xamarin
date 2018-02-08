@@ -1213,11 +1213,9 @@ namespace Cavokator
 
                 // Share Icon
                 ImageView myShareIcon = new ImageView(Activity);
-                //myShareIcon.Id = 3;
                 myShareIcon.SetImageResource(Resource.Drawable.ic_share_variant_black_48dp);
                 LinearLayout.LayoutParams myShareIconParams =
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
-                //myShareIconParams.AddRule(LayoutRules.AlignParentLeft);
                 myShareIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 myShareIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 myShareIconParams.SetMargins(0, 0, 0, 0);
@@ -1228,17 +1226,16 @@ namespace Cavokator
 
                 myShareIcon.Click += delegate
                 {
+                    // TODO: **
                     Console.WriteLine("AA");
                 };
 
                 // Coordinates
-                if (_mNotamContainerList[i].Latitude[j] != 9999) // TODO: check position if 9999
+                if (_mNotamContainerList[i].Latitude[j] != 9999)
                 {
                     ImageView myWorldMap = new ImageView(Activity);
-                    //myWorldMap.Id = 2;
                     LinearLayout.LayoutParams worldMapIconParams =
                         new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
-                    //worldMapIconParams.AddRule(LayoutRules.AlignParentRight);
                     worldMapIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
                     worldMapIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
                     worldMapIconParams.SetMargins(20, 0, 0, 0);

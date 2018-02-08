@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:minWidth="300dp">
+    android:minWidth="400dp">
 <!-- ID -->
     <TextView
         android:id="@+id/notam_rawDialog_notamId"
@@ -28,11 +28,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/notam_rawDialog_notamText"
             android:textSize="11dp"
-            android:layout_marginTop="20.0dp"
             android:enabled="true"
+            android:layout_marginTop="20.0dp"
             android:layout_marginLeft="20.0dp"
             android:layout_marginRight="20.0dp"
             android:layout_marginBottom="20.0dp"
+            android:paddingBottom="15.0dp"
             android:layout_gravity="center_horizontal" />
     </ScrollView>
 <!-- CLOSE BUTTON -->
