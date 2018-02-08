@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <dimen name="dimen_entry_in_dp_15">15dp</dimen>
   <dimen name="dimen_entry_in_dp_20">20dp</dimen>
+  <dimen name="dimen_entry_in_dp_25">25dp</dimen>
   <dimen name="dimen_entry_in_dp_35">35dp</dimen>
 </resources>

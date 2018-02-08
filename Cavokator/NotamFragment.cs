@@ -34,8 +34,9 @@ namespace Cavokator
 {
     class NotamFragment : Android.Support.V4.App.Fragment
     {
-
+        // Options from options menu
         private string mSortByCategory;
+        private bool showSubcategories = true;
         
         // Floating action button
         private CoordinatorLayout _coordinatorLayout;
@@ -1111,6 +1112,8 @@ namespace Cavokator
 
             // Styling notamId
             RelativeLayout topLayout = LocalStyleTopLayout();
+
+            RelativeLayout subcategoriesLayout = LocalStyleSubcategoriesLayout();
             
             // Styling notamFreeText
             LinearLayout notamFreeTextLayout = LocalStyleFreeText();
@@ -1127,6 +1130,7 @@ namespace Cavokator
             {
                 notamCard.AddView(notamLayoutContainer);
                 notamLayoutContainer.AddView(topLayout);
+                notamLayoutContainer.AddView(subcategoriesLayout);
                 notamLayoutContainer.AddView(notamFreeTextLayout);
                 notamLayoutContainer.AddView(toFromRelativeLayout);
                 notamLayoutContainer.AddView(spanRelativeLayout);
@@ -1163,7 +1167,12 @@ namespace Cavokator
 
             RelativeLayout LocalStyleTopLayout()
             {
+                // Clickable ID
                 RelativeLayout myTopLayout = new RelativeLayout(Activity);
+                LinearLayout.LayoutParams myTopLayoutParams =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
+                myTopLayoutParams.SetMargins(30, 20, 20, 0);
+                myTopLayout.LayoutParameters = myTopLayoutParams;
 
                 TextView notamIdTextView = new TextView(Activity);
                 notamIdTextView.Id = 1;
@@ -1190,27 +1199,53 @@ namespace Cavokator
                 notamIdTextView.MovementMethod = new LinkMovementMethod();
 
                 notamIdTextView.SetTextSize(ComplexUnitType.Dip, 13);
-                notamIdTextView.SetPadding(30, 30, 15, 0);
+                notamIdTextView.SetPadding(0, 0, 0, 0);
 
                 myTopLayout.AddView(notamIdTextView);
-                
-                if (_mNotamContainerList[i].Latitude[j] != 9999)
+
+
+                // Share and Coordinates holder
+                LinearLayout shareAndCoordinatesLayout = new LinearLayout(Activity);
+                RelativeLayout.LayoutParams shareAndCoordinatesLayoutParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                shareAndCoordinatesLayoutParams.AddRule(LayoutRules.AlignParentRight);
+                shareAndCoordinatesLayout.LayoutParameters = shareAndCoordinatesLayoutParams;
+
+                // Share Icon
+                ImageView myShareIcon = new ImageView(Activity);
+                //myShareIcon.Id = 3;
+                myShareIcon.SetImageResource(Resource.Drawable.ic_share_variant_black_48dp);
+                LinearLayout.LayoutParams myShareIconParams =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                //myShareIconParams.AddRule(LayoutRules.AlignParentLeft);
+                myShareIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                myShareIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                myShareIconParams.SetMargins(0, 0, 0, 0);
+                myShareIconParams.Gravity = GravityFlags.CenterVertical;
+                myShareIcon.LayoutParameters = myShareIconParams;
+
+                shareAndCoordinatesLayout.AddView(myShareIcon);
+
+                myShareIcon.Click += delegate
+                {
+                    Console.WriteLine("AA");
+                };
+
+                // Coordinates
+                if (_mNotamContainerList[i].Latitude[j] != 9999) // TODO: check position if 9999
                 {
                     ImageView myWorldMap = new ImageView(Activity);
-
-                    myWorldMap.Id = 2;
-
-                    myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
-
-                    RelativeLayout.LayoutParams worldMapIconParams =
-                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
-                    worldMapIconParams.AddRule(LayoutRules.AlignParentRight);
+                    //myWorldMap.Id = 2;
+                    LinearLayout.LayoutParams worldMapIconParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    //worldMapIconParams.AddRule(LayoutRules.AlignParentRight);
                     worldMapIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
                     worldMapIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
-                    worldMapIconParams.SetMargins(0, 10, 15, 25);
-                    myWorldMap.LayoutParameters = worldMapIconParams;
+                    worldMapIconParams.SetMargins(20, 0, 0, 0);
+                    worldMapIconParams.Gravity = GravityFlags.CenterVertical;
+                    myWorldMap.LayoutParameters = worldMapIconParams;myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
 
-                    myTopLayout.AddView(myWorldMap);
+                    shareAndCoordinatesLayout.AddView(myWorldMap);
 
                     myWorldMap.Click += delegate
                     {
@@ -1223,9 +1258,80 @@ namespace Cavokator
                     };
                 }
 
+                myTopLayout.AddView(shareAndCoordinatesLayout);
+
                 return myTopLayout;
-            }            
-            
+            }
+
+            RelativeLayout LocalStyleSubcategoriesLayout()
+            {
+                RelativeLayout mySubcaterogiesLayout = new RelativeLayout(Activity);
+
+                if (showSubcategories)
+                {
+                    string myMainCategoryString = ReturnMainCategory(_mNotamContainerList[i].CodeSecondThird[j]);
+                    string mySecondaryCategoryString = ReturnSecondaryCategory(_mNotamContainerList[i].CodeFourthFifth[j]);
+
+                    if (myMainCategoryString != string.Empty)
+                    {
+                        RelativeLayout categoryTopLayout = new RelativeLayout(Activity);
+                        categoryTopLayout.Id = 1;
+
+                        TextView mainCategoryTextView = new TextView(Activity);
+                        mainCategoryTextView.Text = myMainCategoryString;
+                        mainCategoryTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                        mainCategoryTextView.SetTextSize(ComplexUnitType.Dip, 10);
+                        RelativeLayout.LayoutParams mainCategoryTextViewParams =
+                            new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                        mainCategoryTextViewParams.SetMargins(30, 0, 0, 0);
+                        mainCategoryTextView.LayoutParameters = mainCategoryTextViewParams;
+
+                        categoryTopLayout.AddView(mainCategoryTextView);
+                        mySubcaterogiesLayout.AddView(categoryTopLayout);
+
+                        if (mySecondaryCategoryString != string.Empty)
+                        {
+                            RelativeLayout categoryBottomLayout = new RelativeLayout(Activity);
+                            RelativeLayout.LayoutParams categoryBottomLayoutParams =
+                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            categoryBottomLayoutParams.AddRule(LayoutRules.Below, categoryTopLayout.Id);
+                            categoryBottomLayout.LayoutParameters = categoryBottomLayoutParams;
+
+                            ImageView arrowIcon = new ImageView(Activity);
+                            arrowIcon.Id = 1;
+                            arrowIcon.SetImageResource(Resource.Drawable.ic_menu_right_black_48dp);
+                            RelativeLayout.LayoutParams arrowIconParams =
+                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            arrowIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_15);
+                            arrowIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_15);
+                            arrowIconParams.SetMargins(30, 0, 0, 0);
+                            arrowIconParams.AddRule(LayoutRules.CenterVertical);
+                            arrowIcon.LayoutParameters = arrowIconParams;
+
+                            TextView secondaryCategoryTextView = new TextView(Activity);
+                            secondaryCategoryTextView.Text = mySecondaryCategoryString;
+                            secondaryCategoryTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+                            secondaryCategoryTextView.SetTextSize(ComplexUnitType.Dip, 10);
+                            RelativeLayout.LayoutParams secondaryCategoryTextViewParams =
+                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            secondaryCategoryTextViewParams.SetMargins(0, 0, 0, 0);
+                            secondaryCategoryTextViewParams.AddRule(LayoutRules.RightOf, arrowIcon.Id);
+                            secondaryCategoryTextViewParams.AddRule(LayoutRules.CenterVertical);
+                            secondaryCategoryTextView.LayoutParameters = secondaryCategoryTextViewParams;
+
+                            categoryBottomLayout.AddView(arrowIcon);
+                            categoryBottomLayout.AddView(secondaryCategoryTextView);
+
+                            mySubcaterogiesLayout.AddView(categoryBottomLayout);
+                        }
+
+                    }
+
+                }
+
+                return mySubcaterogiesLayout;
+            }
+
             LinearLayout LocalStyleFreeText()
             {
                 LinearLayout freeTextLayout = new LinearLayout(Activity);
@@ -1233,13 +1339,13 @@ namespace Cavokator
 
                 LinearLayout.LayoutParams freeTextLayoutParams = 
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                freeTextLayoutParams.SetMargins(30, 30, 30, 20);
                 freeTextLayout.LayoutParameters = freeTextLayoutParams;
 
                 TextView notamFreeText = new TextView(Activity);
                 notamFreeText.Text = _mNotamContainerList[i].NotamFreeText[j];
                 notamFreeText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
                 notamFreeText.SetTextSize(ComplexUnitType.Dip, 12);
-                notamFreeText.SetPadding(30, 30, 15, 10);
 
                 freeTextLayout.AddView(notamFreeText);
 
@@ -1251,7 +1357,7 @@ namespace Cavokator
                 RelativeLayout myBaseTimeLayout = new RelativeLayout(Activity);
                 LinearLayout.LayoutParams myBaseTimeLayoutParams = 
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
-                myBaseTimeLayoutParams.SetMargins(30, 20, 0, 0);
+                myBaseTimeLayoutParams.SetMargins(30, 10, 30, 10);
                 myBaseTimeLayout.LayoutParameters = myBaseTimeLayoutParams;
                 
                 ImageView calendarIcon = new ImageView(Activity);
@@ -1261,7 +1367,6 @@ namespace Cavokator
                     new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
                 calendarIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 calendarIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
-                calendarIconParams.SetMargins(0, 0, 20, 0);
                 calendarIconParams.AddRule(LayoutRules.CenterVertical);
                 calendarIcon.LayoutParameters = calendarIconParams;
                 DateTime timeNow = DateTime.UtcNow;
@@ -1284,7 +1389,7 @@ namespace Cavokator
                 myStartTimeEditText.SetTextSize(ComplexUnitType.Dip, 11);
                 RelativeLayout.LayoutParams myStartTimeEditTextParams = 
                     new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                myStartTimeEditTextParams.SetMargins(0, 0, 0, 0);
+                myStartTimeEditTextParams.SetMargins(10, 0, 0, 0);
                 myStartTimeEditTextParams.AddRule(LayoutRules.RightOf, calendarIcon.Id);
                 myStartTimeEditTextParams.AddRule(LayoutRules.CenterVertical);
                 myStartTimeEditText.LayoutParameters = myStartTimeEditTextParams;
@@ -1355,7 +1460,7 @@ namespace Cavokator
                 {
                     LinearLayout.LayoutParams myBaseSpanLayoutParams = 
                         new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
-                    myBaseSpanLayoutParams.SetMargins(30, 20, 0, 0);
+                    myBaseSpanLayoutParams.SetMargins(30, 10, 0, 10);
                     myBaseSpanLayout.LayoutParameters = myBaseSpanLayoutParams;
 
                     ImageView spanClockIcon = new ImageView(Activity);
@@ -1398,7 +1503,7 @@ namespace Cavokator
                     
                     LinearLayout.LayoutParams myBottomTopLayoutParams =
                         new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
-                    myBottomTopLayoutParams.SetMargins(30, 20, 0, 0);
+                    myBottomTopLayoutParams.SetMargins(30, 10, 0, 10);
                     myBottomTopLayout.LayoutParameters = myBottomTopLayoutParams;
 
                     ImageView bottomIcon = new ImageView(Activity);
@@ -1586,15 +1691,14 @@ namespace Cavokator
         private void TimeTick()
         {
             // Update requested UTC time
-            var timerDelegate = new TimerCallback(UpdateRequestedTime);
+            var timerDelegate = new TimerCallback(UpdateRequestedTimeOnTick);
             var utcUpdateTimer = new Timer(timerDelegate, null, 0, 30000);
 
-            var timerDelegateCalendar = new TimerCallback(UpdateCalendarColors);
+            var timerDelegateCalendar = new TimerCallback(UpdateCalendarColorsOnTick);
             var utcUpdateTimerCalendar = new Timer(timerDelegateCalendar, null, 0, 60000);
         }
 
-        // Update calendar colors on timer tick
-        private void UpdateCalendarColors(object state)
+        private void UpdateCalendarColorsOnTick(object state)
         {
             if (_thisView.IsAttachedToWindow && _mCalendarViews.Count > 0)
             {
@@ -1623,8 +1727,7 @@ namespace Cavokator
             }
         }
 
-        // Update requested UTC time on timer tick
-        private void UpdateRequestedTime(object state)
+        private void UpdateRequestedTimeOnTick(object state)
         {
             // Make sure were are finding the TextView
             if (_thisView.IsAttachedToWindow && _mUtcTextView != null)
@@ -1954,6 +2057,7 @@ namespace Cavokator
 
             Dictionary<string, string> secondaryCategoriesDictionary = new Dictionary<string, string>
             {
+
                 // Availability
                 { "AC", "Withdrawn from maintenance" },
                 { "AD", "Available for daylight operations" },
@@ -2040,6 +2144,10 @@ namespace Cavokator
                 { "LX", "Operating but caution advised" },
 
             };
+
+            if (fourthAndFifthLetters == "XX")
+                Console.WriteLine("cuac");
+
 
             foreach (KeyValuePair<string, string> entry in secondaryCategoriesDictionary)
             {
