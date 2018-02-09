@@ -358,7 +358,7 @@ namespace Cavokator
             }
         }
         
-        private void GetNotams()
+        private async void GetNotams()
         {
             // Populate list with notams for every airport requested
 
@@ -371,7 +371,7 @@ namespace Cavokator
                 if (!mNotams.DecodedNotam.ConnectionError)
                 {
                     _mNotamContainerList.Add(mNotams.DecodedNotam);
-                    PercentageCompleted(i, _mRequestedAirportsByIcao.Count, currentAirport);
+                    await PercentageCompleted(i, _mRequestedAirportsByIcao.Count, currentAirport);
                 }
                 else
                 {
@@ -382,7 +382,7 @@ namespace Cavokator
             }
         }
 
-        private void ShowNotams()
+        private async void ShowNotams()
         {
             // Start working if there is something in the container
             if (_mNotamContainerList.Count > 0)
@@ -404,6 +404,8 @@ namespace Cavokator
 
                         if (mSortByCategory == "category")
                         {
+                            // TODO:
+                            //await Task.Run(() => LocalAddNotamsByCategory(i));
                             LocalAddNotamsByCategory(i);
                         }
                         else
@@ -2141,10 +2143,6 @@ namespace Cavokator
                 { "LX", "Operating but caution advised" },
 
             };
-
-            if (fourthAndFifthLetters == "XX")
-                Console.WriteLine("cuac");
-
 
             foreach (KeyValuePair<string, string> entry in secondaryCategoriesDictionary)
             {
