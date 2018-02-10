@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using Android.App;
@@ -22,13 +23,18 @@ using System.Threading.Tasks;
 using Android.Support.V7.Widget;
 using Android.Util;
 using System.Threading;
+using Android;
+using Android.Content.PM;
 using Android.Graphics.Drawables;
+using Android.Provider;
 using Android.Support.V7.App;
 using Android.Text.Method;
 using Android.Text.Style;
 using Newtonsoft.Json;
 using AlertDialog = Android.App.AlertDialog;
 using Android.Support.Design.Widget;
+using Android.Support.V4.App;
+
 
 namespace Cavokator
 {
@@ -1230,6 +1236,61 @@ namespace Cavokator
                 {
                     // TODO: **
                     Console.WriteLine("AA");
+
+                    share_bitMap_to_Apps();
+
+                    void share_bitMap_to_Apps()
+                    {
+                        Intent intent = new Intent(Intent.ActionSend);
+
+                        intent.SetType("image/*");
+                        MemoryStream stream = new MemoryStream();
+
+                        intent.PutExtra(Intent.ExtraStream, getImageUri(Activity, getBitmapFromView(notamLayoutContainer)));
+                        try
+                        {
+                            StartActivity(Intent.CreateChooser(intent, "My Profile ..."));
+                        }
+                        catch (Android.Content.ActivityNotFoundException ex)
+                        {
+                            ex.PrintStackTrace();
+                        }
+                    }
+
+                    Android.Net.Uri getImageUri(Context inContext, Bitmap inImage)
+                    {
+                        MemoryStream bytes = new MemoryStream();
+                        inImage.Compress(Bitmap.CompressFormat.Jpeg, 100, bytes);
+
+                        ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.WriteExternalStorage }, 1);
+                        //ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.ReadExternalStorage }, 1);
+
+                        String path = MediaStore.Images.Media.InsertImage(inContext.ContentResolver, inImage, "Title", null);
+                        return Android.Net.Uri.Parse(path);
+                    }
+
+                    Bitmap getBitmapFromView(View view)
+                    {
+                        //Define a bitmap with the same size as the view
+                        Bitmap returnedBitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
+                        //Bind a canvas to it
+                        Canvas canvas = new Canvas(returnedBitmap);
+                        //Get the view's background
+                        Drawable bgDrawable = view.Background;
+                        if (bgDrawable != null)
+                            //has background drawable, then draw it on the canvas
+                            bgDrawable.Draw(canvas);
+                        else
+                            //does not have background drawable, then draw white background on the canvas
+                            canvas.DrawColor(Color.White);
+                        // draw the view on the canvas
+                        view.Draw(canvas);
+                        //return the bitmap
+                        return returnedBitmap;
+                    }
+
+
+
                 };
 
                 // Coordinates
@@ -1825,6 +1886,12 @@ namespace Cavokator
 
             _linearLayoutNotamLines.RemoveAllViews();
             ShowNotams();
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            // Override in order to get permissions
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
         private string ReturnMainCategory(string secondAndThirdLetters)
