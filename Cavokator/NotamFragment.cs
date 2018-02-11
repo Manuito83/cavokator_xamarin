@@ -34,11 +34,12 @@ using Newtonsoft.Json;
 using AlertDialog = Android.App.AlertDialog;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
+using Android.Support.V4.Content;
 
 
 namespace Cavokator
 {
-    class NotamFragment : Android.Support.V4.App.Fragment
+    class NotamFragment : Android.Support.V4.App.Fragment, Android.Support.V4.AppActivityCompat.IOnRequestPermissionsResultCallback
     {
         // Options from options menu
         private string mSortByCategory;
@@ -1235,21 +1236,28 @@ namespace Cavokator
                 myShareIcon.Click += delegate
                 {
                     // TODO: **
-                    Console.WriteLine("AA");
+                   // LocalShareBitmapToApps();
 
-                    share_bitMap_to_Apps();
+                    try
+                    {
+                        Task.Run(() => GetWritePermission());
+                    }
+                    catch
+                    {
+                        Console.WriteLine("ERROR");
+                    }
 
-                    void share_bitMap_to_Apps()
+                    void LocalShareBitmapToApps()
                     {
                         Intent intent = new Intent(Intent.ActionSend);
 
                         intent.SetType("image/*");
                         MemoryStream stream = new MemoryStream();
 
-                        intent.PutExtra(Intent.ExtraStream, getImageUri(Activity, getBitmapFromView(notamLayoutContainer)));
+                        intent.PutExtra(Intent.ExtraStream, GetImageUri(Activity, GetBitmapFromView(notamLayoutContainer)).Result);
                         try
                         {
-                            StartActivity(Intent.CreateChooser(intent, "My Profile ..."));
+                            StartActivity(Intent.CreateChooser(intent, "NOTAM"));
                         }
                         catch (Android.Content.ActivityNotFoundException ex)
                         {
@@ -1257,40 +1265,76 @@ namespace Cavokator
                         }
                     }
 
-                    Android.Net.Uri getImageUri(Context inContext, Bitmap inImage)
+                    async Task<Android.Net.Uri> GetImageUri(Context inContext, Bitmap inImage)
                     {
                         MemoryStream bytes = new MemoryStream();
                         inImage.Compress(Bitmap.CompressFormat.Jpeg, 100, bytes);
 
-                        ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.WriteExternalStorage }, 1);
+                        //ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.WriteExternalStorage }, 1);
                         //ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.ReadExternalStorage }, 1);
+
 
                         String path = MediaStore.Images.Media.InsertImage(inContext.ContentResolver, inImage, "Title", null);
                         return Android.Net.Uri.Parse(path);
                     }
 
-                    Bitmap getBitmapFromView(View view)
+                    Bitmap GetBitmapFromView(View view)
                     {
-                        //Define a bitmap with the same size as the view
                         Bitmap returnedBitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
-                        //Bind a canvas to it
                         Canvas canvas = new Canvas(returnedBitmap);
-                        //Get the view's background
                         Drawable bgDrawable = view.Background;
+
                         if (bgDrawable != null)
-                            //has background drawable, then draw it on the canvas
                             bgDrawable.Draw(canvas);
                         else
-                            //does not have background drawable, then draw white background on the canvas
                             canvas.DrawColor(Color.White);
-                        // draw the view on the canvas
+
                         view.Draw(canvas);
-                        //return the bitmap
                         return returnedBitmap;
                     }
 
 
+                    async Task GetWritePermission()
+                    {
+                        string[] PermissionsStorage =
+                        {
+                            Manifest.Permission.WriteExternalStorage,
+                            Manifest.Permission.ReadExternalStorage
+                        };
 
+                        const string permission = Manifest.Permission.WriteExternalStorage;
+                        if (ContextCompat.CheckSelfPermission(Activity, permission) == (int)Permission.Granted)
+                        {
+                            return;
+                        }
+
+                        ActivityCompat.RequestPermissions(Activity, PermissionsStorage, 0);
+
+                    }
+
+
+                    //Boolean IsStoragePermissionGranted()
+                    //{
+                    //    if ((int)Build.VERSION.SdkInt >= 23)
+                    //    {
+
+                    //        const string permission = Manifest.Permission.WriteExternalStorage;
+                    //        if (Activity.CheckSelfPermission(permission) == (int)Permission.Granted)
+                    //        {
+                    //            return true;
+                    //        }
+                    //        else
+                    //        {
+                    //            ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.WriteExternalStorage }, 1);
+                    //            return false;
+                    //        }
+                    //    }
+                    //    else
+                    //    { 
+                    //        // ermission is automatically granted on sdk < 23 upon installation
+                    //        return true;
+                    //    }
+                    //}
                 };
 
                 // Coordinates
@@ -1890,8 +1934,33 @@ namespace Cavokator
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
-            // Override in order to get permissions
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            base.OnRequestPermissionsResult();
+
+            switch (requestCode)
+            {
+                case 0:
+                {
+                    if (grantResults[0] == Permission.Granted)
+                    {
+                        //Permission granted
+                        var snack = Snackbar.Make(_scrollViewContainer,
+                            "Location permission is available, getting lat/long.", Snackbar.LengthShort);
+                        snack.Show();
+
+                        //await GetLocationAsync();
+                    }
+                    else
+                    {
+                        //Explain to the user why we need to read the contacts
+                        Snackbar.Make(_scrollViewContainer, "Permission needed to save image and share NOTAM",
+                                Snackbar.LengthIndefinite)
+                            .Show();
+                    }
+
+                    break;
+
+                }
+            }
         }
 
         private string ReturnMainCategory(string secondAndThirdLetters)
