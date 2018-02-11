@@ -39,7 +39,7 @@ using Android.Support.V4.Content;
 
 namespace Cavokator
 {
-    class NotamFragment : Android.Support.V4.App.Fragment, Android.Support.V4.AppActivityCompat.IOnRequestPermissionsResultCallback
+    class NotamFragment : Android.Support.V4.App.Fragment, ActivityCompat.IOnRequestPermissionsResultCallback
     {
         // Options from options menu
         private string mSortByCategory;
@@ -58,6 +58,11 @@ namespace Cavokator
         private ImageButton _notamOptionsButton;
         private TextView _chooseIDtextview;
         private LinearLayout _linearLayoutNotamLines;
+
+        // Notam view to share
+        private View _myViewToShare;
+        private string myNotamIdToShare;
+        private string myNotamRawToShare;
 
         // ProgressDialog to show while we fetch the wx information
         private AlertDialog.Builder _notamFetchingAlertDialogBuilder;
@@ -391,40 +396,49 @@ namespace Cavokator
 
         private async void ShowNotams()
         {
-            // Start working if there is something in the container
-            if (_mNotamContainerList.Count > 0)
+            try
             {
-                if (!_connectionError)
+                // Start working if there is something in the container
+                if (_mNotamContainerList.Count > 0)
                 {
-                    AddRequestedTime();
-
-                    // Iterate every airport populated by GetNotams()
-                    for (int i = 0; i < _mNotamContainerList.Count; i++)
+                    if (!_connectionError)
                     {
-                        AddAirportName(i);
+                        AddRequestedTime();
 
-                        if (_mNotamContainerList[i].NotamRaw.Count == 0)
+                        // Iterate every airport populated by GetNotams()
+                        for (int i = 0; i < _mNotamContainerList.Count; i++)
                         {
-                            AddErrorCard();
-                            break;
-                        }
+                            AddAirportName(i);
 
-                        if (mSortByCategory == "category")
-                        {
-                            // TODO:
-                            //await Task.Run(() => LocalAddNotamsByCategory(i));
-                            LocalAddNotamsByCategory(i);
-                        }
-                        else
-                        {
-                            LocalAddNotamsByDate(i);
+                            if (_mNotamContainerList[i].NotamRaw.Count == 0)
+                            {
+                                AddErrorCard();
+                                break;
+                            }
+
+                            if (mSortByCategory == "category")
+                            {
+                                // TODO:
+                                //LocalAddNotamsByCategory(i);
+                                await Task.Run(() => LocalAddNotamsByCategory(i));
+                            }
+                            else
+                            {
+                                await Task.Run(() => LocalAddNotamsByDate(i));
+                            }
                         }
                     }
+                    else
+                    {
+                        ShowConnectionError();
+                    }
+
                 }
-                else
-                {
-                    ShowConnectionError();
-                }
+            }
+            catch
+            {
+                // Ignored
+                // Might encounter nill views if view change occurs while async task running
             }
 
             void LocalAddNotamsByCategory(int i)
@@ -1235,106 +1249,11 @@ namespace Cavokator
 
                 myShareIcon.Click += delegate
                 {
-                    // TODO: **
-                   // LocalShareBitmapToApps();
+                    _myViewToShare = notamLayoutContainer;
+                    myNotamIdToShare = _mRequestedAirportsByIcao[i].ToUpper();
+                    myNotamRawToShare = _mNotamContainerList[i].NotamRaw[j];
 
-                    try
-                    {
-                        Task.Run(() => GetWritePermission());
-                    }
-                    catch
-                    {
-                        Console.WriteLine("ERROR");
-                    }
-
-                    void LocalShareBitmapToApps()
-                    {
-                        Intent intent = new Intent(Intent.ActionSend);
-
-                        intent.SetType("image/*");
-                        MemoryStream stream = new MemoryStream();
-
-                        intent.PutExtra(Intent.ExtraStream, GetImageUri(Activity, GetBitmapFromView(notamLayoutContainer)).Result);
-                        try
-                        {
-                            StartActivity(Intent.CreateChooser(intent, "NOTAM"));
-                        }
-                        catch (Android.Content.ActivityNotFoundException ex)
-                        {
-                            ex.PrintStackTrace();
-                        }
-                    }
-
-                    async Task<Android.Net.Uri> GetImageUri(Context inContext, Bitmap inImage)
-                    {
-                        MemoryStream bytes = new MemoryStream();
-                        inImage.Compress(Bitmap.CompressFormat.Jpeg, 100, bytes);
-
-                        //ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.WriteExternalStorage }, 1);
-                        //ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.ReadExternalStorage }, 1);
-
-
-                        String path = MediaStore.Images.Media.InsertImage(inContext.ContentResolver, inImage, "Title", null);
-                        return Android.Net.Uri.Parse(path);
-                    }
-
-                    Bitmap GetBitmapFromView(View view)
-                    {
-                        Bitmap returnedBitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
-                        Canvas canvas = new Canvas(returnedBitmap);
-                        Drawable bgDrawable = view.Background;
-
-                        if (bgDrawable != null)
-                            bgDrawable.Draw(canvas);
-                        else
-                            canvas.DrawColor(Color.White);
-
-                        view.Draw(canvas);
-                        return returnedBitmap;
-                    }
-
-
-                    async Task GetWritePermission()
-                    {
-                        string[] PermissionsStorage =
-                        {
-                            Manifest.Permission.WriteExternalStorage,
-                            Manifest.Permission.ReadExternalStorage
-                        };
-
-                        const string permission = Manifest.Permission.WriteExternalStorage;
-                        if (ContextCompat.CheckSelfPermission(Activity, permission) == (int)Permission.Granted)
-                        {
-                            return;
-                        }
-
-                        ActivityCompat.RequestPermissions(Activity, PermissionsStorage, 0);
-
-                    }
-
-
-                    //Boolean IsStoragePermissionGranted()
-                    //{
-                    //    if ((int)Build.VERSION.SdkInt >= 23)
-                    //    {
-
-                    //        const string permission = Manifest.Permission.WriteExternalStorage;
-                    //        if (Activity.CheckSelfPermission(permission) == (int)Permission.Granted)
-                    //        {
-                    //            return true;
-                    //        }
-                    //        else
-                    //        {
-                    //            ActivityCompat.RequestPermissions(Activity, new String[] { Manifest.Permission.WriteExternalStorage }, 1);
-                    //            return false;
-                    //        }
-                    //    }
-                    //    else
-                    //    { 
-                    //        // ermission is automatically granted on sdk < 23 upon installation
-                    //        return true;
-                    //    }
-                    //}
+                    ShareSpecificNotam(false);
                 };
 
                 // Coordinates
@@ -1697,6 +1616,127 @@ namespace Cavokator
             });
         }
 
+        private void ShareSpecificNotam(bool shareRaw)
+        {
+            View myNotamView = _myViewToShare;
+            string airportId = myNotamIdToShare;
+            string notamRaw = myNotamRawToShare;
+
+
+            string[] permissionsStorage =
+            {
+                Manifest.Permission.WriteExternalStorage,
+                Manifest.Permission.ReadExternalStorage
+            };
+
+            if (!shareRaw)
+            {
+                try
+                {
+                    bool permissionsGranted = LocalGetWritePermission();
+
+                    if (permissionsGranted)
+                    {
+                        LocalShareBitmapToApps();
+                    }
+                    else
+                    {
+                        // Save the view 
+                        _myViewToShare = myNotamView;
+
+                        // Request permissions
+                        RequestPermissions(permissionsStorage, 0);
+                    }
+                }
+                catch
+                {
+                    LocalShareRawNotam();
+                }
+            }
+            else
+            {
+                LocalShareRawNotam();
+            }
+            
+            void LocalShareRawNotam()
+            {
+                // TODO: Implement
+            }
+
+            Boolean LocalGetWritePermission()
+            {
+                const string permission = Manifest.Permission.WriteExternalStorage;
+                if (ContextCompat.CheckSelfPermission(Activity, permission) == (int)Permission.Granted)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            void LocalShareBitmapToApps()
+            {
+                Intent intent = new Intent(Intent.ActionSend);
+
+                intent.SetType("*/*");
+
+                intent.PutExtra(Intent.ExtraText, "CAVOKATOR APP, NOTAM from airport " + airportId + ", requested @ " + _mUtcRequestTime.ToString("dd-MMM-yyyy HH:mm") + "UTC");
+                intent.PutExtra(Intent.ExtraStream, LocalGetImageUri(Activity, LocalGetBitmapFromView(myNotamView)));
+                
+                StartActivity(Intent.CreateChooser(intent, "NOTAM"));
+            }
+
+            Android.Net.Uri LocalGetImageUri(Context inContext, Bitmap inImage)
+            {
+                MemoryStream bytes = new MemoryStream();
+                inImage.Compress(Bitmap.CompressFormat.Jpeg, 100, bytes);
+
+                String path = MediaStore.Images.Media.InsertImage(inContext.ContentResolver, inImage, "NOTAM", null);
+                return Android.Net.Uri.Parse(path);
+            }
+
+            Bitmap LocalGetBitmapFromView(View view)
+            {
+                Bitmap returnedBitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
+                Canvas canvas = new Canvas(returnedBitmap);
+                Drawable bgDrawable = view.Background;
+
+                if (bgDrawable != null)
+                    bgDrawable.Draw(canvas);
+                else
+                    canvas.DrawColor(Color.White);
+
+                view.Draw(canvas);
+                return returnedBitmap;
+            }
+
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            switch (requestCode)
+            {
+                case 0:
+                {
+                    if (grantResults[0] == Permission.Granted)
+                    {
+                        // Call again function to share
+                        ShareSpecificNotam(false);
+                    }
+                    else
+                    {
+                        //Explain to the user why we need to read the contacts
+                        Snackbar.Make(_scrollViewContainer, "Permission needed to share full NOTAM as image!", Snackbar.LengthShort).Show();
+
+                        // Call again function to share
+                        ShareSpecificNotam(true);
+                    }
+
+                    break;
+                }
+            }
+        }
+
         private void StyleViews()
         {
             _coordinatorLayout = _thisView.FindViewById<CoordinatorLayout>(Resource.Id.cl);
@@ -1930,37 +1970,6 @@ namespace Cavokator
 
             _linearLayoutNotamLines.RemoveAllViews();
             ShowNotams();
-        }
-
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
-        {
-            base.OnRequestPermissionsResult();
-
-            switch (requestCode)
-            {
-                case 0:
-                {
-                    if (grantResults[0] == Permission.Granted)
-                    {
-                        //Permission granted
-                        var snack = Snackbar.Make(_scrollViewContainer,
-                            "Location permission is available, getting lat/long.", Snackbar.LengthShort);
-                        snack.Show();
-
-                        //await GetLocationAsync();
-                    }
-                    else
-                    {
-                        //Explain to the user why we need to read the contacts
-                        Snackbar.Make(_scrollViewContainer, "Permission needed to save image and share NOTAM",
-                                Snackbar.LengthIndefinite)
-                            .Show();
-                    }
-
-                    break;
-
-                }
-            }
         }
 
         private string ReturnMainCategory(string secondAndThirdLetters)
