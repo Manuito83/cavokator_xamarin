@@ -41,6 +41,7 @@ namespace Cavokator
 {
     class NotamFragment : Android.Support.V4.App.Fragment, ActivityCompat.IOnRequestPermissionsResultCallback
     {
+
         // Options from options menu
         private string mSortByCategory;
         private bool showSubcategories = true;
@@ -419,8 +420,8 @@ namespace Cavokator
                             if (mSortByCategory == "category")
                             {
                                 // TODO:
-                                //LocalAddNotamsByCategory(i);
-                                await Task.Run(() => LocalAddNotamsByCategory(i));
+                                LocalAddNotamsByCategory(i);
+                                //await Task.Run(() => LocalAddNotamsByCategory(i));
                             }
                             else
                             {
