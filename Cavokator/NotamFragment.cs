@@ -24,7 +24,6 @@ using Android.Support.V7.Widget;
 using Android.Util;
 using System.Threading;
 using Android;
-using Android.Content.PM;
 using Android.Graphics.Drawables;
 using Android.Provider;
 using Android.Support.V7.App;
@@ -35,6 +34,9 @@ using AlertDialog = Android.App.AlertDialog;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
+using Android.Support.V4.Widget;
+using Java.Security;
+using Permission = Android.Content.PM.Permission;
 
 
 namespace Cavokator
@@ -51,7 +53,7 @@ namespace Cavokator
         private FloatingActionButton _fabScrollTop;
         
         // Main views
-        private ScrollView _scrollViewContainer;
+        private NestedScrollView _scrollViewContainer;
         private LinearLayout _linearlayoutBottom;
         private EditText _airportEntryEditText;
         private Button _notamRequestButton;
@@ -106,6 +108,17 @@ namespace Cavokator
             HasOptionsMenu = true;
         }
 
+
+
+        RecyclerView mRecyclerView;
+        RecyclerView.LayoutManager mLayoutManager;
+        NotamCardsAdapter mAdapter;
+
+        private List<object> myRecyclerNotamList = new List<object>();
+
+
+
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // In order to return the view for this Fragment
@@ -120,7 +133,7 @@ namespace Cavokator
             _notamOptionsButton.Click += OnOptionsButtonClicked;
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
-            _scrollViewContainer.ScrollChange += OnScrollMoved;
+            //_scrollViewContainer.ScrollChange += OnScrollMoved;
             _fabScrollTop.Click += ScrollToTop;
 
             // TODO: do try/catch for weather as well?
@@ -133,7 +146,24 @@ namespace Cavokator
                 // Encountered new null fields
                 _notamClearButton.CallOnClick();
             }
-            
+
+
+
+
+
+            // TODO: RECYCLER
+            // Get our RecyclerView layout:
+            mRecyclerView = _thisView.FindViewById<RecyclerView>(Resource.Id.rvContacts);
+
+            // Plug in the linear layout manager:
+            mLayoutManager = new LinearLayoutManager(Activity);
+            mRecyclerView.SetLayoutManager(mLayoutManager);
+
+
+
+
+
+
             // Add FAB and hide
             _coordinatorLayout.AddView(_fabScrollTop);
             _fabScrollTop.Hide();
@@ -306,7 +336,20 @@ namespace Cavokator
 
                     // Did we connect succesfully? Then show Notams!
                     if (_connectionError == false)
+                    {
                         ShowNotams();
+
+                        FillFinalList();
+
+                        // TODO: **RECYCLER**
+                        // Plug in my adapter:
+                        mAdapter = new NotamCardsAdapter(myRecyclerNotamList);
+                        Activity.RunOnUiThread(() =>
+                        {
+                            mRecyclerView.SetAdapter(mAdapter);
+                        });
+                        
+                    }
                     else
                     {
                         _mNotamContainerList.Clear();
@@ -395,631 +438,679 @@ namespace Cavokator
             }
         }
 
-        private async void ShowNotams()
+        private void FillFinalList()
         {
-            try
+
+            // FILL AIRPORT NAMES
+            string myAirport = string.Empty;
+            
+            // Iterate every airport populated by GetNotams()
+            for (int i = 0; i < _mNotamContainerList.Count; i++)
             {
-                // Start working if there is something in the container
-                if (_mNotamContainerList.Count > 0)
-                {
-                    if (!_connectionError)
-                    {
-                        AddRequestedTime();
-
-                        // Iterate every airport populated by GetNotams()
-                        for (int i = 0; i < _mNotamContainerList.Count; i++)
-                        {
-                            AddAirportName(i);
-
-                            if (_mNotamContainerList[i].NotamRaw.Count == 0)
-                            {
-                                AddErrorCard();
-                                break;
-                            }
-
-                            if (mSortByCategory == "category")
-                            {
-                                // TODO:
-                                LocalAddNotamsByCategory(i);
-                                //await Task.Run(() => LocalAddNotamsByCategory(i));
-                            }
-                            else
-                            {
-                                await Task.Run(() => LocalAddNotamsByDate(i));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ShowConnectionError();
-                    }
-
-                }
-            }
-            catch
-            {
-                // Ignored
-                // Might encounter nill views if view change occurs while async task running
-            }
-
-            void LocalAddNotamsByCategory(int i)
-            {
-
+                // Try to get the airport's name from existing _myAirportDefinition List
+                bool foundAirportIcao = false;
                 try
                 {
-                    bool anyQNotam = false;
-                    bool anyDNotam = false;
-                    bool anyRawNotam = false;
-
-                    bool anyCategoryL = false;
-                    bool anyCategoryM = false;
-                    bool anyCategoryF = false;
-                    bool anyCategoryA = false;
-                    bool anyCategoryS = false;
-                    bool anyCategoryP = false;
-                    bool anyCategoryC = false;
-                    bool anyCategoryI = false;
-                    bool anyCategoryG = false;
-                    bool anyCategoryN = false;
-                    bool anyCategoryR = false;
-                    bool anyCategoryW = false;
-                    bool anyCategoryO = false;
-                    bool anyCategoryNotReported = false;
-
-                    List<int> positionL = new List<int>();
-                    List<int> positionM = new List<int>();
-                    List<int> positionF = new List<int>();
-                    List<int> positionA = new List<int>();
-                    List<int> positionS = new List<int>();
-                    List<int> positionP = new List<int>();
-                    List<int> positionC = new List<int>();
-                    List<int> positionI = new List<int>();
-                    List<int> positionG = new List<int>();
-                    List<int> positionN = new List<int>();
-                    List<int> positionR = new List<int>();
-                    List<int> positionW = new List<int>();
-                    List<int> positionO = new List<int>();
-                    List<int> positionUnknown = new List<int>();
-                    List<int> positionRaw = new List<int>();
-
-                    for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
-                    {
-                        // NOTAM Q
-                        if (_mNotamContainerList[i].NotamQ[j])
+                    for (var j = 0; j < _mAirportDefinitions.Count; j++)
+                        if (_mAirportDefinitions[j].icao == _mRequestedAirportsByIcao[i].ToUpper())
                         {
-                            anyQNotam = true;
-
-                            if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "L")
-                            {
-                                anyCategoryL = true;
-                                positionL.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "M")
-                            {
-                                anyCategoryM = true;
-                                positionM.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "F")
-                            {
-                                anyCategoryF = true;
-                                positionF.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "A")
-                            {
-                                anyCategoryA = true;
-                                positionA.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "S")
-                            {
-                                anyCategoryS = true;
-                                positionS.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "P")
-                            {
-                                anyCategoryP = true;
-                                positionP.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "C")
-                            {
-                                anyCategoryC = true;
-                                positionC.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "I")
-                            {
-                                anyCategoryI = true;
-                                positionI.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "G")
-                            {
-                                anyCategoryG = true;
-                                positionG.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "N")
-                            {
-                                anyCategoryN = true;
-                                positionN.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "R")
-                            {
-                                anyCategoryR = true;
-                                positionR.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "W")
-                            {
-                                anyCategoryW = true;
-                                positionW.Add(j);
-                            }
-                            else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "O")
-                            {
-                                anyCategoryO = true;
-                                positionO.Add(j);
-                            }
-                            else
-                            {
-                                anyCategoryNotReported = true;
-                                positionUnknown.Add(j);
-                            }
+                            myAirport = _mRequestedAirportsRawString[i].ToUpper() + " - " + _mAirportDefinitions[j].description;
+                            foundAirportIcao = true;
+                            break;
                         }
-                        else if (_mNotamContainerList[i].NotamD[j])
-                        {
-                            // Placeholder for USA D NOTAMS
-                        }
-                        else
-                        {
-                            // Raw Notams
-                            anyRawNotam = true;
-                            positionRaw.Add(j);
-                        }
-                    }
-
-                    if (anyQNotam)
-                    {
-                        if (anyCategoryL)
-                        {
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Lightning facilities";
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionL)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryM)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Movement and landing area";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionM)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryF)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Facilities and services";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionF)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryA)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Airspace organization";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionA)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryS)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Air traffic and VOLMET";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionS)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryP)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Air traffic procedures";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionP)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryC)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Communications and surveillance";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionC)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryI)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Instrument landing system";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionI)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryG)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "GNSS services";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionG)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryN)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Terminal and en-route navaids";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionN)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryR)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Airspace restrictions";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionR)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryW)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Warnings";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionW)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryO)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "Other information";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionO)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyCategoryNotReported)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "(category not reported)";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionUnknown)
-                            {
-                                AddNotamQCard(i, p);
-                            }
-                        }
-
-                        if (anyRawNotam)
-                        {
-                            GradientDrawable categoryTitleBackground = new GradientDrawable();
-                            categoryTitleBackground.SetCornerRadius(8);
-                            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                            categoryTitleBackground.SetStroke(3, Color.Black);
-
-                            TextView categoryTitleTextView = new TextView(Activity);
-                            categoryTitleTextView.Text = "(raw NOTAM)";
-                            categoryTitleTextView.Background = categoryTitleBackground;
-                            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                            categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                            var categoryTitleTextViewParams =
-                                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-
-                            foreach (var p in positionRaw)
-                            {
-                                AddRawNotamsCard(i, p);
-                            }
-                        }
-
-                    }
-                    else if (anyDNotam)
-                    {
-                        // Placeholder for USA D NOTAMS
-                    }
-                    else
-                    {
-                        // Raw Notam
-                        GradientDrawable categoryTitleBackground = new GradientDrawable();
-                        categoryTitleBackground.SetCornerRadius(8);
-                        categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
-                        categoryTitleBackground.SetStroke(3, Color.Black);
-
-                        TextView categoryTitleTextView = new TextView(Activity);
-                        categoryTitleTextView.Text = "(raw NOTAM)";
-                        categoryTitleTextView.Background = categoryTitleBackground;
-                        categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
-                        categoryTitleTextView.SetPadding(20, 5, 20, 5);
-                        var categoryTitleTextViewParams =
-                            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                        categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
-                        categoryTitleTextViewParams.Gravity = GravityFlags.Center;
-                        categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
-
-                        Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-                        
-                        foreach (var p in positionRaw)
-                        {
-                            AddRawNotamsCard(i, p);
-                        }
-                    }
                 }
-                catch
+                finally
                 {
-                    // If error showing, show Raw
-                    for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
-                        AddRawNotamsCard(i, j);
+                    if (!foundAirportIcao) myAirport = _mRequestedAirportsRawString[i].ToUpper();
                 }
-            }
 
-            void LocalAddNotamsByDate(int i)
-            {
+                MyAirportRecycler myAirportRecycler = new MyAirportRecycler();
+                myAirportRecycler.Name = myAirport;
+                myRecyclerNotamList.Add(myAirportRecycler);
+
+
+
+
+                // FILL NOTAMS
                 for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
                 {
-                    // It's Q
-                    if (_mNotamContainerList[i].NotamQ[j])
-                    {
-                        try
-                        {
-                            AddNotamQCard(i, j);
-                        }
-                        catch
-                        {
-                            // If error showing Q, show Raw
-                            AddRawNotamsCard(i, j);
-                        }
-                    }
-                    // It's D
-                    else if (_mNotamContainerList[i].NotamD[j])
-                    {
-                        // Placeholder for USA D NOTAMS
-                    }
-                    // It's raw
-                    else
-                    {
-                        AddRawNotamsCard(i, j);
-                    }
+                    MyNotamRecycler myNotamRecycler = new MyNotamRecycler();
+
+                    myNotamRecycler.NotamText = _mNotamContainerList[i].NotamRaw[j];
+                    myRecyclerNotamList.Add(myNotamRecycler);
                 }
+
             }
+
+
+            
+        }
+
+        private async void ShowNotams()
+        {
+            //try
+            //{
+            //    // Start working if there is something in the container
+            //    if (_mNotamContainerList.Count > 0)
+            //    {
+            //        if (!_connectionError)
+            //        {
+            //            AddRequestedTime();
+
+            //            // Iterate every airport populated by GetNotams()
+            //            for (int i = 0; i < _mNotamContainerList.Count; i++)
+            //            {
+            //                AddAirportName(i);
+
+            //                if (_mNotamContainerList[i].NotamRaw.Count == 0)
+            //                {
+            //                    AddErrorCard();
+            //                    break;
+            //                }
+
+            //                if (mSortByCategory == "category")
+            //                {
+            //                    // TODO:
+            //                    LocalAddNotamsByCategory(i);
+            //                    //await Task.Run(() => LocalAddNotamsByCategory(i));
+            //                }
+            //                else
+            //                {
+            //                    await Task.Run(() => LocalAddNotamsByDate(i));
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            ShowConnectionError();
+            //        }
+
+            //    }
+            //}
+            //catch
+            //{
+            //    // Ignored
+            //    // Might encounter nill views if view change occurs while async task running
+            //}
+
+            //void LocalAddNotamsByCategory(int i)
+            //{
+
+            //    try
+            //    {
+            //        bool anyQNotam = false;
+            //        bool anyDNotam = false;
+            //        bool anyRawNotam = false;
+
+            //        bool anyCategoryL = false;
+            //        bool anyCategoryM = false;
+            //        bool anyCategoryF = false;
+            //        bool anyCategoryA = false;
+            //        bool anyCategoryS = false;
+            //        bool anyCategoryP = false;
+            //        bool anyCategoryC = false;
+            //        bool anyCategoryI = false;
+            //        bool anyCategoryG = false;
+            //        bool anyCategoryN = false;
+            //        bool anyCategoryR = false;
+            //        bool anyCategoryW = false;
+            //        bool anyCategoryO = false;
+            //        bool anyCategoryNotReported = false;
+
+            //        List<int> positionL = new List<int>();
+            //        List<int> positionM = new List<int>();
+            //        List<int> positionF = new List<int>();
+            //        List<int> positionA = new List<int>();
+            //        List<int> positionS = new List<int>();
+            //        List<int> positionP = new List<int>();
+            //        List<int> positionC = new List<int>();
+            //        List<int> positionI = new List<int>();
+            //        List<int> positionG = new List<int>();
+            //        List<int> positionN = new List<int>();
+            //        List<int> positionR = new List<int>();
+            //        List<int> positionW = new List<int>();
+            //        List<int> positionO = new List<int>();
+            //        List<int> positionUnknown = new List<int>();
+            //        List<int> positionRaw = new List<int>();
+
+            //        for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+            //        {
+            //            // NOTAM Q
+            //            if (_mNotamContainerList[i].NotamQ[j])
+            //            {
+            //                anyQNotam = true;
+
+            //                if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "L")
+            //                {
+            //                    anyCategoryL = true;
+            //                    positionL.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "M")
+            //                {
+            //                    anyCategoryM = true;
+            //                    positionM.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "F")
+            //                {
+            //                    anyCategoryF = true;
+            //                    positionF.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "A")
+            //                {
+            //                    anyCategoryA = true;
+            //                    positionA.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "S")
+            //                {
+            //                    anyCategoryS = true;
+            //                    positionS.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "P")
+            //                {
+            //                    anyCategoryP = true;
+            //                    positionP.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "C")
+            //                {
+            //                    anyCategoryC = true;
+            //                    positionC.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "I")
+            //                {
+            //                    anyCategoryI = true;
+            //                    positionI.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "G")
+            //                {
+            //                    anyCategoryG = true;
+            //                    positionG.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "N")
+            //                {
+            //                    anyCategoryN = true;
+            //                    positionN.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "R")
+            //                {
+            //                    anyCategoryR = true;
+            //                    positionR.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "W")
+            //                {
+            //                    anyCategoryW = true;
+            //                    positionW.Add(j);
+            //                }
+            //                else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "O")
+            //                {
+            //                    anyCategoryO = true;
+            //                    positionO.Add(j);
+            //                }
+            //                else
+            //                {
+            //                    anyCategoryNotReported = true;
+            //                    positionUnknown.Add(j);
+            //                }
+            //            }
+            //            else if (_mNotamContainerList[i].NotamD[j])
+            //            {
+            //                // Placeholder for USA D NOTAMS
+            //            }
+            //            else
+            //            {
+            //                // Raw Notams
+            //                anyRawNotam = true;
+            //                positionRaw.Add(j);
+            //            }
+            //        }
+
+            //        if (anyQNotam)
+            //        {
+            //            if (anyCategoryL)
+            //            {
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Lightning facilities";
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionL)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryM)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Movement and landing area";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionM)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryF)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Facilities and services";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionF)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryA)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Airspace organization";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionA)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryS)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Air traffic and VOLMET";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionS)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryP)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Air traffic procedures";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionP)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryC)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Communications and surveillance";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionC)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryI)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Instrument landing system";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionI)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryG)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "GNSS services";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionG)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryN)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Terminal and en-route navaids";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionN)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryR)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Airspace restrictions";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionR)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryW)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Warnings";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionW)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryO)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "Other information";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionO)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyCategoryNotReported)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "(category not reported)";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionUnknown)
+            //                {
+            //                    AddNotamQCard(i, p);
+            //                }
+            //            }
+
+            //            if (anyRawNotam)
+            //            {
+            //                GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //                categoryTitleBackground.SetCornerRadius(8);
+            //                categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //                categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //                TextView categoryTitleTextView = new TextView(Activity);
+            //                categoryTitleTextView.Text = "(raw NOTAM)";
+            //                categoryTitleTextView.Background = categoryTitleBackground;
+            //                categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //                categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //                var categoryTitleTextViewParams =
+            //                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //                categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //                categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //                categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //                Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+
+            //                foreach (var p in positionRaw)
+            //                {
+            //                    AddRawNotamsCard(i, p);
+            //                }
+            //            }
+
+            //        }
+            //        else if (anyDNotam)
+            //        {
+            //            // Placeholder for USA D NOTAMS
+            //        }
+            //        else
+            //        {
+            //            // Raw Notam
+            //            GradientDrawable categoryTitleBackground = new GradientDrawable();
+            //            categoryTitleBackground.SetCornerRadius(8);
+            //            categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+            //            categoryTitleBackground.SetStroke(3, Color.Black);
+
+            //            TextView categoryTitleTextView = new TextView(Activity);
+            //            categoryTitleTextView.Text = "(raw NOTAM)";
+            //            categoryTitleTextView.Background = categoryTitleBackground;
+            //            categoryTitleTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            //            categoryTitleTextView.SetPadding(20, 5, 20, 5);
+            //            var categoryTitleTextViewParams =
+            //                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //            categoryTitleTextViewParams.SetMargins(80, 20, 80, 10);
+            //            categoryTitleTextViewParams.Gravity = GravityFlags.Center;
+            //            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
+
+            //            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
+                        
+            //            foreach (var p in positionRaw)
+            //            {
+            //                AddRawNotamsCard(i, p);
+            //            }
+            //        }
+            //    }
+            //    catch
+            //    {
+            //        // If error showing, show Raw
+            //        for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+            //            AddRawNotamsCard(i, j);
+            //    }
+            //}
+
+            //void LocalAddNotamsByDate(int i)
+            //{
+            //    for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+            //    {
+            //        // It's Q
+            //        if (_mNotamContainerList[i].NotamQ[j])
+            //        {
+            //            try
+            //            {
+            //                AddNotamQCard(i, j);
+            //            }
+            //            catch
+            //            {
+            //                // If error showing Q, show Raw
+            //                AddRawNotamsCard(i, j);
+            //            }
+            //        }
+            //        // It's D
+            //        else if (_mNotamContainerList[i].NotamD[j])
+            //        {
+            //            // Placeholder for USA D NOTAMS
+            //        }
+            //        // It's raw
+            //        else
+            //        {
+            //            AddRawNotamsCard(i, j);
+            //        }
+            //    }
+            //}
         }
 
         private void ShowConnectionError()
@@ -1743,7 +1834,7 @@ namespace Cavokator
             _coordinatorLayout = _thisView.FindViewById<CoordinatorLayout>(Resource.Id.cl);
             _fabScrollTop = new FloatingActionButton(Activity);
             _fabScrollTop.SetImageResource(Resource.Drawable.ic_arrow_up_bold_white_48dp);
-            _scrollViewContainer = _thisView.FindViewById<ScrollView>(Resource.Id.notam_fragment_container);
+            _scrollViewContainer = _thisView.FindViewById<NestedScrollView>(Resource.Id.notam_fragment_container);
 
             _linearlayoutBottom = _thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_bottom);
             _linearlayoutBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
@@ -2301,5 +2392,122 @@ namespace Cavokator
             return string.Empty;
         }
 
+    }
+
+
+
+
+    public class AirportViewHolder : RecyclerView.ViewHolder
+    {
+        public TextView Caption { get; private set; }
+
+        private string title;
+
+        public AirportViewHolder(View itemView) : base(itemView)
+        {
+            // Locate and cache view references:
+            Caption = itemView.FindViewById<TextView>(Resource.Id.airport_id_AA);
+        }
+
+        public void SetTitle(string title)
+        {
+            this.title = title;
+        }
+    }
+
+    public class NotamViewHolder : RecyclerView.ViewHolder
+    {
+        public TextView Caption { get; private set; }
+
+        public NotamViewHolder(View itemView) : base(itemView)
+        {
+            // Locate and cache view references:
+            Caption = itemView.FindViewById<TextView>(Resource.Id.notam_id_AA);
+        }
+    }
+
+
+    public class NotamCardsAdapter : RecyclerView.Adapter
+    {
+        private List<object> mRecyclerNotamList;
+        
+        public NotamCardsAdapter(List<object> recyclerNotamList)
+        {
+            mRecyclerNotamList = recyclerNotamList;
+        }
+
+        public override int GetItemViewType(int position)
+        {
+            if (mRecyclerNotamList[position] is MyAirportRecycler)
+            {
+                return 0;
+            }
+            else if (mRecyclerNotamList[position] is MyNotamRecycler)
+            {
+                return 1;
+            }
+
+            return -1;
+        }
+
+
+        public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
+        {
+            RecyclerView.ViewHolder vh;
+            LayoutInflater inflater = LayoutInflater.From(parent.Context);
+
+            switch (viewType)
+            {
+                case 0:
+                    View v1 = inflater.Inflate(Resource.Layout.notam_airports, parent, false);
+                    vh = new AirportViewHolder(v1);
+                    break;
+
+                case 1:
+                    View v2 = inflater.Inflate(Resource.Layout.notam_cards, parent, false);
+                    vh = new NotamViewHolder(v2);
+                    break;
+                default:
+                    View v3 = inflater.Inflate(Resource.Layout.notam_cards, parent, false);
+                    vh = new NotamViewHolder(v3);
+                    break;
+            }
+            
+            return vh;
+        }
+
+        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        {
+            switch (holder.ItemViewType)
+            {
+                case 0:
+                    AirportViewHolder vh1 = (AirportViewHolder)holder;
+                    MyAirportRecycler airport = (MyAirportRecycler)mRecyclerNotamList[position];
+                    vh1.Caption.Text = airport.Name;
+                    break;
+
+                case 1:
+                    NotamViewHolder vh2 = (NotamViewHolder)holder;
+                    vh2.Caption.Text = "LALA";
+                    break;
+            }
+            
+        }
+
+        public override int ItemCount
+        {
+            get { return mRecyclerNotamList.Count; }
+        }
+    }
+
+
+    internal class MyAirportRecycler
+    {
+        public string Name;
+    }
+
+    internal class MyNotamRecycler
+    {
+        public string NotamText;
     }
 }

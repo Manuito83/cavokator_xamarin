@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Cavokator
 {
-    class NotamContainer
+    public class NotamContainer
     {
         public bool ConnectionError;
 
