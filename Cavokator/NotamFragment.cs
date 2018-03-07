@@ -476,7 +476,9 @@ namespace Cavokator
                 {
                     MyNotamRecycler myNotamRecycler = new MyNotamRecycler();
 
-                    myNotamRecycler.NotamText = _mNotamContainerList[i].NotamRaw[j];
+                    myNotamRecycler.NotamId = _mNotamContainerList[i].NotamId[j];
+                    myNotamRecycler.NotamFreeText = _mNotamContainerList[i].NotamFreeText[j];
+
                     myRecyclerNotamList.Add(myNotamRecycler);
                 }
 
@@ -2399,14 +2401,14 @@ namespace Cavokator
 
     public class AirportViewHolder : RecyclerView.ViewHolder
     {
-        public TextView Caption { get; private set; }
+        public TextView AirportNameTextView { get; private set; }
 
         private string title;
 
         public AirportViewHolder(View itemView) : base(itemView)
         {
             // Locate and cache view references:
-            Caption = itemView.FindViewById<TextView>(Resource.Id.airport_id_AA);
+            AirportNameTextView = itemView.FindViewById<TextView>(Resource.Id.airport_id_AA);
         }
 
         public void SetTitle(string title)
@@ -2417,12 +2419,14 @@ namespace Cavokator
 
     public class NotamViewHolder : RecyclerView.ViewHolder
     {
-        public TextView Caption { get; private set; }
-
+        public TextView NotamIdTextView;
+        public TextView NotamFreeTextTextView;
+        
         public NotamViewHolder(View itemView) : base(itemView)
         {
             // Locate and cache view references:
-            Caption = itemView.FindViewById<TextView>(Resource.Id.notam_id_AA);
+            NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);
+            NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
         }
     }
 
@@ -2483,12 +2487,14 @@ namespace Cavokator
                 case 0:
                     AirportViewHolder vh1 = (AirportViewHolder)holder;
                     MyAirportRecycler airport = (MyAirportRecycler)mRecyclerNotamList[position];
-                    vh1.Caption.Text = airport.Name;
+                    vh1.AirportNameTextView.Text = airport.Name;
                     break;
 
                 case 1:
                     NotamViewHolder vh2 = (NotamViewHolder)holder;
-                    vh2.Caption.Text = "LALA";
+                    MyNotamRecycler notam = (MyNotamRecycler)mRecyclerNotamList[position];
+                    vh2.NotamIdTextView.Text = notam.NotamId;
+                    vh2.NotamFreeTextTextView.Text = notam.NotamFreeText;
                     break;
             }
             
@@ -2508,6 +2514,7 @@ namespace Cavokator
 
     internal class MyNotamRecycler
     {
-        public string NotamText;
+        public string NotamId;
+        public string NotamFreeText;
     }
 }
