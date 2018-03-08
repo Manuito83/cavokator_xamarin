@@ -2426,7 +2426,10 @@ namespace Cavokator
         {
             // Locate and cache view references:
             NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);
+
             NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
+            NotamFreeTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            NotamFreeTextTextView.SetTextSize(ComplexUnitType.Dip, 12);
         }
     }
 

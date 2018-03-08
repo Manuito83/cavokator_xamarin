@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
-
+  <!--MAIN CARDVIEW-->
   <android.support.v7.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,28 +14,42 @@
     card_view:cardCornerRadius="5dp"
     card_view:cardUseCompatPadding="true">
 
+    <!--MAIN LINEARLAYOUT--> 
     <LinearLayout
       android:orientation="vertical"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:paddingTop="10dp"
-      android:paddingBottom="10dp">
-    
-    <TextView
-    android:id="@+id/notamCard_Id"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content">
 
-    <TextView
-      android:id="@+id/notamCard_FreeText"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      <!--TOP LAYOUT (ID + SHARE + MAP)--> 
+      <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="0dp">
+        <TextView
+          android:text="NOTAM ID"
+          android:id="@+id/notamCard_Id"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+      </RelativeLayout>
 
+      <!--FREE NOTAM TEXT--> 
+      <TextView
+        android:text="FREE TEXT"
+        android:id="@+id/notamCard_FreeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"/>
+      
     </LinearLayout>
-
 
   </android.support.v7.widget.CardView>
   
-  </FrameLayout>
+</FrameLayout>
 
 
