@@ -464,21 +464,47 @@ namespace Cavokator
                     if (!foundAirportIcao) myAirport = _mRequestedAirportsRawString[i].ToUpper();
                 }
 
+
+                // FILL AIRPORT RECYCLER LIST
                 MyAirportRecycler myAirportRecycler = new MyAirportRecycler();
                 myAirportRecycler.Name = myAirport;
                 myRecyclerNotamList.Add(myAirportRecycler);
 
-
-
+                
 
                 // FILL NOTAMS
                 for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
                 {
                     MyNotamRecycler myNotamRecycler = new MyNotamRecycler();
 
-                    myNotamRecycler.NotamId = _mNotamContainerList[i].NotamId[j];
+                    // FILL ID
+                    ClickableSpan myClickableSpan = new ClickableSpan(_mNotamContainerList[i].NotamId[j]);
+                    SpannableString idSpan = new SpannableString(_mNotamContainerList[i].NotamId[j]);
+                    idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
+                    idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
+                    idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
+                    
+                    int a = i;
+                    int b = j;
+                    myClickableSpan.ClickedMyClickableSpan += delegate
+                    {
+                        Activity.RunOnUiThread(() =>
+                        {
+                            // Pull up dialog
+                            var transaction = FragmentManager.BeginTransaction();
+                            var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[a].NotamId[b], _mNotamContainerList[a].NotamRaw[b]);
+                            notamRawDialog.Show(transaction, "notamRawDialog");
+                        });
+                    };
+
+                    myNotamRecycler.NotamId = idSpan;
+
+
+                    // FILL FREE TEXT
                     myNotamRecycler.NotamFreeText = _mNotamContainerList[i].NotamFreeText[j];
 
+
+                    // ADD NOTAMRECYCLER TO RECYCLER LIST
                     myRecyclerNotamList.Add(myNotamRecycler);
                 }
 
@@ -2496,7 +2522,8 @@ namespace Cavokator
                 case 1:
                     NotamViewHolder vh2 = (NotamViewHolder)holder;
                     MyNotamRecycler notam = (MyNotamRecycler)mRecyclerNotamList[position];
-                    vh2.NotamIdTextView.Text = notam.NotamId;
+                    vh2.NotamIdTextView.TextFormatted = notam.NotamId;
+                    vh2.NotamIdTextView.MovementMethod = new LinkMovementMethod();
                     vh2.NotamFreeTextTextView.Text = notam.NotamFreeText;
                     break;
             }
@@ -2517,7 +2544,7 @@ namespace Cavokator
 
     internal class MyNotamRecycler
     {
-        public string NotamId;
+        public SpannableString NotamId;
         public string NotamFreeText;
     }
 }

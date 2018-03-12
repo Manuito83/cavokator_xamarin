@@ -3191,6 +3191,9 @@ namespace Cavokator
 			// aapt resource value: 0x7f0a00d1
 			public const int notamCard_Id = 2131362001;
 			
+			// aapt resource value: 0x7f0a00eb
+			public const int notamRecyclerView = 2131362027;
+			
 			// aapt resource value: 0x7f0a00e7
 			public const int notam_airport_entry = 2131362023;
 			
@@ -3301,9 +3304,6 @@ namespace Cavokator
 			
 			// aapt resource value: 0x7f0a00f8
 			public const int right_side = 2131362040;
-			
-			// aapt resource value: 0x7f0a00eb
-			public const int rvContacts = 2131362027;
 			
 			// aapt resource value: 0x7f0a001f
 			public const int satellite = 2131361823;
