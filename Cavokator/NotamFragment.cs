@@ -37,7 +37,7 @@ using Android.Support.V4.Content;
 using Android.Support.V4.Widget;
 using Java.Security;
 using Permission = Android.Content.PM.Permission;
-
+using static Android.Support.V4.Widget.NestedScrollView;
 
 namespace Cavokator
 {
@@ -47,11 +47,11 @@ namespace Cavokator
         // Options from options menu
         private string mSortByCategory;
         private bool showSubcategories = true;
-        
+
         // Floating action button
         private CoordinatorLayout _coordinatorLayout;
         private FloatingActionButton _fabScrollTop;
-        
+
         // Main views
         private NestedScrollView _scrollViewContainer;
         private LinearLayout _linearlayoutBottom;
@@ -99,6 +99,14 @@ namespace Cavokator
         // Initialize object to store List downloaded at OnCreate from a CAV file with IATA, ICAO and Airport Names
         private List<AirportCsvDefinition> _mAirportDefinitions = AirportDefinitions._myAirportDefinitions;
 
+        // RecyclerView, LayoutManager and Adapter
+        RecyclerView mRecyclerView;
+        LinearLayoutManager mLayoutManager;
+        NotamCardsAdapter mAdapter;
+
+        // List of <object> to be used in RecyclerView
+        private List<object> myRecyclerNotamList = new List<object>();
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -107,17 +115,6 @@ namespace Cavokator
 
             HasOptionsMenu = true;
         }
-
-
-
-        RecyclerView mRecyclerView;
-        RecyclerView.LayoutManager mLayoutManager;
-        NotamCardsAdapter mAdapter;
-
-        private List<object> myRecyclerNotamList = new List<object>();
-
-
-
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -133,7 +130,6 @@ namespace Cavokator
             _notamOptionsButton.Click += OnOptionsButtonClicked;
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
-            //_scrollViewContainer.ScrollChange += OnScrollMoved;
             _fabScrollTop.Click += ScrollToTop;
 
             // TODO: do try/catch for weather as well?
@@ -147,41 +143,36 @@ namespace Cavokator
                 _notamClearButton.CallOnClick();
             }
 
+            // Get our RecyclerView layout
+            mRecyclerView = _thisView.FindViewById<RecyclerView>(Resource.Id.notamRecyclerView);
 
-
-
-
-            // TODO: RECYCLER
-            // Get our RecyclerView layout:
-            mRecyclerView = _thisView.FindViewById<RecyclerView>(Resource.Id.rvContacts);
-
-            // Plug in the linear layout manager:
+            // Plug in the linear layout manager
             mLayoutManager = new LinearLayoutManager(Activity);
             mRecyclerView.SetLayoutManager(mLayoutManager);
 
+            // Add ScrollChangeListener to our NestedScrollView and subscribe to scroll event
+            var mNestedScrollViewListener = new NestedScrollViewListener();
+            _scrollViewContainer.SetOnScrollChangeListener(mNestedScrollViewListener);
+            mNestedScrollViewListener.OnScrollEvent += OnScrollMoved;
 
-
-
-
-
-            // Add FAB and hide
+            // Add FAB and hide for later on
             _coordinatorLayout.AddView(_fabScrollTop);
             _fabScrollTop.Hide();
 
             // Sets up timer to update NOTAM UTC
             TimeTick();
-            
+
             return _thisView;
         }
 
         private void ScrollToTop(object sender, EventArgs e)
         {
-            _scrollViewContainer.SmoothScrollTo(0, 0);
+            _scrollViewContainer.ScrollTo(0, 0);
         }
 
-        private void OnScrollMoved(object sender, View.ScrollChangeEventArgs e)
+        private void OnScrollMoved(object sender, NestedScrollViewListenerEventArgs e)
         {
-            if (_scrollViewContainer.ScrollY > 1000)
+            if (e.positionY > 1000)
             {
                 CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)_fabScrollTop.LayoutParameters;
                 lp.Gravity = (int)(GravityFlags.Bottom | GravityFlags.Right | GravityFlags.End);
@@ -207,49 +198,49 @@ namespace Cavokator
         /// First we change the box style, then we limit length to 4 chars
         /// </summary>
         private void OnIdTextChanged(object sender, AfterTextChangedEventArgs e)
-    {
-        // Style EdiText text when writting
-        _airportEntryEditText.SetTextColor(Color.Black);
-        _airportEntryEditText.SetBackgroundColor(Color.White);
-        _airportEntryEditText.SetTypeface(null, TypefaceStyle.Normal);
-
-
-        // Apply only if we are adding text
-        // Otherwise, we could not delete (due to infinite loop)
-        if (_airportEntryEditText.Text.Length > _mEditTextIdLength)
         {
-            // If our text is already 4 positions long
-            if (_airportEntryEditText.Text.Length > 3)
+            // Style EdiText text when writting
+            _airportEntryEditText.SetTextColor(Color.Black);
+            _airportEntryEditText.SetBackgroundColor(Color.White);
+            _airportEntryEditText.SetTypeface(null, TypefaceStyle.Normal);
+
+
+            // Apply only if we are adding text
+            // Otherwise, we could not delete (due to infinite loop)
+            if (_airportEntryEditText.Text.Length > _mEditTextIdLength)
             {
-                // Take a look at the last 4 chars entered
-                string lastFourChars = _airportEntryEditText.Text.Substring(_airportEntryEditText.Text.Length - 4, 4);
-
-                // If there is at least a space, then do nothing
-                bool maxLengthReached = true;
-                foreach (char c in lastFourChars)
+                // If our text is already 4 positions long
+                if (_airportEntryEditText.Text.Length > 3)
                 {
-                    if (c == ' ')
+                    // Take a look at the last 4 chars entered
+                    string lastFourChars = _airportEntryEditText.Text.Substring(_airportEntryEditText.Text.Length - 4, 4);
+
+                    // If there is at least a space, then do nothing
+                    bool maxLengthReached = true;
+                    foreach (char c in lastFourChars)
                     {
-                        maxLengthReached = false;
+                        if (c == ' ')
+                        {
+                            maxLengthReached = false;
+                        }
                     }
+
+                    // If there is no space, then we apply a space
+                    if (maxLengthReached)
+                    {
+                        // We need to unsubscribe and subscribe again to the event
+                        // Otherwise we would get an infinite loop
+                        _airportEntryEditText.AfterTextChanged -= OnIdTextChanged;
+
+                        _airportEntryEditText.Append(" ");
+
+                        _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
+
+                    }
+
                 }
-
-                // If there is no space, then we apply a space
-                if (maxLengthReached)
-                {
-                    // We need to unsubscribe and subscribe again to the event
-                    // Otherwise we would get an infinite loop
-                    _airportEntryEditText.AfterTextChanged -= OnIdTextChanged;
-
-                    _airportEntryEditText.Append(" ");
-
-                    _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
-
-                }
-
             }
         }
-    }
 
         private void BeforeIdTextChanged(object sender, TextChangedEventArgs e)
         {
@@ -288,7 +279,7 @@ namespace Cavokator
             var notamOptionsDialog = new NotamOptionsDialog(mSortByCategory);
             notamOptionsDialog.Show(transaction, "options_dialog");
 
-            notamOptionsDialog.SortBySpinnerChanged += OnSortSpinnedChanged; 
+            notamOptionsDialog.SortBySpinnerChanged += OnSortSpinnedChanged;
         }
 
         private void OnRequestButtonClicked(object sender, EventArgs e)
@@ -313,11 +304,11 @@ namespace Cavokator
 
             // Update the time at which the request was performed
             _mUtcRequestTime = DateTime.UtcNow;
-            
+
             if (CrossConnectivity.Current.IsConnected && _airportEntryEditText.Text != String.Empty)
             {
                 _notamRequestButton.Enabled = false;
-                
+
                 // Show our AlertDialog
                 _notamFetchingAlertDialogBuilder = new AlertDialog.Builder(Activity);
                 _notamFetchingAlertDialogBuilder.SetTitle(Resources.GetString(Resource.String.Fetching));
@@ -348,7 +339,7 @@ namespace Cavokator
                         {
                             mRecyclerView.SetAdapter(mAdapter);
                         });
-                        
+
                     }
                     else
                     {
@@ -371,7 +362,7 @@ namespace Cavokator
         private void SanitizeRequestedNotams(string requestedNotamsString)
         {
             // Populate "requestedAirports" lists
-            
+
             // Split airport list entered
             // We perform the same operation to both lists, the user one and the ICAO one
             _mRequestedAirportsByIcao = requestedNotamsString.Split(' ', '\n', ',').ToList();
@@ -413,12 +404,12 @@ namespace Cavokator
                 }
             }
         }
-        
+
         private async void GetNotams()
         {
             // Populate list with notams for every airport requested
 
-            for (int i = 0; i < _mRequestedAirportsByIcao.Count; i++) 
+            for (int i = 0; i < _mRequestedAirportsByIcao.Count; i++)
             {
                 string currentAirport = _mRequestedAirportsByIcao[i];
 
@@ -443,7 +434,7 @@ namespace Cavokator
 
             // FILL AIRPORT NAMES
             string myAirport = string.Empty;
-            
+
             // Iterate every airport populated by GetNotams()
             for (int i = 0; i < _mNotamContainerList.Count; i++)
             {
@@ -470,7 +461,7 @@ namespace Cavokator
                 myAirportRecycler.Name = myAirport;
                 myRecyclerNotamList.Add(myAirportRecycler);
 
-                
+
 
                 // FILL NOTAMS
                 for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
@@ -483,7 +474,7 @@ namespace Cavokator
                     idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
                     idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
                     idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
-                    
+
                     int a = i;
                     int b = j;
                     myClickableSpan.ClickedMyClickableSpan += delegate
@@ -511,7 +502,7 @@ namespace Cavokator
             }
 
 
-            
+
         }
 
         private async void ShowNotams()
@@ -1095,7 +1086,7 @@ namespace Cavokator
             //            categoryTitleTextView.LayoutParameters = categoryTitleTextViewParams;
 
             //            Activity.RunOnUiThread(() => { _linearLayoutNotamLines.AddView(categoryTitleTextView); });
-                        
+
             //            foreach (var p in positionRaw)
             //            {
             //                AddRawNotamsCard(i, p);
@@ -1185,7 +1176,7 @@ namespace Cavokator
         private void AddAirportName(int i)
         {
             TextView airportName = new TextView(Activity);
-            
+
             // Try to get the airport's name from existing _myAirportDefinition List
             bool foundAirportIcao = false;
             try
@@ -1257,7 +1248,7 @@ namespace Cavokator
             RelativeLayout topLayout = LocalStyleTopLayout();
 
             RelativeLayout subcategoriesLayout = LocalStyleSubcategoriesLayout();
-            
+
             // Styling notamFreeText
             LinearLayout notamFreeTextLayout = LocalStyleFreeText();
 
@@ -1282,7 +1273,7 @@ namespace Cavokator
             });
 
             // ** Local functions for styling ** //
-            
+
             CardView LocalStyleCard()
             {
                 CardView cardView = new CardView(Activity);
@@ -1386,7 +1377,7 @@ namespace Cavokator
                     worldMapIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
                     worldMapIconParams.SetMargins(20, 0, 0, 0);
                     worldMapIconParams.Gravity = GravityFlags.CenterVertical;
-                    myWorldMap.LayoutParameters = worldMapIconParams;myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
+                    myWorldMap.LayoutParameters = worldMapIconParams; myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
 
                     shareAndCoordinatesLayout.AddView(myWorldMap);
 
@@ -1480,7 +1471,7 @@ namespace Cavokator
                 LinearLayout freeTextLayout = new LinearLayout(Activity);
                 freeTextLayout.Orientation = Orientation.Vertical;
 
-                LinearLayout.LayoutParams freeTextLayoutParams = 
+                LinearLayout.LayoutParams freeTextLayoutParams =
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
                 freeTextLayoutParams.SetMargins(30, 30, 30, 20);
                 freeTextLayout.LayoutParameters = freeTextLayoutParams;
@@ -1498,11 +1489,11 @@ namespace Cavokator
             RelativeLayout LocalTimeFromTo(DateTime myTimeStart, DateTime myTimeEnd)
             {
                 RelativeLayout myBaseTimeLayout = new RelativeLayout(Activity);
-                LinearLayout.LayoutParams myBaseTimeLayoutParams = 
+                LinearLayout.LayoutParams myBaseTimeLayoutParams =
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
                 myBaseTimeLayoutParams.SetMargins(30, 10, 30, 10);
                 myBaseTimeLayout.LayoutParameters = myBaseTimeLayoutParams;
-                
+
                 ImageView calendarIcon = new ImageView(Activity);
                 calendarIcon.Id = 1;
                 calendarIcon.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
@@ -1530,7 +1521,7 @@ namespace Cavokator
                 myStartTimeEditText.Id = 2;
                 myStartTimeEditText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
                 myStartTimeEditText.SetTextSize(ComplexUnitType.Dip, 11);
-                RelativeLayout.LayoutParams myStartTimeEditTextParams = 
+                RelativeLayout.LayoutParams myStartTimeEditTextParams =
                     new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
                 myStartTimeEditTextParams.SetMargins(10, 0, 0, 0);
                 myStartTimeEditTextParams.AddRule(LayoutRules.RightOf, calendarIcon.Id);
@@ -1601,7 +1592,7 @@ namespace Cavokator
 
                 if (_mNotamContainerList[i].Span[j] != String.Empty)
                 {
-                    LinearLayout.LayoutParams myBaseSpanLayoutParams = 
+                    LinearLayout.LayoutParams myBaseSpanLayoutParams =
                         new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
                     myBaseSpanLayoutParams.SetMargins(30, 10, 0, 10);
                     myBaseSpanLayout.LayoutParameters = myBaseSpanLayoutParams;
@@ -1624,7 +1615,7 @@ namespace Cavokator
                     RelativeLayout.LayoutParams spanTextParams =
                         new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
                     spanTextParams.SetMargins(0, 0, 0, 0);
-                    spanTextParams.AddRule(LayoutRules.RightOf,spanClockIcon.Id);
+                    spanTextParams.AddRule(LayoutRules.RightOf, spanClockIcon.Id);
                     spanTextParams.AddRule(LayoutRules.CenterVertical);
                     spanText.LayoutParameters = spanTextParams;
                     spanText.Text = _mNotamContainerList[i].Span[j];
@@ -1643,7 +1634,7 @@ namespace Cavokator
                 if (_mNotamContainerList[i].BottomLimit[j] != String.Empty ||
                     _mNotamContainerList[i].TopLimit[j] != String.Empty)
                 {
-                    
+
                     LinearLayout.LayoutParams myBottomTopLayoutParams =
                         new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
                     myBottomTopLayoutParams.SetMargins(30, 10, 0, 10);
@@ -1720,7 +1711,7 @@ namespace Cavokator
             notamLine.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             notamLine.SetTextSize(ComplexUnitType.Dip, 12);
             notamLine.SetPadding(30, 30, 15, 0);
-                        
+
             // Styling cards
             notamCard.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
             notamCard.Elevation = 5.0f;
@@ -1777,7 +1768,7 @@ namespace Cavokator
             {
                 LocalShareRawNotam();
             }
-            
+
             void LocalShareRawNotam()
             {
                 // TODO: Implement
@@ -1802,7 +1793,7 @@ namespace Cavokator
 
                 intent.PutExtra(Intent.ExtraText, "CAVOKATOR APP, NOTAM from airport " + airportId + ", requested @ " + _mUtcRequestTime.ToString("dd-MMM-yyyy HH:mm") + "UTC");
                 intent.PutExtra(Intent.ExtraStream, LocalGetImageUri(Activity, LocalGetBitmapFromView(myNotamView)));
-                
+
                 StartActivity(Intent.CreateChooser(intent, "NOTAM"));
             }
 
@@ -1837,23 +1828,23 @@ namespace Cavokator
             switch (requestCode)
             {
                 case 0:
-                {
-                    if (grantResults[0] == Permission.Granted)
                     {
-                        // Call again function to share
-                        ShareSpecificNotam(false);
-                    }
-                    else
-                    {
-                        //Explain to the user why we need to read the contacts
-                        Snackbar.Make(_scrollViewContainer, "Permission needed to share full NOTAM as image!", Snackbar.LengthShort).Show();
+                        if (grantResults[0] == Permission.Granted)
+                        {
+                            // Call again function to share
+                            ShareSpecificNotam(false);
+                        }
+                        else
+                        {
+                            //Explain to the user why we need to read the contacts
+                            Snackbar.Make(_scrollViewContainer, "Permission needed to share full NOTAM as image!", Snackbar.LengthShort).Show();
 
-                        // Call again function to share
-                        ShareSpecificNotam(true);
-                    }
+                            // Call again function to share
+                            ShareSpecificNotam(true);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
 
@@ -1866,7 +1857,7 @@ namespace Cavokator
 
             _linearlayoutBottom = _thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_bottom);
             _linearlayoutBottom.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.MainBackground));
-            
+
             _chooseIDtextview = _thisView.FindViewById<TextView>(Resource.Id.notam_choose_id_textview);
             _chooseIDtextview.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
 
@@ -2058,7 +2049,7 @@ namespace Cavokator
 
         private async Task PercentageCompleted(int currentCount, int totalCount, string currentAirport)
         {
-            int percentage = (currentCount +1 ) * 100 / totalCount;
+            int percentage = (currentCount + 1) * 100 / totalCount;
 
             if (percentage <= 100)
             {
@@ -2447,7 +2438,7 @@ namespace Cavokator
     {
         public TextView NotamIdTextView;
         public TextView NotamFreeTextTextView;
-        
+
         public NotamViewHolder(View itemView) : base(itemView)
         {
             // Locate and cache view references:
@@ -2463,7 +2454,7 @@ namespace Cavokator
     public class NotamCardsAdapter : RecyclerView.Adapter
     {
         private List<object> mRecyclerNotamList;
-        
+
         public NotamCardsAdapter(List<object> recyclerNotamList)
         {
             mRecyclerNotamList = recyclerNotamList;
@@ -2505,7 +2496,7 @@ namespace Cavokator
                     vh = new NotamViewHolder(v3);
                     break;
             }
-            
+
             return vh;
         }
 
@@ -2527,7 +2518,7 @@ namespace Cavokator
                     vh2.NotamFreeTextTextView.Text = notam.NotamFreeText;
                     break;
             }
-            
+
         }
 
         public override int ItemCount
@@ -2546,5 +2537,40 @@ namespace Cavokator
     {
         public SpannableString NotamId;
         public string NotamFreeText;
+    }
+
+
+
+
+
+
+
+    internal class NestedScrollViewListener : Java.Lang.Object, IOnScrollChangeListener
+    {
+        public EventHandler<NestedScrollViewListenerEventArgs> OnScrollEvent;
+
+
+        public void OnScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
+        {
+            Console.WriteLine("scrollY = " + scrollY);
+            Console.WriteLine("scrollY = " + oldScrollY);
+
+            ScrollEvent(scrollY);
+        }
+
+        protected virtual void ScrollEvent(int y)
+        {
+            OnScrollEvent?.Invoke(this, new NestedScrollViewListenerEventArgs(y));
+        }
+    }
+
+    internal class NestedScrollViewListenerEventArgs
+    {
+        public int positionY { get; }
+
+        public NestedScrollViewListenerEventArgs(int y)
+        {
+            positionY = y;
+        }
     }
 }
