@@ -37,7 +37,6 @@ using Android.Support.V4.Content;
 using Android.Support.V4.Widget;
 using Java.Security;
 using Permission = Android.Content.PM.Permission;
-using static Android.Support.V4.Widget.NestedScrollView;
 
 namespace Cavokator
 {
@@ -172,7 +171,7 @@ namespace Cavokator
 
         private void OnScrollMoved(object sender, NestedScrollViewListenerEventArgs e)
         {
-            if (e.positionY > 1000)
+            if (e.PositionY > 1000)
             {
                 CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)_fabScrollTop.LayoutParameters;
                 lp.Gravity = (int)(GravityFlags.Bottom | GravityFlags.Right | GravityFlags.End);
@@ -466,7 +465,7 @@ namespace Cavokator
                 // FILL NOTAMS
                 for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
                 {
-                    MyNotamRecycler myNotamRecycler = new MyNotamRecycler();
+                    MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
 
                     // FILL ID
                     ClickableSpan myClickableSpan = new ClickableSpan(_mNotamContainerList[i].NotamId[j]);
@@ -488,15 +487,15 @@ namespace Cavokator
                         });
                     };
 
-                    myNotamRecycler.NotamId = idSpan;
+                    myNotamCardRecycler.NotamId = idSpan;
 
 
                     // FILL FREE TEXT
-                    myNotamRecycler.NotamFreeText = _mNotamContainerList[i].NotamFreeText[j];
+                    myNotamCardRecycler.NotamFreeText = _mNotamContainerList[i].NotamFreeText[j];
 
 
                     // ADD NOTAMRECYCLER TO RECYCLER LIST
-                    myRecyclerNotamList.Add(myNotamRecycler);
+                    myRecyclerNotamList.Add(myNotamCardRecycler);
                 }
 
             }
@@ -2416,161 +2415,8 @@ namespace Cavokator
 
 
 
-    public class AirportViewHolder : RecyclerView.ViewHolder
-    {
-        public TextView AirportNameTextView { get; private set; }
-
-        private string title;
-
-        public AirportViewHolder(View itemView) : base(itemView)
-        {
-            // Locate and cache view references:
-            AirportNameTextView = itemView.FindViewById<TextView>(Resource.Id.airport_id_AA);
-        }
-
-        public void SetTitle(string title)
-        {
-            this.title = title;
-        }
-    }
-
-    public class NotamViewHolder : RecyclerView.ViewHolder
-    {
-        public TextView NotamIdTextView;
-        public TextView NotamFreeTextTextView;
-
-        public NotamViewHolder(View itemView) : base(itemView)
-        {
-            // Locate and cache view references:
-            NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);
-
-            NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
-            NotamFreeTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
-            NotamFreeTextTextView.SetTextSize(ComplexUnitType.Dip, 12);
-        }
-    }
-
-
-    public class NotamCardsAdapter : RecyclerView.Adapter
-    {
-        private List<object> mRecyclerNotamList;
-
-        public NotamCardsAdapter(List<object> recyclerNotamList)
-        {
-            mRecyclerNotamList = recyclerNotamList;
-        }
-
-        public override int GetItemViewType(int position)
-        {
-            if (mRecyclerNotamList[position] is MyAirportRecycler)
-            {
-                return 0;
-            }
-            else if (mRecyclerNotamList[position] is MyNotamRecycler)
-            {
-                return 1;
-            }
-
-            return -1;
-        }
-
-
-        public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
-        {
-            RecyclerView.ViewHolder vh;
-            LayoutInflater inflater = LayoutInflater.From(parent.Context);
-
-            switch (viewType)
-            {
-                case 0:
-                    View v1 = inflater.Inflate(Resource.Layout.notam_airports, parent, false);
-                    vh = new AirportViewHolder(v1);
-                    break;
-
-                case 1:
-                    View v2 = inflater.Inflate(Resource.Layout.notam_cards, parent, false);
-                    vh = new NotamViewHolder(v2);
-                    break;
-                default:
-                    View v3 = inflater.Inflate(Resource.Layout.notam_cards, parent, false);
-                    vh = new NotamViewHolder(v3);
-                    break;
-            }
-
-            return vh;
-        }
-
-        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
-        {
-            switch (holder.ItemViewType)
-            {
-                case 0:
-                    AirportViewHolder vh1 = (AirportViewHolder)holder;
-                    MyAirportRecycler airport = (MyAirportRecycler)mRecyclerNotamList[position];
-                    vh1.AirportNameTextView.Text = airport.Name;
-                    break;
-
-                case 1:
-                    NotamViewHolder vh2 = (NotamViewHolder)holder;
-                    MyNotamRecycler notam = (MyNotamRecycler)mRecyclerNotamList[position];
-                    vh2.NotamIdTextView.TextFormatted = notam.NotamId;
-                    vh2.NotamIdTextView.MovementMethod = new LinkMovementMethod();
-                    vh2.NotamFreeTextTextView.Text = notam.NotamFreeText;
-                    break;
-            }
-
-        }
-
-        public override int ItemCount
-        {
-            get { return mRecyclerNotamList.Count; }
-        }
-    }
-
-
-    internal class MyAirportRecycler
-    {
-        public string Name;
-    }
-
-    internal class MyNotamRecycler
-    {
-        public SpannableString NotamId;
-        public string NotamFreeText;
-    }
 
 
 
 
-
-
-
-    internal class NestedScrollViewListener : Java.Lang.Object, IOnScrollChangeListener
-    {
-        public EventHandler<NestedScrollViewListenerEventArgs> OnScrollEvent;
-
-
-        public void OnScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
-        {
-            Console.WriteLine("scrollY = " + scrollY);
-            Console.WriteLine("scrollY = " + oldScrollY);
-
-            ScrollEvent(scrollY);
-        }
-
-        protected virtual void ScrollEvent(int y)
-        {
-            OnScrollEvent?.Invoke(this, new NestedScrollViewListenerEventArgs(y));
-        }
-    }
-
-    internal class NestedScrollViewListenerEventArgs
-    {
-        public int positionY { get; }
-
-        public NestedScrollViewListenerEventArgs(int y)
-        {
-            positionY = y;
-        }
-    }
 }
