@@ -191,6 +191,12 @@ namespace Cavokator
         {
             SaveData();
 
+            if (mAdapter != null)
+            {
+                myRecyclerNotamList.Clear();
+                mAdapter.NotifyDataSetChanged();
+            }
+
             base.OnPause();
         }
 
