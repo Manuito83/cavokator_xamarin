@@ -9,9 +9,6 @@ namespace Cavokator
         
         public void OnScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
         {
-            Console.WriteLine("scrollY = " + scrollY);
-            Console.WriteLine("scrollY = " + oldScrollY);
-
             ScrollEvent(scrollY);
         }
 

@@ -154,7 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cavokator.config\AboutFragment.cs" />
-    <Compile Include="cavokator.notam\NotamCardsAdapter.cs" />
+    <Compile Include="cavokator.notam\NotamFieldsAdapter.cs" />
     <Compile Include="cavokator.util\AirportConverter.cs" />
     <Compile Include="cavokator.util\AirportDefinitions.cs" />
     <Compile Include="cavokator.config\ApplyTheme.cs" />
@@ -585,9 +585,16 @@
     <AndroidResource Include="Resources\layout\notam_cards.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\notam_airports.xml" />
+    <AndroidResource Include="Resources\layout\notam_airports.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\notam_error_card.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\notam_category_card.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Annotations.26.1.0.1\build\MonoAndroid80\Xamarin.Android.Support.Annotations.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Annotations.26.1.0.1\build\MonoAndroid80\Xamarin.Android.Support.Annotations.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

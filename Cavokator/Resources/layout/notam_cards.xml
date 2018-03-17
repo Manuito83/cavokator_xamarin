@@ -7,6 +7,7 @@
 
   <!--MAIN CARDVIEW-->
   <android.support.v7.widget.CardView
+    android:id="@+id/notamCard_MainCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -24,7 +25,7 @@
       <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="0dp">
@@ -41,9 +42,9 @@
         android:id="@+id/notamCard_FreeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"/>
       
     </LinearLayout>

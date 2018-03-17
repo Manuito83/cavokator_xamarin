@@ -59,7 +59,7 @@ namespace Cavokator
         private Button _notamClearButton;
         private ImageButton _notamOptionsButton;
         private TextView _chooseIDtextview;
-        private LinearLayout _linearLayoutNotamLines;
+        private LinearLayout _linearLayoutNotamRequestedTime;
 
         // Notam view to share
         private View _myViewToShare;
@@ -101,7 +101,7 @@ namespace Cavokator
         // RecyclerView, LayoutManager and Adapter
         RecyclerView mRecyclerView;
         LinearLayoutManager mLayoutManager;
-        NotamCardsAdapter mAdapter;
+        NotamFieldsAdapter mAdapter;
 
         // List of <object> to be used in RecyclerView
         private List<object> myRecyclerNotamList = new List<object>();
@@ -130,7 +130,14 @@ namespace Cavokator
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
             _fabScrollTop.Click += ScrollToTop;
+            
+            // Get our RecyclerView layout
+            mRecyclerView = _thisView.FindViewById<RecyclerView>(Resource.Id.notamRecyclerView);
 
+            // Plug in the linear layout manager
+            mLayoutManager = new LinearLayoutManager(Activity);
+            mRecyclerView.SetLayoutManager(mLayoutManager);
+            
             // TODO: do try/catch for weather as well?
             try
             {
@@ -142,12 +149,6 @@ namespace Cavokator
                 _notamClearButton.CallOnClick();
             }
 
-            // Get our RecyclerView layout
-            mRecyclerView = _thisView.FindViewById<RecyclerView>(Resource.Id.notamRecyclerView);
-
-            // Plug in the linear layout manager
-            mLayoutManager = new LinearLayoutManager(Activity);
-            mRecyclerView.SetLayoutManager(mLayoutManager);
 
             // Add ScrollChangeListener to our NestedScrollView and subscribe to scroll event
             var mNestedScrollViewListener = new NestedScrollViewListener();
@@ -254,7 +255,13 @@ namespace Cavokator
 
         private void OnClearButtonClicked(object sender, EventArgs e)
         {
-            _linearLayoutNotamLines.RemoveAllViews();
+            _linearLayoutNotamRequestedTime.RemoveAllViews();
+
+            if (mAdapter != null)
+            {
+                myRecyclerNotamList.Clear();
+                mAdapter.NotifyDataSetChanged();
+            }
 
             _mNotamContainerList.Clear();
             _mUtcTextView = null;
@@ -298,8 +305,14 @@ namespace Cavokator
             mStartDateTimes.Clear();
             mEnDateTimes.Clear();
 
-            // Remove all previous views from the linear layout
-            _linearLayoutNotamLines.RemoveAllViews();
+            // Remove all previous views
+            _linearLayoutNotamRequestedTime.RemoveAllViews();
+
+            if (mAdapter != null)
+            {
+                myRecyclerNotamList.Clear();
+                mAdapter.NotifyDataSetChanged();
+            }
 
             // Update the time at which the request was performed
             _mUtcRequestTime = DateTime.UtcNow;
@@ -328,17 +341,6 @@ namespace Cavokator
                     if (_connectionError == false)
                     {
                         ShowNotams();
-
-                        FillFinalList();
-
-                        // TODO: **RECYCLER**
-                        // Plug in my adapter:
-                        mAdapter = new NotamCardsAdapter(myRecyclerNotamList);
-                        Activity.RunOnUiThread(() =>
-                        {
-                            mRecyclerView.SetAdapter(mAdapter);
-                        });
-
                     }
                     else
                     {
@@ -428,7 +430,7 @@ namespace Cavokator
             }
         }
 
-        private void FillFinalList()
+        private void FillRecyclerList()
         {
 
             // FILL AIRPORT NAMES
@@ -461,95 +463,130 @@ namespace Cavokator
                 myRecyclerNotamList.Add(myAirportRecycler);
 
 
+                // FILL ERROR RECYCLER LIST
+                if (_mNotamContainerList[i].NotamRaw.Count == 0)
+                {
+                    MyErrorRecycler errorRecycler = new MyErrorRecycler();
+                    errorRecycler.ErrorString = Resources.GetString(Resource.String.Notam_not_found);
+                    myRecyclerNotamList.Add(errorRecycler);
+                    continue;
+                }
+
 
                 // FILL NOTAMS
-                for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                if (mSortByCategory == "category")
                 {
-                    MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
-
-                    // FILL ID
-                    ClickableSpan myClickableSpan = new ClickableSpan(_mNotamContainerList[i].NotamId[j]);
-                    SpannableString idSpan = new SpannableString(_mNotamContainerList[i].NotamId[j]);
-                    idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
-                    idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
-                    idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
-
-                    int a = i;
-                    int b = j;
-                    myClickableSpan.ClickedMyClickableSpan += delegate
-                    {
-                        Activity.RunOnUiThread(() =>
-                        {
-                            // Pull up dialog
-                            var transaction = FragmentManager.BeginTransaction();
-                            var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[a].NotamId[b], _mNotamContainerList[a].NotamRaw[b]);
-                            notamRawDialog.Show(transaction, "notamRawDialog");
-                        });
-                    };
-
-                    myNotamCardRecycler.NotamId = idSpan;
-
-
-                    // FILL FREE TEXT
-                    myNotamCardRecycler.NotamFreeText = _mNotamContainerList[i].NotamFreeText[j];
-
-
-                    // ADD NOTAMRECYCLER TO RECYCLER LIST
-                    myRecyclerNotamList.Add(myNotamCardRecycler);
+                    LocalFillAllNotamsTogether();
                 }
+                else
+                {
+                    LocalFillAllNotamsTogether();
+                }
+
+                
+                // ** LOCAL FUNCTIONS **
+                void LocalFillAllNotamsTogether()
+                {
+                    for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                    {
+                        MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
+
+                        // FILL ID
+                        ClickableSpan myClickableSpan = new ClickableSpan(_mNotamContainerList[i].NotamId[j]);
+                        SpannableString idSpan = new SpannableString(_mNotamContainerList[i].NotamId[j]);
+                        idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
+                        idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
+                        idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
+
+                        int a = i;
+                        int b = j;
+                        myClickableSpan.ClickedMyClickableSpan += delegate
+                        {
+                            Activity.RunOnUiThread(() =>
+                            {
+                                // Pull up dialog
+                                var transaction = FragmentManager.BeginTransaction();
+                                var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[a].NotamId[b], _mNotamContainerList[a].NotamRaw[b]);
+                                notamRawDialog.Show(transaction, "notamRawDialog");
+                            });
+                        };
+
+                        myNotamCardRecycler.NotamId = idSpan;
+
+                        // FILL FREE TEXT
+                        myNotamCardRecycler.NotamFreeText = _mNotamContainerList[i].NotamFreeText[j];
+                    
+                        // ADD NOTAMRECYCLER TO RECYCLER LIST
+                        myRecyclerNotamList.Add(myNotamCardRecycler);
+                    }
+                };
 
             }
 
-
-
         }
+
 
         private async void ShowNotams()
         {
-            //try
-            //{
-            //    // Start working if there is something in the container
-            //    if (_mNotamContainerList.Count > 0)
-            //    {
-            //        if (!_connectionError)
-            //        {
-            //            AddRequestedTime();
+            AddRequestedTime();
 
-            //            // Iterate every airport populated by GetNotams()
-            //            for (int i = 0; i < _mNotamContainerList.Count; i++)
-            //            {
-            //                AddAirportName(i);
+            FillRecyclerList();
 
-            //                if (_mNotamContainerList[i].NotamRaw.Count == 0)
-            //                {
-            //                    AddErrorCard();
-            //                    break;
-            //                }
+            // Plug in my adapter
+            mAdapter = new NotamFieldsAdapter(myRecyclerNotamList);
+            Activity.RunOnUiThread(() =>
+            {
+                mRecyclerView.SetAdapter(mAdapter);
+            });
 
-            //                if (mSortByCategory == "category")
-            //                {
-            //                    // TODO:
-            //                    LocalAddNotamsByCategory(i);
-            //                    //await Task.Run(() => LocalAddNotamsByCategory(i));
-            //                }
-            //                else
-            //                {
-            //                    await Task.Run(() => LocalAddNotamsByDate(i));
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            ShowConnectionError();
-            //        }
 
-            //    }
-            //}
-            //catch
-            //{
-            //    // Ignored
-            //    // Might encounter nill views if view change occurs while async task running
-            //}
+
+            {
+                //try
+                //{
+                //    // Start working if there is something in the container
+                //    if (_mNotamContainerList.Count > 0)
+                //    {
+                //        if (!_connectionError)
+                //        {
+                //            AddRequestedTime();
+
+                //            // Iterate every airport populated by GetNotams()
+                //            for (int i = 0; i < _mNotamContainerList.Count; i++)
+                //            {
+                //                AddAirportName(i);
+
+                //                if (_mNotamContainerList[i].NotamRaw.Count == 0)
+                //                {
+                //                    AddErrorCard();
+                //                    break;
+                //                }
+
+                //                if (mSortByCategory == "category")
+                //                {
+                //                    // TODO:
+                //                    LocalAddNotamsByCategory(i);
+                //                    //await Task.Run(() => LocalAddNotamsByCategory(i));
+                //                }
+                //                else
+                //                {
+                //                    await Task.Run(() => LocalAddNotamsByDate(i));
+                //                }
+                //            }
+                //        }
+                //        else
+                //        {
+                //            ShowConnectionError();
+                //        }
+
+                //    }
+                //}
+                //catch
+                //{
+                //    // Ignored
+                //    // Might encounter nill views if view change occurs while async task running
+                //}
+            }
 
             //void LocalAddNotamsByCategory(int i)
             //{
@@ -1131,6 +1168,8 @@ namespace Cavokator
             //}
         }
 
+        
+        // TODO: ADAPT
         private void ShowConnectionError()
         {
             TextView errorTextView = new TextView(Activity);
@@ -1145,7 +1184,7 @@ namespace Cavokator
             // Adding view
             Activity.RunOnUiThread(() =>
             {
-                _linearLayoutNotamLines.AddView(errorTextView);
+                //_linearLayoutNotamLines.AddView(errorTextView);
             });
         }
 
@@ -1168,7 +1207,7 @@ namespace Cavokator
             // Adding view
             Activity.RunOnUiThread(() =>
             {
-                _linearLayoutNotamLines.AddView(_mUtcTextView);
+                _linearLayoutNotamRequestedTime.AddView(_mUtcTextView);
             });
         }
 
@@ -1203,7 +1242,7 @@ namespace Cavokator
             // Adding view
             Activity.RunOnUiThread(() =>
             {
-                _linearLayoutNotamLines.AddView(airportName);
+                //_linearLayoutNotamLines.AddView(airportName);
             });
 
         }
@@ -1231,7 +1270,7 @@ namespace Cavokator
             Activity.RunOnUiThread(() =>
             {
                 notamCard.AddView(notamLine);
-                _linearLayoutNotamLines.AddView(notamCard);
+                //_linearLayoutNotamLines.AddView(notamCard);
             });
         }
 
@@ -1268,7 +1307,7 @@ namespace Cavokator
                 notamLayoutContainer.AddView(toFromRelativeLayout);
                 notamLayoutContainer.AddView(spanRelativeLayout);
                 notamLayoutContainer.AddView(bottomToTopRelativeLayout);
-                _linearLayoutNotamLines.AddView(notamCard);
+                //_linearLayoutNotamLines.AddView(notamCard);
             });
 
             // ** Local functions for styling ** //
@@ -1722,7 +1761,7 @@ namespace Cavokator
             Activity.RunOnUiThread(() =>
             {
                 notamCard.AddView(notamLine);
-                _linearLayoutNotamLines.AddView(notamCard);
+                //_linearLayoutNotamLines.AddView(notamCard);
             });
         }
 
@@ -1864,7 +1903,7 @@ namespace Cavokator
             _notamRequestButton = _thisView.FindViewById<Button>(Resource.Id.notam_request_button);
             _notamClearButton = _thisView.FindViewById<Button>(Resource.Id.notam_clear_button);
             _notamOptionsButton = _thisView.FindViewById<ImageButton>(Resource.Id.notam_options_button);
-            _linearLayoutNotamLines = _thisView.FindViewById<LinearLayout>(Resource.Id.notam_linearlayout_lines);
+            _linearLayoutNotamRequestedTime = _thisView.FindViewById<LinearLayout>(Resource.Id.notam_RequestedTime);
 
             _notamRequestButton.Text = Resources.GetString(Resource.String.Send_button);
             _notamClearButton.Text = Resources.GetString(Resource.String.Clear_button);
@@ -2078,7 +2117,16 @@ namespace Cavokator
                 mSortByCategory = "date";
             }
 
-            _linearLayoutNotamLines.RemoveAllViews();
+            // Remove all views and show again with new methodology
+            _linearLayoutNotamRequestedTime.RemoveAllViews();
+
+            if (mAdapter != null)
+            {
+                myRecyclerNotamList.Clear();
+                mAdapter.NotifyDataSetChanged();
+            }
+            
+            // TODO: adapt?
             ShowNotams();
         }
 
@@ -2411,11 +2459,6 @@ namespace Cavokator
         }
 
     }
-
-
-
-
-
 
 
 

@@ -10,7 +10,8 @@
       android:id="@+id/notam_fragment_container"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
-      android:fillViewport="true">
+      android:fillViewport="true"
+      android:scrollbars="vertical">
     <LinearLayout
         android:id="@+id/notam_linearlayout_bottom"
         android:layout_width="fill_parent"
@@ -66,21 +67,19 @@
             android:src="@drawable/options_button" />
       </LinearLayout>
       
-      
+      <LinearLayout
+        android:id="@+id/notam_RequestedTime"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:minHeight="20dp"
+        android:minWidth="20dp" />
+
       <android.support.v7.widget.RecyclerView
         android:id="@+id/notamRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
       
-      
-      
-      <LinearLayout
-          android:id="@+id/notam_linearlayout_lines"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:minHeight="20dp"
-          android:minWidth="20dp" />
       <LinearLayout
           android:id="@+id/notam_margin_bottom"
           android:layout_width="wrap_content"
