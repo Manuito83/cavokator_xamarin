@@ -107,6 +107,12 @@ namespace Cavokator
                     MyErrorRecycler errorCard = (MyErrorRecycler)mRecyclerNotamList[position];
                     vh3.ErrorTextView.Text = errorCard.ErrorString;
                     break;
+
+                case 3:
+                    CategoryViewHolder vh4 = (CategoryViewHolder)holder;
+                    MyCategoryRecycler categoryCard = (MyCategoryRecycler)mRecyclerNotamList[position];
+                    vh4.CategoryTextView.Text = categoryCard.CategoryString;
+                    break;
             }
         }
     }

@@ -191,13 +191,15 @@ namespace Cavokator
         {
             SaveData();
 
-            if (mAdapter != null)
-            {
-                myRecyclerNotamList.Clear();
-                mAdapter.NotifyDataSetChanged();
-            }
-
             base.OnPause();
+        }
+
+        // Empty RecyclerView to allow garbage collection
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            mRecyclerView.SetAdapter(null);
         }
 
         /// <summary>
@@ -480,51 +482,229 @@ namespace Cavokator
 
 
                 // FILL NOTAMS
-                if (mSortByCategory == "category")
-                {
-                    LocalFillAllNotamsTogether();
-                }
-                else
-                {
-                    LocalFillAllNotamsTogether();
-                }
+                bool anyQNotam = false;
+                bool anyDNotam = false;
+                bool anyRawNotam = false;
 
-                
-                // ** LOCAL FUNCTIONS **
-                void LocalFillAllNotamsTogether()
-                {
-                    for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                bool anyCategoryL = false;
+                bool anyCategoryM = false;
+                bool anyCategoryF = false;
+                bool anyCategoryA = false;
+                bool anyCategoryS = false;
+                bool anyCategoryP = false;
+                bool anyCategoryC = false;
+                bool anyCategoryI = false;
+                bool anyCategoryG = false;
+                bool anyCategoryN = false;
+                bool anyCategoryR = false;
+                bool anyCategoryW = false;
+                bool anyCategoryO = false;
+                bool anyCategoryNotReported = false;
+
+                List<int> positionL = new List<int>();
+                List<int> positionM = new List<int>();
+                List<int> positionF = new List<int>();
+                List<int> positionA = new List<int>();
+                List<int> positionS = new List<int>();
+                List<int> positionP = new List<int>();
+                List<int> positionC = new List<int>();
+                List<int> positionI = new List<int>();
+                List<int> positionG = new List<int>();
+                List<int> positionN = new List<int>();
+                List<int> positionR = new List<int>();
+                List<int> positionW = new List<int>();
+                List<int> positionO = new List<int>();
+                List<int> positionUnknown = new List<int>();
+                List<int> positionRaw = new List<int>();
+
+                for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
+                { 
+                    if (mSortByCategory == "category")
                     {
-                        MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
-
-                        // FILL ID
-                        ClickableSpan myClickableSpan = new ClickableSpan(_mNotamContainerList[i].NotamId[j]);
-                        SpannableString idSpan = new SpannableString(_mNotamContainerList[i].NotamId[j]);
-                        idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
-                        idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
-                        idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
-
-                        int a = i;
-                        int b = j;
-                        myClickableSpan.ClickedMyClickableSpan += delegate
-                        {
-                            Activity.RunOnUiThread(() =>
-                            {
-                                // Pull up dialog
-                                var transaction = FragmentManager.BeginTransaction();
-                                var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[a].NotamId[b], _mNotamContainerList[a].NotamRaw[b]);
-                                notamRawDialog.Show(transaction, "notamRawDialog");
-                            });
-                        };
-
-                        myNotamCardRecycler.NotamId = idSpan;
-
-                        // FILL FREE TEXT
-                        myNotamCardRecycler.NotamFreeText = _mNotamContainerList[i].NotamFreeText[j];
-                    
-                        // ADD NOTAMRECYCLER TO RECYCLER LIST
-                        myRecyclerNotamList.Add(myNotamCardRecycler);
+                        LocalAnalyzeCategories(j);
                     }
+                    else
+                    {
+                        LocalFillOnlyNotams(j);
+                    }
+                }
+
+                LocalFillCategoriesAndNotams();
+
+
+                // ** LOCAL FUNCTIONS **
+                void LocalAnalyzeCategories(int j)
+                {
+                    // NOTAM Q
+                    if (_mNotamContainerList[i].NotamQ[j])
+                    {
+                        anyQNotam = true;
+
+                        if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "L")
+                        {
+                            anyCategoryL = true;
+                            positionL.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "M")
+                        {
+                            anyCategoryM = true;
+                            positionM.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "F")
+                        {
+                            anyCategoryF = true;
+                            positionF.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "A")
+                        {
+                            anyCategoryA = true;
+                            positionA.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "S")
+                        {
+                            anyCategoryS = true;
+                            positionS.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "P")
+                        {
+                            anyCategoryP = true;
+                            positionP.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "C")
+                        {
+                            anyCategoryC = true;
+                            positionC.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "I")
+                        {
+                            anyCategoryI = true;
+                            positionI.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "G")
+                        {
+                            anyCategoryG = true;
+                            positionG.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "N")
+                        {
+                            anyCategoryN = true;
+                            positionN.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "R")
+                        {
+                            anyCategoryR = true;
+                            positionR.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "W")
+                        {
+                            anyCategoryW = true;
+                            positionW.Add(j);
+                        }
+                        else if (_mNotamContainerList[i].CodeSecondThird[j].Substring(0, 1) == "O")
+                        {
+                            anyCategoryO = true;
+                            positionO.Add(j);
+                        }
+                        else
+                        {
+                            anyCategoryNotReported = true;
+                            positionUnknown.Add(j);
+                        }
+                    }
+                    else if (_mNotamContainerList[i].NotamD[j])
+                    {
+                        // Placeholder for USA D NOTAMS
+                    }
+                    else
+                    {
+                        // Raw Notams
+                        anyRawNotam = true;
+                        positionRaw.Add(j);
+                    }
+
+
+                }
+
+                void LocalFillCategoriesAndNotams()
+                {
+                    if (anyQNotam)
+                    {
+                        if (anyCategoryF)
+                        {
+                            MyCategoryRecycler myCategoryRecycler = new MyCategoryRecycler();
+                            myCategoryRecycler.CategoryString = "Category F";
+
+                            myRecyclerNotamList.Add(myCategoryRecycler);
+
+                            foreach (var p in positionF)
+                            {
+                                LocalFillOnlyNotams(p);
+                            }
+                        }
+
+                        if (anyCategoryM)
+                        {
+                            MyCategoryRecycler myCategoryRecycler = new MyCategoryRecycler();
+                            myCategoryRecycler.CategoryString = "Category M";
+
+                            myRecyclerNotamList.Add(myCategoryRecycler);
+
+                            foreach (var p in positionM)
+                            {
+                                LocalFillOnlyNotams(p);
+                            }
+                        }
+
+                        if (anyRawNotam)
+                        {
+                            MyCategoryRecycler myCategoryRecycler = new MyCategoryRecycler();
+                            myCategoryRecycler.CategoryString = "(raw NOTAM)";
+
+                            myRecyclerNotamList.Add(myCategoryRecycler);
+
+                            foreach (var p in positionRaw)
+                            {
+                                // TODO: Change function and add another one for raw (only text)
+                                // otherwise it will be blank!!!
+                                LocalFillOnlyNotams(p);
+                            }
+                        }
+                    }
+                }
+
+                void LocalFillOnlyNotams(int j)
+                {
+                    int a = i;
+                    int b = j;
+
+                    MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
+
+                    // FILL ID
+                    ClickableSpan myClickableSpan = new ClickableSpan(_mNotamContainerList[a].NotamId[b]);
+                    SpannableString idSpan = new SpannableString(_mNotamContainerList[a].NotamId[b]);
+                    idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
+                    idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
+                    idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
+
+                    myClickableSpan.ClickedMyClickableSpan += delegate
+                    {
+                        Activity.RunOnUiThread(() =>
+                        {
+                            // Pull up dialog
+                            var transaction = FragmentManager.BeginTransaction();
+                            var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[a].NotamId[b], _mNotamContainerList[a].NotamRaw[b]);
+                            notamRawDialog.Show(transaction, "notamRawDialog");
+                        });
+                    };
+
+                    myNotamCardRecycler.NotamId = idSpan;
+
+                    // FILL FREE TEXT
+                    myNotamCardRecycler.NotamFreeText = _mNotamContainerList[a].NotamFreeText[b];
+                    
+                    // ADD NOTAMRECYCLER TO RECYCLER LIST
+                    myRecyclerNotamList.Add(myNotamCardRecycler);
+
                 };
 
             }
