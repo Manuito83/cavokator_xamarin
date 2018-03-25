@@ -138,7 +138,6 @@ namespace Cavokator
             mLayoutManager = new LinearLayoutManager(Activity);
             mRecyclerView.SetLayoutManager(mLayoutManager);
             
-            // TODO: do try/catch for weather as well?
             try
             {
                 RecallSavedData();
@@ -374,6 +373,7 @@ namespace Cavokator
             else if (!CrossConnectivity.Current.IsConnected)
             {
                 Toast.MakeText(Activity, Resource.String.Internet_Error, ToastLength.Short).Show();
+                ShowConnectionError();
             }
         }
 
@@ -860,10 +860,13 @@ namespace Cavokator
                     }
                     else
                     {
-                        MyCategoryRecycler myCategoryRecycler = new MyCategoryRecycler();
-                        myCategoryRecycler.CategoryString = "(raw NOTAM)";
+                        if (mSortByCategory == "category")
+                        {
+                            MyCategoryRecycler myCategoryRecycler = new MyCategoryRecycler();
+                            myCategoryRecycler.CategoryString = "(raw NOTAM)";
 
-                        myRecyclerNotamList.Add(myCategoryRecycler);
+                            myRecyclerNotamList.Add(myCategoryRecycler);
+                        }
 
                         foreach (var p in positionRaw)
                         {
@@ -923,13 +926,9 @@ namespace Cavokator
             }
         }
 
-        // TODO: Fix showing time when cleared (go to WX and back to test)
         private void AddRequestedTime()
         {
-            string utcStringBeginning = "* " + Resources.GetString(Resource.String.NOTAM_requested);
-            string justNow = Resources.GetString(Resource.String.time_just_now) + " *";
-
-            string utcString = $"{utcStringBeginning} {justNow}";
+            GetTimeDifferenceString (out var timeComparison, out var utcString);
 
             _mUtcTextView = new TextView(Activity);
             _mUtcTextView.Text = utcString;
@@ -943,11 +942,20 @@ namespace Cavokator
             // Adding view
             Activity.RunOnUiThread(() =>
             {
+                _mUtcTextView.Text = utcString;
+
+                // Styling
+                if (timeComparison.Hours >= 6)
+                    _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
+                else if (timeComparison.Hours >= 2)
+                    _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.YellowText));
+                else
+                    _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
+
                 _linearLayoutNotamRequestedTime.AddView(_mUtcTextView);
             });
         }
 
-        // TODO: ADAPT
         private void ShowConnectionError()
         {
             TextView errorTextView = new TextView(Activity);
@@ -962,7 +970,7 @@ namespace Cavokator
             // Adding view
             Activity.RunOnUiThread(() =>
             {
-                //_linearLayoutNotamLines.AddView(errorTextView);
+                _linearLayoutNotamRequestedTime.AddView(errorTextView);
             });
         }
 
@@ -1781,49 +1789,7 @@ namespace Cavokator
             // Make sure were are finding the TextView
             if (_thisView.IsAttachedToWindow && _mUtcTextView != null)
             {
-                var utcNow = DateTime.UtcNow;
-                var timeComparison = utcNow - _mUtcRequestTime;
-
-                string utcStringBeginning = "* " + Resources.GetString(Resource.String.NOTAM_requested);
-                string utcStringEnd = Resources.GetString(Resource.String.Ago) + " *";
-                string justNow = Resources.GetString(Resource.String.time_just_now) + " *";
-                string days = Resources.GetString(Resource.String.Days);
-                string hours = Resources.GetString(Resource.String.Hours);
-                string minutes = Resources.GetString(Resource.String.Minutes);
-                string day = Resources.GetString(Resource.String.Day);
-                string hour = Resources.GetString(Resource.String.Hour);
-                string minute = Resources.GetString(Resource.String.Minute);
-
-                string utcString = String.Empty;
-
-                if (timeComparison.Days > 1 && timeComparison.Hours > 1)
-                    utcString =
-                        $"{utcStringBeginning} {timeComparison.Days} {days}, {timeComparison.Hours} {hours} {utcStringEnd}";
-                else if (timeComparison.Days == 1 && timeComparison.Hours > 1)
-                    utcString =
-                        $"{utcStringBeginning} {timeComparison.Days} {day}, {timeComparison.Hours} {hours} {utcStringEnd}";
-                else if (timeComparison.Days > 1 && timeComparison.Hours == 1)
-                    utcString =
-                        $"{utcStringBeginning} {timeComparison.Days} {days}, {timeComparison.Hours} {hour} {utcStringEnd}";
-                else if (timeComparison.Days == 1 && timeComparison.Hours == 1)
-                    utcString =
-                        $"{utcStringBeginning} {timeComparison.Days} {day}, {timeComparison.Hours} {hour} {utcStringEnd}";
-                else if (timeComparison.Days < 1 && timeComparison.Hours > 1 && timeComparison.Minutes > 1)
-                    utcString =
-                        $"{utcStringBeginning} {timeComparison.Hours} {hours}, {timeComparison.Minutes} {minutes} {utcStringEnd}";
-                else if (timeComparison.Days < 1 && timeComparison.Hours == 1 && timeComparison.Minutes > 1)
-                    utcString =
-                        $"{utcStringBeginning} {timeComparison.Hours} {hour}, {timeComparison.Minutes} {minutes} {utcStringEnd}";
-                else if (timeComparison.Days < 1 && timeComparison.Hours > 1 && timeComparison.Minutes == 1)
-                    utcString =
-                        $"{utcStringBeginning} {timeComparison.Hours} {hours}, {timeComparison.Minutes} {minute} {utcStringEnd}";
-                else if (timeComparison.Days < 1 && timeComparison.Hours == 1 && timeComparison.Minutes == 1)
-                    utcString =
-                        $"{utcStringBeginning} {timeComparison.Hours} {hour}, {timeComparison.Minutes} {minute} {utcStringEnd}";
-                else if (timeComparison.Days < 1 && timeComparison.Hours < 1 && timeComparison.Minutes > 1)
-                    utcString = $"{utcStringBeginning} {timeComparison.Minutes} {minutes} {utcStringEnd}";
-                else
-                    utcString = $"{utcStringBeginning} {justNow}";
+                GetTimeDifferenceString(out var timeComparison, out var utcString);
 
                 // Adding view
                 Activity.RunOnUiThread(() =>
@@ -1839,6 +1805,53 @@ namespace Cavokator
                         _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
                 });
             }
+        }
+
+        private void GetTimeDifferenceString(out TimeSpan timeComparison, out string utcString)
+        {
+            var utcNow = DateTime.UtcNow;
+            timeComparison = utcNow - _mUtcRequestTime;
+            string utcStringBeginning = "* " + Resources.GetString(Resource.String.NOTAM_requested);
+            string utcStringEnd = Resources.GetString(Resource.String.Ago) + " *";
+            string justNow = Resources.GetString(Resource.String.time_just_now) + " *";
+            string days = Resources.GetString(Resource.String.Days);
+            string hours = Resources.GetString(Resource.String.Hours);
+            string minutes = Resources.GetString(Resource.String.Minutes);
+            string day = Resources.GetString(Resource.String.Day);
+            string hour = Resources.GetString(Resource.String.Hour);
+            string minute = Resources.GetString(Resource.String.Minute);
+
+            utcString = String.Empty;
+            if (timeComparison.Days > 1 && timeComparison.Hours > 1)
+                utcString =
+                    $"{utcStringBeginning} {timeComparison.Days} {days}, {timeComparison.Hours} {hours} {utcStringEnd}";
+            else if (timeComparison.Days == 1 && timeComparison.Hours > 1)
+                utcString =
+                    $"{utcStringBeginning} {timeComparison.Days} {day}, {timeComparison.Hours} {hours} {utcStringEnd}";
+            else if (timeComparison.Days > 1 && timeComparison.Hours == 1)
+                utcString =
+                    $"{utcStringBeginning} {timeComparison.Days} {days}, {timeComparison.Hours} {hour} {utcStringEnd}";
+            else if (timeComparison.Days == 1 && timeComparison.Hours == 1)
+                utcString =
+                    $"{utcStringBeginning} {timeComparison.Days} {day}, {timeComparison.Hours} {hour} {utcStringEnd}";
+            else if (timeComparison.Days < 1 && timeComparison.Hours > 1 && timeComparison.Minutes > 1)
+                utcString =
+                    $"{utcStringBeginning} {timeComparison.Hours} {hours}, {timeComparison.Minutes} {minutes} {utcStringEnd}";
+            else if (timeComparison.Days < 1 && timeComparison.Hours == 1 && timeComparison.Minutes > 1)
+                utcString =
+                    $"{utcStringBeginning} {timeComparison.Hours} {hour}, {timeComparison.Minutes} {minutes} {utcStringEnd}";
+            else if (timeComparison.Days < 1 && timeComparison.Hours > 1 && timeComparison.Minutes == 1)
+                utcString =
+                    $"{utcStringBeginning} {timeComparison.Hours} {hours}, {timeComparison.Minutes} {minute} {utcStringEnd}";
+            else if (timeComparison.Days < 1 && timeComparison.Hours == 1 && timeComparison.Minutes == 1)
+                utcString =
+                    $"{utcStringBeginning} {timeComparison.Hours} {hour}, {timeComparison.Minutes} {minute} {utcStringEnd}";
+            else if (timeComparison.Days < 1 && timeComparison.Hours < 1 && timeComparison.Minutes > 1)
+                utcString = $"{utcStringBeginning} {timeComparison.Minutes} {minutes} {utcStringEnd}";
+            else
+                utcString = $"{utcStringBeginning} {justNow}";
+
+
         }
 
         private async Task PercentageCompleted(int currentCount, int totalCount, string currentAirport)
@@ -1882,7 +1895,6 @@ namespace Cavokator
                 mAdapter.NotifyDataSetChanged();
             }
             
-            // TODO: adapt?
             ShowNotams();
         }
 
