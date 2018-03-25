@@ -125,7 +125,15 @@ namespace Cavokator
             // and then call ShowWeather again, so that the information is re-generated
             if (_saveData)
             {
-                GetAndShowSavedValues();
+                try
+                {
+                    GetAndShowSavedValues();
+                }
+                catch
+                {
+                    // Encountered new null fields
+                    _wxClearButton.CallOnClick();
+                }
             }
 
 
