@@ -193,7 +193,7 @@ namespace Cavokator
             // Valid values
             DecodedNotam.NotamRaw.Add(singleNotam);
             
-            // TODO: fill all!
+            // IMPORTANT: fill all in order to avoid errors
             DecodedNotam.NotamId.Add(String.Empty);
             DecodedNotam.CodeSecondThird.Add(String.Empty);
             DecodedNotam.CodeFourthFifth.Add(String.Empty);
@@ -345,7 +345,7 @@ namespace Cavokator
             }
         }
 
-        private static string RetrieveHtml(string url)
+        private string RetrieveHtml(string url)
         {
             // Used to build entire input
             StringBuilder sb = new StringBuilder();
@@ -393,7 +393,7 @@ namespace Cavokator
             return sb.ToString();
         }
 
-        private static string GetSourceUrl(string icao)
+        private string GetSourceUrl(string icao)
         {
             string url = "https://pilotweb.nas.faa.gov/PilotWeb/notamRetrievalByICAOAction.do?"
                          + "method=displayByICAOs&reportType=RAW&formatType=DOMESTIC&"

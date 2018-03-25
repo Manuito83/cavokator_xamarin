@@ -100,6 +100,13 @@ namespace Cavokator
                     vh2.NotamIdTextView.TextFormatted = notamCard.NotamId;
                     vh2.NotamIdTextView.MovementMethod = new LinkMovementMethod();
                     vh2.NotamFreeTextTextView.Text = notamCard.NotamFreeText;
+
+                    // Remove unnecessary layouts
+                    if (notamCard.DisableTopLayout)
+                    {
+                        vh2.NotamCardMainLayout.RemoveView(vh2.NotamCardTopLayout);
+                    }
+                    
                     break;
 
                 case 2:
@@ -132,6 +139,8 @@ namespace Cavokator
     internal class NotamViewHolder : RecyclerView.ViewHolder
     {
         public CardView NotamMainCardView { get; }
+        public LinearLayout NotamCardMainLayout { get; }
+        public RelativeLayout NotamCardTopLayout { get; }
         public TextView NotamIdTextView { get; }
         public TextView NotamFreeTextTextView { get; }
 
@@ -139,11 +148,17 @@ namespace Cavokator
         {
             // Locate and cache view references:
             NotamMainCardView = itemView.FindViewById<CardView>(Resource.Id.notamCard_MainCard);
-            NotamMainCardView.SetCardBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews)); 
+            NotamMainCardView.SetCardBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
 
+            // Main layouts
+            NotamCardMainLayout = itemView.FindViewById<LinearLayout>(Resource.Id.notamCard_MainLayout);
+            NotamCardTopLayout = itemView.FindViewById<RelativeLayout>(Resource.Id.notamCard_TopLayout);
+
+            // Childs in TopLayout
             NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);
             NotamIdTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
 
+            // Free Notam Text
             NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
             NotamFreeTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             NotamFreeTextTextView.SetTextSize(ComplexUnitType.Dip, 12);
@@ -192,6 +207,7 @@ namespace Cavokator
 
     internal class MyNotamCardRecycler
     {
+        public bool DisableTopLayout;
         public SpannableString NotamId;
         public string NotamFreeText;
     }

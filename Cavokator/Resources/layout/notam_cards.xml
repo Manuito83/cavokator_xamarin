@@ -17,12 +17,14 @@
 
     <!--MAIN LINEARLAYOUT--> 
     <LinearLayout
+      android:id="@+id/notamCard_MainLayout"
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
       <!--TOP LAYOUT (ID + SHARE + MAP)--> 
       <RelativeLayout
+        android:id="@+id/notamCard_TopLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
