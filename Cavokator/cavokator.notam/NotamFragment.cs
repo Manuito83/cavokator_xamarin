@@ -137,6 +137,8 @@ namespace Cavokator
             // Plug in the linear layout manager
             mLayoutManager = new LinearLayoutManager(Activity);
             mRecyclerView.SetLayoutManager(mLayoutManager);
+
+            
             
             try
             {
@@ -452,6 +454,8 @@ namespace Cavokator
             // Plug in my adapter
             mAdapter = new NotamFieldsAdapter(myRecyclerNotamList);
             Activity.RunOnUiThread(() => { mRecyclerView.SetAdapter(mAdapter); });
+
+            mRecyclerView.NestedScrollingEnabled = false;
 
             AddRequestedTime();
 
