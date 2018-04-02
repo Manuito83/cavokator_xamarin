@@ -12,6 +12,10 @@ using System.Net;
 using System.Text;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
+using Android.Content;
 
 namespace Cavokator
 {
@@ -22,6 +26,12 @@ namespace Cavokator
         public NotamFetcher(string icao)
         {
             List<string> notamList = Fetch(icao);
+
+
+            // TODO: FETCH AIDAP
+            FetchAidapAsync();
+
+
 
             if (notamList != null)
                 Decode(notamList);
@@ -343,6 +353,101 @@ namespace Cavokator
             {
                 return null;
             }
+        }
+
+        // TODO: implement
+        private void FetchAidapAsync()
+        {
+            // https://stackoverflow.com/questions/13533351/curl-request-using-net-using-security-certificate?rq=1
+            // http://cemtopkaya.blogspot.com.es/2013/12/pfx-dosyasyla-webrequest-yaparak-c-ile.html
+            
+            // https://forums.xamarin.com/discussion/35598/android-p12-certificate-authentication-issue
+
+
+            try
+            {
+                // Web talebi yapacağımız nesneyi yaratırken gideceğimiz web adresini belirtiyoruz
+                // Bu adres başta https://www.aidap.naimes.faa.gov/aidap/qhome.html muş gibi görünsede
+                // aslında sayfadaki formun gideceği web adresi (sol tarafta html formun action kısmında bulabilirsin).
+                HttpWebRequest talep =
+                    (HttpWebRequest)WebRequest.Create("https://www.aidap.naimes.faa.gov/aidap/XmlNotamServlet");
+
+
+                #region Sertifika işlemlerimiz
+
+                //// Sertifikamızı dosyadan çekip şifre ile nesnemizi yaratıyoruz
+                X509Certificate2 clientCertificate = new X509Certificate2("\\aidapuser-cert-2018.p12", "start123");
+                //// talep nesnemize sertifikamızı ekleyelim
+                talep.ClientCertificates.Add(clientCertificate);
+                talep.Credentials = CredentialCache.DefaultCredentials;
+
+                //// isteklerimizi zaman içerisinde yaparken Credential'ı değiştirmeyeceğimiz için true yapıyoruz. 
+                //// Aralarda farklı credentiallar kullanacak olsaydık false yapar, her isteğimizin authenticate edilmesini sunucuya bildirirdik
+                talep.PreAuthenticate = true;
+
+                #endregion
+
+
+                #region Talep edeceğimiz bilgiler ve talep yöntemimiz
+
+                // bağlantıyı açık tutalım ki birden fazla gidiş gelişlerde TCP işlemlerini her defasında tekrarlayarak arka planda zaman ve emek kaybetmesin
+                talep.KeepAlive = true;
+
+                // Talebimiz sadece bir url değil, form bilgilerimizin POST metoduyla gönderimi olduğundan ContentType aşağıdaki gibi olacak
+                talep.ContentType = "application/x-www-form-urlencoded";
+                talep.Method = "POST";
+
+                // html de <form></form>etiketinin özellikleri şunlardır:
+                // <form action="form bilgilerinin gönderileceği sayfa adresi" method="POST(arka planda görünmeden gider) ya da GET(sayfanın adresine eklenerek gider)">//    ...
+                // </form>talep.Method = "POST";
+
+                // Sayfadaki text kutuları, dropdownların hepsinin bir id'si var ve içlerindeki ya da seçilmiş değerleri ise value olarak 
+                // degisken1=deger1°isken2=deger2&..... şeklinde yazılır
+                // aşağıdaki bilgide user id= SXS, password=notam123*, active=Y ve location_id=LTFG olarak gönderilirken diğerleri boş olarak gidiyor.
+                string formunIcerigi =
+                    "uid=kuid=usename&password=mypass&location_id=LEZL";
+                // form içeriğini byte[] (byte dizisine) çevirmemiz gerekiyor yani her karakter byte değeriyle gidecek. Mesela;
+                // A   h   m   e   t   metninin byte dizisi hali
+                // 065 104 109 101 116 (decimal hali)
+                var encoder = new ASCIIEncoding();
+                var requestData = encoder.GetBytes(formunIcerigi);
+                // Talebimizin içeriğinin ne kadar olduğunu yazalım
+                talep.ContentLength = requestData.Length;
+
+
+                #endregion
+
+                // istemci ile(bizim program), sunucu arasında kurduğumuz bağlantı akışını ele geçirelim (içinden su geçebilen hortum gibi düşün) 
+                var gidenAkis = talep.GetRequestStream();
+                // talebimizin byte[] halini hortumdan akıtmamız gerekecek
+                gidenAkis.Write(requestData, 0, requestData.Length);
+                // şimdi verilerimiz gittiğine göre gidenAkışımızı kapatlım ve gelen akışa bakalım.
+                gidenAkis.Close();
+
+                // Protokolün talep kısmı tamamlandı, şimdi cevap kısmını görebileceğimiz nesnemizi talep nesnemize oluşturtalım
+                // Bu tıpkı;
+                // "Git bak ahmet ne yapıyormuş" deyip çocuğu gönderdikten sonra, çocuk gelince
+                // "eee... ne yapıyormuş?" diye sormamıza benzer. Elçiyi gönderdik ve elçi dönünce muhatabımızın cevabını elçiye sormamız gibi.
+                var cevap = (HttpWebResponse)talep.GetResponse();
+                // HTTP ile dosya indirirken nasıl GBlarca veriyi çektiğimiz bir CEVAP akışı varsa burada da aynı gelen akışını yaratıyoruz.
+                Stream gelen_akisi = cevap.GetResponseStream();
+
+                // Dönen cevabı stringe çevirip ekranda gösteriyoruz.
+                StreamReader sr = new StreamReader(gelen_akisi);
+                String result = sr.ReadToEnd();
+                Console.WriteLine(result);
+
+                // Kaynaklarla işimiz bitti iade edelim.
+                sr.Close();
+                gelen_akisi.Close();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+
+
         }
 
         private string RetrieveHtml(string url)
