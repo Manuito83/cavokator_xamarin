@@ -14,11 +14,14 @@ using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using Android.App;
 using Android.Content;
 using Android.Content.Res;
+using Android.OS;
 using Java.Security;
+using RestSharp;
 
 namespace Cavokator
 {
@@ -369,47 +372,61 @@ namespace Cavokator
 
             try
             {
-                //**** TEST
-                var myPath = "android.resource://" + Application.Context.PackageName + "/" + Application.Context.Resources.OpenRawResource(Resource.Raw.test);
-                var text = File.ReadAllText(myPath);
-                Console.WriteLine("Contents of example.txt = {0}", text);
-                //*** TEST
 
-                HttpWebRequest talep = (HttpWebRequest)WebRequest.Create("https://www.aidap.naimes.faa.gov/aidap/XmlNotamServlet");
+                AssetManager assets = Application.Context.Assets;
+                byte[] bytes;
+                using (StreamReader sr2 = new StreamReader(assets.Open("certificate_example.p12")))
+                {
+                    using (var memstream = new MemoryStream())
+                    {
+                        sr2.BaseStream.CopyTo(memstream);
+                        bytes = memstream.ToArray();
+                    }
+                }
 
-                var path = "android.resource://" + Application.Context.PackageName + "/" + Resource.Raw.test;
-                //var path = Android.Net.Uri.Parse("android.resource://" + "com.github.manuito83.cavokator" + "/" + Resource.Raw.aidapuser_cert_2018).Path;
+                X509Certificate2 clientCertificate = new X509Certificate2(bytes, "certificate_password");   // Change this to the real one
 
-                X509Certificate2 clientCertificate = new X509Certificate2(path, "start123");
 
-                talep.ClientCertificates.Add(clientCertificate);
-                talep.Credentials = CredentialCache.DefaultCredentials;
-                talep.PreAuthenticate = true;
+                // RESTSHARP
+                var client = new RestClient("https://www.aidap.naimes.faa.gov/aidap/XmlNotamServlet");
+                client.ClientCertificates = new X509CertificateCollection() { clientCertificate };
 
-                talep.KeepAlive = true;
-                talep.ContentType = "application/x-www-form-urlencoded";
-                talep.Method = "POST";
+                string postData = "uid=myusername&password=mypasswordA&active=Y";   // Change this to the real one
 
-                string formunIcerigi = "uid=kuid=usename&password=mypass&location_id=LEZL";
+                var request = new RestRequest(Method.POST);
+                request.AddParameter("application/x-www-form-urlencoded", postData, ParameterType.RequestBody);
 
-                var encoder = new ASCIIEncoding();
-                var requestData = encoder.GetBytes(formunIcerigi);
+                Debug.StartMethodTracing("sample");
+                var response = client.Execute(request);
+                Debug.StopMethodTracing();
+                // RESTSHARP
 
-                talep.ContentLength = requestData.Length;
 
-                var gidenAkis = talep.GetRequestStream();
-                gidenAkis.Write(requestData, 0, requestData.Length);
-                gidenAkis.Close();
 
-                var cevap = (HttpWebResponse)talep.GetResponse();
-                Stream gelen_akisi = cevap.GetResponseStream();
+                //HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.aidap.naimes.faa.gov/aidap/XmlNotamServlet");
 
-                StreamReader sr = new StreamReader(gelen_akisi);
-                String result = sr.ReadToEnd();
-                Console.WriteLine(result);
+                //req.ClientCertificates.Add(clientCertificate);
+                //req.Method = "POST";
+                //req.ContentType = "application/x-www-form-urlencoded";
 
-                sr.Close();
-                gelen_akisi.Close();
+                //string postData = "uid=myusername&password=mypasswordA&active=Y"; // Change this to the real one
+                //byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                //req.ContentLength = byteArray.Length;
+
+                //using (Stream dataStream = req.GetRequestStream())
+                //{
+                //    dataStream.Write(byteArray, 0, byteArray.Length);
+                //    dataStream.Close();
+                //}
+
+                //// Show the first 10 lines
+                //using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
+                //{
+                //    for (int i = 0; i < 10; i++)
+                //        Console.WriteLine(sr.ReadLine());
+                //}
+
+
             }
             catch (Exception ex)
             {
