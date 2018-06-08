@@ -190,7 +190,6 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\appicon.psd" />
     <AndroidAsset Include="Assets\airport_codes13.csv" />
-    <AndroidAsset Include="Assets\certificate_example.p12" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />

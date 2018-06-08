@@ -21,7 +21,11 @@ using Android.Content;
 using Android.Content.Res;
 using Android.OS;
 using Java.Security;
+using Java.Security.Cert;
+using Newtonsoft.Json;
 using RestSharp;
+using Xamarin.Android.Net;
+
 
 namespace Cavokator
 {
@@ -361,81 +365,48 @@ namespace Cavokator
             }
         }
 
-        // TODO: implement
+
+        // Fetches from FAA AIDAP through API (to avoid issues with Xamarin SSL certificate)
         private void FetchAidapAsync()
         {
-            // https://stackoverflow.com/questions/13533351/curl-request-using-net-using-security-certificate?rq=1
-            // http://cemtopkaya.blogspot.com.es/2013/12/pfx-dosyasyla-webrequest-yaparak-c-ile.html
-            
-            // https://forums.xamarin.com/discussion/35598/android-p12-certificate-authentication-issue
-
-
             try
             {
 
-                AssetManager assets = Application.Context.Assets;
-                byte[] bytes;
-                using (StreamReader sr2 = new StreamReader(assets.Open("certificate_example.p12")))
+                // RESTSHARP
+                var data = string.Empty;
+
+                using (var client = new HttpClient())
                 {
-                    using (var memstream = new MemoryStream())
-                    {
-                        sr2.BaseStream.CopyTo(memstream);
-                        bytes = memstream.ToArray();
-                    }
+                    // Create a new post
+                    var keyValList = new List<KeyValueModel>();
+                    keyValList.Add(new KeyValueModel { Key = "uid", Value = "uid" });
+                    keyValList.Add(new KeyValueModel { Key = "password", Value = "password" });
+                    keyValList.Add(new KeyValueModel { Key = "active", Value = "Y" });
+                    keyValList.Add(new KeyValueModel { Key = "type", Value = "I" });
+                    keyValList.Add(new KeyValueModel { Key = "location_id", Value = "LEZL" });
+
+                    // create the request content and define Json
+                    var json = JsonConvert.SerializeObject(keyValList);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    // send a POST request
+                    //var uri = "http://10.0.2.2/Cavokator/Notam/FetchAidap";           // DEBUG IIS server
+                    var uri = "https://www.test.com/CavokatorAPI/Notam/FetchAidap";     // Replace by API location
+
+                    var result = client.PostAsync(uri, content).Result;
+
+                    var resultString = result.Content.ReadAsStringAsync();
+                    data = JsonConvert.DeserializeObject<string>(resultString.Result);
                 }
-
-                X509Certificate2 clientCertificate = new X509Certificate2(bytes, "certificate_password");   // Change this to the real one
-
-
-                // RESTSHARP
-                var client = new RestClient("https://www.aidap.naimes.faa.gov/aidap/XmlNotamServlet");
-                client.ClientCertificates = new X509CertificateCollection() { clientCertificate };
-
-                string postData = "uid=myusername&password=mypasswordA&active=Y";   // Change this to the real one
-
-                var request = new RestRequest(Method.POST);
-                request.AddParameter("application/x-www-form-urlencoded", postData, ParameterType.RequestBody);
-
-                Debug.StartMethodTracing("sample");
-                var response = client.Execute(request);
-                Debug.StopMethodTracing();
-                // RESTSHARP
-
-
-
-                //HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.aidap.naimes.faa.gov/aidap/XmlNotamServlet");
-
-                //req.ClientCertificates.Add(clientCertificate);
-                //req.Method = "POST";
-                //req.ContentType = "application/x-www-form-urlencoded";
-
-                //string postData = "uid=myusername&password=mypasswordA&active=Y"; // Change this to the real one
-                //byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                //req.ContentLength = byteArray.Length;
-
-                //using (Stream dataStream = req.GetRequestStream())
-                //{
-                //    dataStream.Write(byteArray, 0, byteArray.Length);
-                //    dataStream.Close();
-                //}
-
-                //// Show the first 10 lines
-                //using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
-                //{
-                //    for (int i = 0; i < 10; i++)
-                //        Console.WriteLine(sr.ReadLine());
-                //}
-
 
             }
             catch (Exception ex)
             {
                 throw (ex);
             }
-
-
-
         }
+
+
 
         private string RetrieveHtml(string url)
         {
@@ -494,6 +465,13 @@ namespace Cavokator
             return url;
         }
 
+    }
+
+
+    public class KeyValueModel
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 
 }
