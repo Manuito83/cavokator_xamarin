@@ -369,6 +369,9 @@ namespace Cavokator
                     Activity.RunOnUiThread(() =>
                     {
                         _notamRequestButton.Enabled = true;
+
+                        // Update the adapter, otherwise data could not refresh on screen
+                        mAdapter.NotifyDataSetChanged();
                     });
                 });
             }

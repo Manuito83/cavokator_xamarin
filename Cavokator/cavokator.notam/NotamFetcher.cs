@@ -253,8 +253,7 @@ namespace Cavokator
                 string longitudeCode = myNotamQ.QMatch.Groups["LON_CODE"].Value;
                 string radius = myNotamQ.QMatch.Groups["RADIUS"].Value;
                 Int32.TryParse(radius, out int radiusInt);
-                DecodedNotam.Radius.Add(radiusInt);
-
+                
                 string degreesLatString = latitude.Substring(0, 2);
                 string minutesLatString = latitude.Substring(2, 2);
                 float.TryParse(degreesLatString, out var degreesLat);
@@ -263,8 +262,7 @@ namespace Cavokator
                 float finalLat = degreesLat + minutesLat;
                 if (latitudeCode == "S")
                     finalLat = -finalLat;
-                DecodedNotam.Latitude.Add(finalLat);
-
+                
                 string degreesLonString = longitude.Substring(0, 3);
                 string minutesLonString = longitude.Substring(3, 2);
                 float.TryParse(degreesLonString, out float degreesLon);
@@ -273,7 +271,11 @@ namespace Cavokator
                 float finalLon = degreesLon + minutesLon;
                 if (longitudeCode == "W")
                     finalLon = -finalLon;
+
+                // Add all of them at the end (to avoid disparities in case of exception)
+                DecodedNotam.Latitude.Add(finalLat);
                 DecodedNotam.Longitude.Add(finalLon);
+                DecodedNotam.Radius.Add(radiusInt);
             }
             catch
             {
