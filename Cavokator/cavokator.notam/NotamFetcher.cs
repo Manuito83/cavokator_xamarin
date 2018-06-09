@@ -13,18 +13,8 @@ using System.Text;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using Android.App;
-using Android.Content;
-using Android.Content.Res;
-using Android.OS;
-using Java.Security;
-using Java.Security.Cert;
+using System.Xml;
 using Newtonsoft.Json;
-using RestSharp;
-using Xamarin.Android.Net;
 
 
 namespace Cavokator
@@ -33,13 +23,16 @@ namespace Cavokator
     {
         public NotamContainer DecodedNotam = new NotamContainer();
 
+        // TODO: implement
+        private string source = "AIDAP";
+
         public NotamFetcher(string icao)
         {
-            List<string> notamList = Fetch(icao);
 
-
+            //List<string> notamList = Fetch(icao);
+            
             // TODO: FETCH AIDAP
-            FetchAidapAsync();
+            List<string> notamList = FetchAidapAsync(icao);
 
 
 
@@ -51,7 +44,6 @@ namespace Cavokator
 
         private void Decode(List<string> notamList)
         {
-            // TODO: https://github.com/liviudnistran/vfrviewer/blob/master/class.NOTAM.php
             foreach (string singleNotam in notamList)
             {
                 // Try to find what kind of NOTAM we are dealing with
@@ -96,7 +88,7 @@ namespace Cavokator
                     else if (Regex.IsMatch(line, @"(^|\s)Q\) (.*)"))
                     {
                         string shortQline = line.Replace(" ", "");
-                        Regex qRegex = new Regex(@"Q\)(?<FIR>[A-Z]{4})\/(?<CODE>[A-Z]{5})\/(?<TRAFFIC>IV|I|V|K)\/(?<PURPOSE>[A-Z]{1,3})\/(?<SCOPE>[A-Z]{1,2})\/(?<LOWER>[0-9]{3})\/(?<UPPER>[0-9]{3})\/(?<LAT>[0-9]{4})(?<LAT_CODE>N|S)(?<LON>[0-9]{5})(?<LON_CODE>E|W)(?<RADIUS>[0-9]{3})");
+                        Regex qRegex = new Regex(@"Q\)(?<FIR>[A-Z]{4})\/(?<CODE>[A-Z]{5})\/(?<TRAFFIC>IV|I|V|K)?\/(?<PURPOSE>[A-Z]{1,3})?\/(?<SCOPE>[A-Z]{1,2})?\/(?<LOWER>[0-9]{3})?\/(?<UPPER>[0-9]{3})?\/((?<LAT>[0-9]{4})(?<LAT_CODE>N|S)(?<LON>[0-9]{5})(?<LON_CODE>E|W)(?<RADIUS>[0-9]{3}))?");
                         Match qMatch = qRegex.Match(shortQline);
                         if (qMatch.Success)
                             myNotamTypeQ.QMatch = qMatch;
@@ -367,8 +359,10 @@ namespace Cavokator
 
 
         // Fetches from FAA AIDAP through API (to avoid issues with Xamarin SSL certificate)
-        private void FetchAidapAsync()
+        private List<string> FetchAidapAsync(string icao)
         {
+            string icaoRequested = icao;
+
             try
             {
 
@@ -383,29 +377,46 @@ namespace Cavokator
                     keyValList.Add(new KeyValueModel { Key = "password", Value = "password" });
                     keyValList.Add(new KeyValueModel { Key = "active", Value = "Y" });
                     keyValList.Add(new KeyValueModel { Key = "type", Value = "I" });
-                    keyValList.Add(new KeyValueModel { Key = "location_id", Value = "LEZL" });
+                    keyValList.Add(new KeyValueModel { Key = "location_id", Value = icaoRequested });
 
                     // create the request content and define Json
                     var json = JsonConvert.SerializeObject(keyValList);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    // send a POST request
-                    //var uri = "http://10.0.2.2/Cavokator/Notam/FetchAidap";           // DEBUG IIS server
-                    var uri = "https://www.test.com/CavokatorAPI/Notam/FetchAidap";     // Replace by API location
+#warning Did we change API location?
+                    // Send a POST request
+                    // Local address: var uri = http://10.0.2.2:80
+                    var uri = "http://10.0.2.2:80/CavokatorAPI/Notam/FetchAidap";      // TODO: change API location!
 
                     var result = client.PostAsync(uri, content).Result;
 
                     var resultString = result.Content.ReadAsStringAsync();
                     data = JsonConvert.DeserializeObject<string>(resultString.Result);
+
+                    
+                    // Get the notams lines in the XML string
+                    List<String> myNotams = new List<string>();
+
+                    XmlDocument xml = new XmlDocument();
+                    xml.LoadXml(data); 
+
+                    XmlNodeList xnList = xml.GetElementsByTagName("notam_text");
+                    foreach (XmlNode xn in xnList)
+                    {
+                         myNotams.Add(xn.InnerText);
+
+                    }
+
+                    return myNotams;
+                    
                 }
-
             }
-            catch (Exception ex)
+            catch
             {
-                throw (ex);
+                return null;
             }
-        }
 
+        }
 
 
         private string RetrieveHtml(string url)
