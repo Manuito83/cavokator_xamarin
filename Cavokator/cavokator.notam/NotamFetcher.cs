@@ -26,16 +26,19 @@ namespace Cavokator
         // TODO: implement
         private string source = "AIDAP";
 
-        public NotamFetcher(string icao)
+        public NotamFetcher(string icao, string sourceSelected)
         {
+            List<string> notamList = new List<string>();
 
-            //List<string> notamList = Fetch(icao);
-            
-            // TODO: FETCH AIDAP
-            List<string> notamList = FetchAidapAsync(icao);
-
-
-
+            if (sourceSelected == "aidap")
+            {
+                notamList = FetchAidapAsync(icao);
+            }
+            else
+            {
+                notamList = FetchFaa(icao);
+            }
+                
             if (notamList != null)
                 Decode(notamList);
             else
@@ -331,7 +334,7 @@ namespace Cavokator
             return null;
         }
 
-        private List<string> Fetch(string icao)
+        private List<string> FetchFaa(string icao)
         {
             try
             {

@@ -45,6 +45,7 @@ namespace Cavokator
 
         // Options from options menu
         private string mSortByCategory;
+        private string mSourceSelection;
         private bool showSubcategories = true;
 
         // Floating action button
@@ -300,7 +301,7 @@ namespace Cavokator
         {
             // Pull up dialog
             var transaction = FragmentManager.BeginTransaction();
-            var notamOptionsDialog = new NotamOptionsDialog(mSortByCategory);
+            var notamOptionsDialog = new NotamOptionsDialog(mSortByCategory, mSourceSelection);
             notamOptionsDialog.Show(transaction, "options_dialog");
 
             notamOptionsDialog.SortBySpinnerChanged += OnSortSpinnedChanged;
@@ -436,7 +437,7 @@ namespace Cavokator
             {
                 string currentAirport = _mRequestedAirportsByIcao[i];
 
-                NotamFetcher mNotams = new NotamFetcher(currentAirport);
+                NotamFetcher mNotams = new NotamFetcher(currentAirport, mSourceSelection);
 
                 if (!mNotams.DecodedNotam.ConnectionError)
                 {
@@ -1707,7 +1708,7 @@ namespace Cavokator
             // Get options from options dialog
             ISharedPreferences notamOptionsPreferences = Application.Context.GetSharedPreferences("NOTAM_Options", FileCreationMode.Private);
 
-            // First initialization _metarOrTafor
+            // First initialization
             mSortByCategory = notamOptionsPreferences.GetString("sortByPREF", String.Empty);
             if (mSortByCategory == String.Empty)
             {
@@ -1718,6 +1719,18 @@ namespace Cavokator
             {
                 mSortByCategory = notamOptionsPreferences.GetString("sortByPREF", String.Empty);
             }
+
+            mSourceSelection = notamOptionsPreferences.GetString("sourcePREF", String.Empty);
+            if (mSourceSelection == String.Empty)
+            {
+                notamOptionsPreferences.Edit().PutString("sourcePREF", "aidap").Apply();
+                mSourceSelection = "aidap";
+            }
+            else
+            {
+                mSourceSelection = notamOptionsPreferences.GetString("sourcePREF", String.Empty);
+            }
+
 
             // Get fragment's saved state
             ISharedPreferences notamFragmentPreferences = Application.Context.GetSharedPreferences("NOTAM_OnPause", FileCreationMode.Private);
@@ -1884,14 +1897,9 @@ namespace Cavokator
 
         private void OnSortSpinnedChanged(object sender, NotamOptionsDialogEventArgs e)
         {
-            if (e.SortBy == "category")
-            {
-                mSortByCategory = "category";
-            }
-            else
-            {
-                mSortByCategory = "date";
-            }
+            mSortByCategory = e.SortBy == "category" ? "category" : "date";
+
+            mSourceSelection = e.Source == "aidap" ? "aidap" : "faa";
 
             // Remove all views and show again with new methodology
             _linearLayoutNotamRequestedTime.RemoveAllViews();
