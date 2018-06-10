@@ -34,8 +34,16 @@
         <TextView
           android:text="NOTAM ID"
           android:id="@+id/notamCard_Id"
+          android:layout_marginTop="5dp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
+        <ImageView
+          android:id="@+id/notamCard_Map"
+          android:clickable="true"
+          android:layout_width="35dp"
+          android:layout_height="35dp"
+          android:layout_alignParentRight="true"
+          android:src="@drawable/ic_world_map"/>
       </RelativeLayout>
 
       <!--FREE NOTAM TEXT--> 

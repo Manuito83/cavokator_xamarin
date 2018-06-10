@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Android.Content.Res;
 using Android.Graphics;
 using Android.Graphics.Drawables;
@@ -122,6 +123,7 @@ namespace Cavokator
                     break;
             }
         }
+
     }
 
     internal class AirportViewHolder : RecyclerView.ViewHolder
@@ -136,12 +138,13 @@ namespace Cavokator
         }
     }
 
-    internal class NotamViewHolder : RecyclerView.ViewHolder
+    internal class NotamViewHolder : RecyclerView.ViewHolder, View.IOnClickListener
     {
         public CardView NotamMainCardView { get; }
         public LinearLayout NotamCardMainLayout { get; }
         public RelativeLayout NotamCardTopLayout { get; }
         public TextView NotamIdTextView { get; }
+        public ImageView NotamMap { get; }
         public TextView NotamFreeTextTextView { get; }
 
         public NotamViewHolder(View itemView) : base(itemView)
@@ -157,11 +160,23 @@ namespace Cavokator
             // Childs in TopLayout
             NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);
             NotamIdTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            NotamMap = itemView.FindViewById<ImageView>(Resource.Id.notamCard_Map);
+            NotamMap.SetOnClickListener(this);
 
             // Free Notam Text
             NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
             NotamFreeTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             NotamFreeTextTextView.SetTextSize(ComplexUnitType.Dip, 12);
+        }
+
+        public void OnClick(View v)
+        {
+            if (v == NotamMap)
+            {
+                // TODO: ????
+                NotamMap.SetOnClickListener(this);
+                Console.WriteLine("***CUAC***");
+            }
         }
     }
 
@@ -209,6 +224,7 @@ namespace Cavokator
     {
         public bool DisableTopLayout;
         public SpannableString NotamId;
+        public ImageView NotamMap;
         public string NotamFreeText;
     }
 

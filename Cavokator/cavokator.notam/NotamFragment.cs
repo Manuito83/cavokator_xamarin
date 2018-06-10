@@ -111,7 +111,7 @@ namespace Cavokator
         {
             base.OnCreate(savedInstanceState);
 
-            ((AppCompatActivity)Activity).SupportActionBar.Title = "NOTAM";
+            ((AppCompatActivity) Activity).SupportActionBar.Title = "NOTAM";
 
             HasOptionsMenu = true;
         }
@@ -131,7 +131,7 @@ namespace Cavokator
             _airportEntryEditText.BeforeTextChanged += BeforeIdTextChanged;
             _airportEntryEditText.AfterTextChanged += OnIdTextChanged;
             _fabScrollTop.Click += ScrollToTop;
-            
+
             // Get our RecyclerView layout
             mRecyclerView = _thisView.FindViewById<RecyclerView>(Resource.Id.notamRecyclerView);
 
@@ -139,8 +139,8 @@ namespace Cavokator
             mLayoutManager = new LinearLayoutManager(Activity);
             mRecyclerView.SetLayoutManager(mLayoutManager);
 
-            
-            
+
+
             try
             {
                 RecallSavedData();
@@ -176,8 +176,8 @@ namespace Cavokator
         {
             if (e.PositionY > 1000)
             {
-                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)_fabScrollTop.LayoutParameters;
-                lp.Gravity = (int)(GravityFlags.Bottom | GravityFlags.Right | GravityFlags.End);
+                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) _fabScrollTop.LayoutParameters;
+                lp.Gravity = (int) (GravityFlags.Bottom | GravityFlags.Right | GravityFlags.End);
                 lp.SetMargins(0, 0, 16, 16);
                 _fabScrollTop.LayoutParameters = lp;
                 _fabScrollTop.Show();
@@ -232,7 +232,8 @@ namespace Cavokator
                 if (_airportEntryEditText.Text.Length > 3)
                 {
                     // Take a look at the last 4 chars entered
-                    string lastFourChars = _airportEntryEditText.Text.Substring(_airportEntryEditText.Text.Length - 4, 4);
+                    string lastFourChars =
+                        _airportEntryEditText.Text.Substring(_airportEntryEditText.Text.Length - 4, 4);
 
                     // If there is at least a space, then do nothing
                     bool maxLengthReached = true;
@@ -268,7 +269,7 @@ namespace Cavokator
 
         private void OnBackgroundTouch(object sender, View.TouchEventArgs e)
         {
-            var imm = (InputMethodManager)Application.Context.GetSystemService(Context.InputMethodService);
+            var imm = (InputMethodManager) Application.Context.GetSystemService(Context.InputMethodService);
             imm.HideSoftInputFromWindow(_airportEntryEditText.WindowToken, 0);
         }
 
@@ -310,7 +311,7 @@ namespace Cavokator
         private void OnRequestButtonClicked(object sender, EventArgs e)
         {
             // Close keyboard when button pressed
-            var im = (InputMethodManager)Activity.GetSystemService(Context.InputMethodService);
+            var im = (InputMethodManager) Activity.GetSystemService(Context.InputMethodService);
             im.HideSoftInputFromWindow(Activity.CurrentFocus.WindowToken, 0);
 
             _connectionError = false;
@@ -482,7 +483,8 @@ namespace Cavokator
                     for (var j = 0; j < _mAirportDefinitions.Count; j++)
                         if (_mAirportDefinitions[j].icao == _mRequestedAirportsByIcao[i].ToUpper())
                         {
-                            myAirport = _mRequestedAirportsRawString[i].ToUpper() + " - " + _mAirportDefinitions[j].description;
+                            myAirport = _mRequestedAirportsRawString[i].ToUpper() + " - " +
+                                        _mAirportDefinitions[j].description;
                             foundAirportIcao = true;
                             break;
                         }
@@ -546,7 +548,7 @@ namespace Cavokator
                 var positionRaw = new List<int>();
 
                 for (int j = 0; j < _mNotamContainerList[i].NotamRaw.Count; j++)
-                { 
+                {
                     if (mSortByCategory == "category")
                     {
                         LocalAnalyzeCategories(j);
@@ -892,11 +894,13 @@ namespace Cavokator
                     MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
 
                     // FILL ID
-                    ClickableSpan myClickableSpan = new ClickableSpan(_mNotamContainerList[a].NotamId[b]);
-                    SpannableString idSpan = new SpannableString(_mNotamContainerList[a].NotamId[b]);
+                    var myId = _mNotamContainerList[a].NotamId[b];
+                    ClickableSpan myClickableSpan = new ClickableSpan(myId);
+                    SpannableString idSpan = new SpannableString(myId);
                     idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
                     idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
-                    idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
+                    idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0,
+                        idSpan.Length(), 0);
 
                     myClickableSpan.ClickedMyClickableSpan += delegate
                     {
@@ -904,16 +908,37 @@ namespace Cavokator
                         {
                             // Pull up dialog
                             var transaction = FragmentManager.BeginTransaction();
-                            var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[a].NotamId[b], _mNotamContainerList[a].NotamRaw[b]);
+                            var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[a].NotamId[b],
+                                _mNotamContainerList[a].NotamRaw[b]);
                             notamRawDialog.Show(transaction, "notamRawDialog");
                         });
                     };
 
                     myNotamCardRecycler.NotamId = idSpan;
 
+                    // MAP
+                    ImageView myWorldMap = new ImageView(Activity);
+
+                    var myLatitude = _mNotamContainerList[a].Latitude[b];
+                    var myLongitude = _mNotamContainerList[a].Longitude[b];
+                    var myRadius = _mNotamContainerList[a].Radius[b];
+
+                    myWorldMap.Click += delegate
+                    {
+                        Activity.RunOnUiThread(() =>
+                        {
+                            var transaction = FragmentManager.BeginTransaction();
+                            var notamRawMap = new NotamDialogMap(myId, myLatitude, myLongitude, myRadius);
+                            notamRawMap.Show(transaction, "notamMapDialog");
+                        });
+                    };
+
+                    myNotamCardRecycler.NotamMap = myWorldMap;
+
+
                     // FILL FREE TEXT
                     myNotamCardRecycler.NotamFreeText = _mNotamContainerList[a].NotamFreeText[b];
-                    
+
                     // ADD NOTAMRECYCLER TO RECYCLER LIST
                     myRecyclerNotamList.Add(myNotamCardRecycler);
                 }
@@ -927,23 +952,27 @@ namespace Cavokator
 
                     // Disable layouts to get rid of margins
                     myNotamCardRecycler.DisableTopLayout = true;
-                    
+
                     // ADD NOTAMRECYCLER TO RECYCLER LIST
                     myRecyclerNotamList.Add(myNotamCardRecycler);
                 }
             }
         }
 
+
+
+
         private void AddRequestedTime()
         {
-            GetTimeDifferenceString (out var timeComparison, out var utcString);
+            GetTimeDifferenceString(out var timeComparison, out var utcString);
 
             _mUtcTextView = new TextView(Activity);
             _mUtcTextView.Text = utcString;
             _mUtcTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.GreenText));
             _mUtcTextView.SetTextSize(ComplexUnitType.Dip, 14);
             _mUtcTextView.Gravity = GravityFlags.Center;
-            var utcTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            var utcTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                ViewGroup.LayoutParams.WrapContent);
             utcTextViewParams.SetMargins(0, 50, 0, 0);
             _mUtcTextView.LayoutParameters = utcTextViewParams;
 
@@ -971,15 +1000,13 @@ namespace Cavokator
             errorTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
             errorTextView.SetTextSize(ComplexUnitType.Dip, 14);
             errorTextView.Gravity = GravityFlags.Center;
-            var errorTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            var errorTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                ViewGroup.LayoutParams.WrapContent);
             errorTextViewParams.SetMargins(0, 50, 0, 0);
             errorTextView.LayoutParameters = errorTextViewParams;
 
             // Adding view
-            Activity.RunOnUiThread(() =>
-            {
-                _linearLayoutNotamRequestedTime.AddView(errorTextView);
-            });
+            Activity.RunOnUiThread(() => { _linearLayoutNotamRequestedTime.AddView(errorTextView); });
         }
 
         private void AddAirportName(int i)
@@ -993,7 +1020,8 @@ namespace Cavokator
                 for (var j = 0; j < _mAirportDefinitions.Count; j++)
                     if (_mAirportDefinitions[j].icao == _mRequestedAirportsByIcao[i].ToUpper())
                     {
-                        airportName.Text = _mRequestedAirportsRawString[i].ToUpper() + " - " + _mAirportDefinitions[j].description;
+                        airportName.Text = _mRequestedAirportsRawString[i].ToUpper() + " - " +
+                                           _mAirportDefinitions[j].description;
                         foundAirportIcao = true;
                         break;
                     }
@@ -1006,7 +1034,8 @@ namespace Cavokator
             // Styling
             airportName.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             airportName.SetTextSize(ComplexUnitType.Dip, 16);
-            LinearLayout.LayoutParams airportTextViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            LinearLayout.LayoutParams airportTextViewParams =
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             airportTextViewParams.SetMargins(0, 80, 0, 20);
             airportName.LayoutParameters = airportTextViewParams;
 
@@ -1033,7 +1062,8 @@ namespace Cavokator
             // Styling cards
             notamCard.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.LightYellowBackground));
             notamCard.Elevation = 5.0f;
-            var cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            var cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                ViewGroup.LayoutParams.WrapContent);
             cardViewParams.SetMargins(10, 10, 10, 10);
             notamCard.LayoutParameters = cardViewParams;
 
@@ -1062,7 +1092,7 @@ namespace Cavokator
             LinearLayout notamFreeTextLayout = LocalStyleFreeText();
 
             RelativeLayout toFromRelativeLayout = LocalTimeFromTo(_mNotamContainerList[i].StartTime[j],
-                                                   _mNotamContainerList[i].EndTime[j]);
+                _mNotamContainerList[i].EndTime[j]);
 
             RelativeLayout spanRelativeLayout = LocalTimeSpan();
 
@@ -1089,7 +1119,8 @@ namespace Cavokator
                 cardView.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
                 cardView.Elevation = 5.0f;
                 var cardViewParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                        ViewGroup.LayoutParams.WrapContent);
                 cardViewParams.SetMargins(10, 10, 10, 20);
                 cardView.LayoutParameters = cardViewParams;
 
@@ -1101,7 +1132,8 @@ namespace Cavokator
                 LinearLayout myContainerLayout = new LinearLayout(Activity);
                 myContainerLayout.Orientation = Orientation.Vertical;
                 FrameLayout.LayoutParams myContainerLayoutParams =
-                    new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                    new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                        ViewGroup.LayoutParams.WrapContent);
                 myContainerLayoutParams.SetMargins(0, 0, 0, 30);
                 myContainerLayout.LayoutParameters = myContainerLayoutParams;
 
@@ -1113,7 +1145,8 @@ namespace Cavokator
                 // Clickable ID
                 RelativeLayout myTopLayout = new RelativeLayout(Activity);
                 LinearLayout.LayoutParams myTopLayoutParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                        (ViewGroup.LayoutParams.WrapContent));
                 myTopLayoutParams.SetMargins(30, 20, 20, 0);
                 myTopLayout.LayoutParameters = myTopLayoutParams;
 
@@ -1128,7 +1161,8 @@ namespace Cavokator
                     {
                         // Pull up dialog
                         var transaction = FragmentManager.BeginTransaction();
-                        var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[i].NotamId[j], _mNotamContainerList[i].NotamRaw[j]);
+                        var notamRawDialog = new NotamDialogRaw(_mNotamContainerList[i].NotamId[j],
+                            _mNotamContainerList[i].NotamRaw[j]);
                         notamRawDialog.Show(transaction, "notamRawDialog");
                     });
                 };
@@ -1136,7 +1170,8 @@ namespace Cavokator
                 SpannableString idSpan = new SpannableString(_mNotamContainerList[i].NotamId[j]);
                 idSpan.SetSpan(myClickableSpan, 0, idSpan.Length(), 0);
                 idSpan.SetSpan(new UnderlineSpan(), 0, idSpan.Length(), 0);
-                idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0, idSpan.Length(), 0);
+                idSpan.SetSpan(new ForegroundColorSpan(new ApplyTheme().GetColor(DesiredColor.CyanText)), 0,
+                    idSpan.Length(), 0);
 
                 notamIdTextView.TextFormatted = idSpan;
                 notamIdTextView.MovementMethod = new LinkMovementMethod();
@@ -1150,7 +1185,8 @@ namespace Cavokator
                 // Share and Coordinates holder
                 LinearLayout shareAndCoordinatesLayout = new LinearLayout(Activity);
                 RelativeLayout.LayoutParams shareAndCoordinatesLayoutParams =
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                        (ViewGroup.LayoutParams.WrapContent));
                 shareAndCoordinatesLayoutParams.AddRule(LayoutRules.AlignParentRight);
                 shareAndCoordinatesLayout.LayoutParameters = shareAndCoordinatesLayoutParams;
 
@@ -1158,7 +1194,8 @@ namespace Cavokator
                 ImageView myShareIcon = new ImageView(Activity);
                 myShareIcon.SetImageResource(Resource.Drawable.ic_share_variant_black_48dp);
                 LinearLayout.LayoutParams myShareIconParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                        (ViewGroup.LayoutParams.WrapContent));
                 myShareIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 myShareIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 myShareIconParams.SetMargins(0, 0, 0, 0);
@@ -1181,12 +1218,15 @@ namespace Cavokator
                 {
                     ImageView myWorldMap = new ImageView(Activity);
                     LinearLayout.LayoutParams worldMapIconParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
-                    worldMapIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                            (ViewGroup.LayoutParams.WrapContent));
+                    worldMapIconParams.Height =
+                        Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
                     worldMapIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_35);
                     worldMapIconParams.SetMargins(20, 0, 0, 0);
                     worldMapIconParams.Gravity = GravityFlags.CenterVertical;
-                    myWorldMap.LayoutParameters = worldMapIconParams; myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
+                    myWorldMap.LayoutParameters = worldMapIconParams;
+                    myWorldMap.SetImageResource(Resource.Drawable.ic_world_map);
 
                     shareAndCoordinatesLayout.AddView(myWorldMap);
 
@@ -1213,7 +1253,8 @@ namespace Cavokator
                 if (showSubcategories)
                 {
                     string myMainCategoryString = ReturnMainCategory(_mNotamContainerList[i].CodeSecondThird[j]);
-                    string mySecondaryCategoryString = ReturnSecondaryCategory(_mNotamContainerList[i].CodeFourthFifth[j]);
+                    string mySecondaryCategoryString =
+                        ReturnSecondaryCategory(_mNotamContainerList[i].CodeFourthFifth[j]);
 
                     if (myMainCategoryString != string.Empty)
                     {
@@ -1225,7 +1266,8 @@ namespace Cavokator
                         mainCategoryTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
                         mainCategoryTextView.SetTextSize(ComplexUnitType.Dip, 10);
                         RelativeLayout.LayoutParams mainCategoryTextViewParams =
-                            new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                            new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                                ViewGroup.LayoutParams.WrapContent);
                         mainCategoryTextViewParams.SetMargins(30, 0, 0, 0);
                         mainCategoryTextView.LayoutParameters = mainCategoryTextViewParams;
 
@@ -1236,7 +1278,8 @@ namespace Cavokator
                         {
                             RelativeLayout categoryBottomLayout = new RelativeLayout(Activity);
                             RelativeLayout.LayoutParams categoryBottomLayoutParams =
-                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                                    ViewGroup.LayoutParams.WrapContent);
                             categoryBottomLayoutParams.AddRule(LayoutRules.Below, categoryTopLayout.Id);
                             categoryBottomLayout.LayoutParameters = categoryBottomLayoutParams;
 
@@ -1244,9 +1287,12 @@ namespace Cavokator
                             arrowIcon.Id = 1;
                             arrowIcon.SetImageResource(Resource.Drawable.ic_menu_right_black_48dp);
                             RelativeLayout.LayoutParams arrowIconParams =
-                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                            arrowIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_15);
-                            arrowIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_15);
+                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                                    ViewGroup.LayoutParams.WrapContent);
+                            arrowIconParams.Height =
+                                Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_15);
+                            arrowIconParams.Width =
+                                Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_15);
                             arrowIconParams.SetMargins(30, 0, 0, 0);
                             arrowIconParams.AddRule(LayoutRules.CenterVertical);
                             arrowIcon.LayoutParameters = arrowIconParams;
@@ -1256,7 +1302,8 @@ namespace Cavokator
                             secondaryCategoryTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
                             secondaryCategoryTextView.SetTextSize(ComplexUnitType.Dip, 10);
                             RelativeLayout.LayoutParams secondaryCategoryTextViewParams =
-                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                                    ViewGroup.LayoutParams.WrapContent);
                             secondaryCategoryTextViewParams.SetMargins(0, 0, 0, 0);
                             secondaryCategoryTextViewParams.AddRule(LayoutRules.RightOf, arrowIcon.Id);
                             secondaryCategoryTextViewParams.AddRule(LayoutRules.CenterVertical);
@@ -1281,7 +1328,8 @@ namespace Cavokator
                 freeTextLayout.Orientation = Orientation.Vertical;
 
                 LinearLayout.LayoutParams freeTextLayoutParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                        ViewGroup.LayoutParams.WrapContent);
                 freeTextLayoutParams.SetMargins(30, 30, 30, 20);
                 freeTextLayout.LayoutParameters = freeTextLayoutParams;
 
@@ -1299,7 +1347,8 @@ namespace Cavokator
             {
                 RelativeLayout myBaseTimeLayout = new RelativeLayout(Activity);
                 LinearLayout.LayoutParams myBaseTimeLayoutParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                        (ViewGroup.LayoutParams.WrapContent));
                 myBaseTimeLayoutParams.SetMargins(30, 10, 30, 10);
                 myBaseTimeLayout.LayoutParameters = myBaseTimeLayoutParams;
 
@@ -1307,7 +1356,8 @@ namespace Cavokator
                 calendarIcon.Id = 1;
                 calendarIcon.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
                 RelativeLayout.LayoutParams calendarIconParams =
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                        (ViewGroup.LayoutParams.WrapContent));
                 calendarIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 calendarIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 calendarIconParams.AddRule(LayoutRules.CenterVertical);
@@ -1321,6 +1371,7 @@ namespace Cavokator
                 {
                     calendarIcon.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
                 }
+
                 // Save view in order to update the calendar color later
                 _mCalendarViews.Add(calendarIcon);
                 mStartDateTimes.Add(myTimeStart);
@@ -1331,7 +1382,8 @@ namespace Cavokator
                 myStartTimeEditText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
                 myStartTimeEditText.SetTextSize(ComplexUnitType.Dip, 11);
                 RelativeLayout.LayoutParams myStartTimeEditTextParams =
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                        ViewGroup.LayoutParams.WrapContent);
                 myStartTimeEditTextParams.SetMargins(10, 0, 0, 0);
                 myStartTimeEditTextParams.AddRule(LayoutRules.RightOf, calendarIcon.Id);
                 myStartTimeEditTextParams.AddRule(LayoutRules.CenterVertical);
@@ -1346,7 +1398,8 @@ namespace Cavokator
                 arrowIcon.Id = 3;
                 arrowIcon.SetImageResource(Resource.Drawable.ic_menu_right_black_48dp);
                 RelativeLayout.LayoutParams arrowIconParams =
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                        (ViewGroup.LayoutParams.WrapContent));
                 arrowIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 arrowIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                 arrowIconParams.SetMargins(8, 0, 8, 0);
@@ -1359,7 +1412,8 @@ namespace Cavokator
                 myEndTimeEditText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
                 myEndTimeEditText.SetTextSize(ComplexUnitType.Dip, 11);
                 RelativeLayout.LayoutParams myEndTimeEditTextParams =
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                        ViewGroup.LayoutParams.WrapContent);
                 myEndTimeEditTextParams.SetMargins(0, 0, 0, 0);
                 myEndTimeEditTextParams.AddRule(LayoutRules.RightOf, arrowIcon.Id);
                 myEndTimeEditTextParams.AddRule(LayoutRules.CenterVertical);
@@ -1368,23 +1422,24 @@ namespace Cavokator
                 if (!_mNotamContainerList[i].CEstimated[j] && !_mNotamContainerList[i].CPermanent[j])
                 {
                     myEndTimeString = myTimeEnd.ToString("dd") + "-" +
-                           myTimeEnd.ToString("MMM") + "-" +
-                           myTimeEnd.ToString("yy") + " " +
-                           myTimeEnd.ToString("HH") + ":" +
-                           myTimeEnd.ToString("mm");
+                                      myTimeEnd.ToString("MMM") + "-" +
+                                      myTimeEnd.ToString("yy") + " " +
+                                      myTimeEnd.ToString("HH") + ":" +
+                                      myTimeEnd.ToString("mm");
                 }
                 else if (_mNotamContainerList[i].CEstimated[j])
                 {
                     myEndTimeString = myTimeEnd.ToString("dd") + "-" +
-                           myTimeEnd.ToString("MMM") + "-" +
-                           myTimeEnd.ToString("yy") + " " +
-                           myTimeEnd.ToString("HH") + ":" +
-                           myTimeEnd.ToString("mm") + " (ESTIMATED)";
+                                      myTimeEnd.ToString("MMM") + "-" +
+                                      myTimeEnd.ToString("yy") + " " +
+                                      myTimeEnd.ToString("HH") + ":" +
+                                      myTimeEnd.ToString("mm") + " (ESTIMATED)";
                 }
                 else if (_mNotamContainerList[i].CPermanent[j])
                 {
                     myEndTimeString = "PERMANENT";
                 }
+
                 myEndTimeEditText.Text = myEndTimeString;
 
                 myBaseTimeLayout.AddView(calendarIcon);
@@ -1402,7 +1457,8 @@ namespace Cavokator
                 if (_mNotamContainerList[i].Span[j] != String.Empty)
                 {
                     LinearLayout.LayoutParams myBaseSpanLayoutParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                            (ViewGroup.LayoutParams.WrapContent));
                     myBaseSpanLayoutParams.SetMargins(30, 10, 0, 10);
                     myBaseSpanLayout.LayoutParameters = myBaseSpanLayoutParams;
 
@@ -1410,9 +1466,12 @@ namespace Cavokator
                     spanClockIcon.SetImageResource(Resource.Drawable.ic_clock_black_48dp);
                     spanClockIcon.Id = 1;
                     RelativeLayout.LayoutParams spanClockIconParams =
-                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
-                    spanClockIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
-                    spanClockIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                            (ViewGroup.LayoutParams.WrapContent));
+                    spanClockIconParams.Height =
+                        Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
+                    spanClockIconParams.Width =
+                        Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                     spanClockIconParams.SetMargins(0, 0, 20, 0);
                     spanClockIconParams.AddRule(LayoutRules.CenterVertical);
                     spanClockIcon.LayoutParameters = spanClockIconParams;
@@ -1422,7 +1481,8 @@ namespace Cavokator
                     spanText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
                     spanText.SetTextSize(ComplexUnitType.Dip, 11);
                     RelativeLayout.LayoutParams spanTextParams =
-                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                            ViewGroup.LayoutParams.WrapContent);
                     spanTextParams.SetMargins(0, 0, 0, 0);
                     spanTextParams.AddRule(LayoutRules.RightOf, spanClockIcon.Id);
                     spanTextParams.AddRule(LayoutRules.CenterVertical);
@@ -1445,7 +1505,8 @@ namespace Cavokator
                 {
 
                     LinearLayout.LayoutParams myBottomTopLayoutParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, (ViewGroup.LayoutParams.WrapContent));
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                            (ViewGroup.LayoutParams.WrapContent));
                     myBottomTopLayoutParams.SetMargins(30, 10, 0, 10);
                     myBottomTopLayout.LayoutParameters = myBottomTopLayoutParams;
 
@@ -1453,7 +1514,8 @@ namespace Cavokator
                     bottomIcon.Id = 1;
                     bottomIcon.SetImageResource(Resource.Drawable.ic_format_vertical_align_bottom_black_48dp);
                     RelativeLayout.LayoutParams bottomIconParams =
-                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                            (ViewGroup.LayoutParams.WrapContent));
                     bottomIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                     bottomIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                     bottomIconParams.SetMargins(0, 0, 0, 0);
@@ -1465,7 +1527,8 @@ namespace Cavokator
                     myBottomTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
                     myBottomTextView.SetTextSize(ComplexUnitType.Dip, 11);
                     RelativeLayout.LayoutParams myBottomTextViewParams =
-                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                            ViewGroup.LayoutParams.WrapContent);
                     myBottomTextViewParams.SetMargins(10, 0, 0, 0);
                     myBottomTextViewParams.AddRule(LayoutRules.RightOf, bottomIcon.Id);
                     myBottomTextViewParams.AddRule(LayoutRules.CenterVertical);
@@ -1476,7 +1539,8 @@ namespace Cavokator
                     topIcon.Id = 3;
                     topIcon.SetImageResource(Resource.Drawable.ic_format_vertical_align_top_black_48dp);
                     RelativeLayout.LayoutParams topIconParams =
-                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, (ViewGroup.LayoutParams.WrapContent));
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                            (ViewGroup.LayoutParams.WrapContent));
                     topIconParams.Height = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                     topIconParams.Width = Resources.GetDimensionPixelSize(Resource.Dimension.dimen_entry_in_dp_20);
                     topIconParams.SetMargins(40, 0, 0, 0);
@@ -1489,7 +1553,8 @@ namespace Cavokator
                     myTopTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
                     myTopTextView.SetTextSize(ComplexUnitType.Dip, 11);
                     RelativeLayout.LayoutParams myTopTextViewParams =
-                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                            ViewGroup.LayoutParams.WrapContent);
                     myTopTextViewParams.SetMargins(10, 0, 0, 0);
                     myTopTextViewParams.AddRule(LayoutRules.RightOf, topIcon.Id);
                     myTopTextViewParams.AddRule(LayoutRules.CenterVertical);
@@ -1524,7 +1589,8 @@ namespace Cavokator
             // Styling cards
             notamCard.SetBackgroundColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
             notamCard.Elevation = 5.0f;
-            var cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            var cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                ViewGroup.LayoutParams.WrapContent);
             cardViewParams.SetMargins(10, 10, 10, 10);
             notamCard.LayoutParameters = cardViewParams;
 
@@ -1586,7 +1652,7 @@ namespace Cavokator
             Boolean LocalGetWritePermission()
             {
                 const string permission = Manifest.Permission.WriteExternalStorage;
-                if (ContextCompat.CheckSelfPermission(Activity, permission) == (int)Permission.Granted)
+                if (ContextCompat.CheckSelfPermission(Activity, permission) == (int) Permission.Granted)
                 {
                     return true;
                 }
@@ -1600,7 +1666,9 @@ namespace Cavokator
 
                 intent.SetType("*/*");
 
-                intent.PutExtra(Intent.ExtraText, "CAVOKATOR APP, NOTAM from airport " + airportId + ", requested @ " + _mUtcRequestTime.ToString("dd-MMM-yyyy HH:mm") + "UTC");
+                intent.PutExtra(Intent.ExtraText,
+                    "CAVOKATOR APP, NOTAM from airport " + airportId + ", requested @ " +
+                    _mUtcRequestTime.ToString("dd-MMM-yyyy HH:mm") + "UTC");
                 intent.PutExtra(Intent.ExtraStream, LocalGetImageUri(Activity, LocalGetBitmapFromView(myNotamView)));
 
                 StartActivity(Intent.CreateChooser(intent, "NOTAM"));
@@ -1632,28 +1700,30 @@ namespace Cavokator
 
         }
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions,
+            Permission[] grantResults)
         {
             switch (requestCode)
             {
                 case 0:
+                {
+                    if (grantResults[0] == Permission.Granted)
                     {
-                        if (grantResults[0] == Permission.Granted)
-                        {
-                            // Call again function to share
-                            ShareSpecificNotam(false);
-                        }
-                        else
-                        {
-                            //Explain to the user why we need to read the contacts
-                            Snackbar.Make(_scrollViewContainer, "Permission needed to share full NOTAM as image!", Snackbar.LengthShort).Show();
-
-                            // Call again function to share
-                            ShareSpecificNotam(true);
-                        }
-
-                        break;
+                        // Call again function to share
+                        ShareSpecificNotam(false);
                     }
+                    else
+                    {
+                        //Explain to the user why we need to read the contacts
+                        Snackbar.Make(_scrollViewContainer, "Permission needed to share full NOTAM as image!",
+                            Snackbar.LengthShort).Show();
+
+                        // Call again function to share
+                        ShareSpecificNotam(true);
+                    }
+
+                    break;
+                }
             }
         }
 
@@ -1706,7 +1776,8 @@ namespace Cavokator
         private void RecallSavedData()
         {
             // Get options from options dialog
-            ISharedPreferences notamOptionsPreferences = Application.Context.GetSharedPreferences("NOTAM_Options", FileCreationMode.Private);
+            ISharedPreferences notamOptionsPreferences =
+                Application.Context.GetSharedPreferences("NOTAM_Options", FileCreationMode.Private);
 
             // First initialization
             mSortByCategory = notamOptionsPreferences.GetString("sortByPREF", String.Empty);
@@ -1733,7 +1804,8 @@ namespace Cavokator
 
 
             // Get fragment's saved state
-            ISharedPreferences notamFragmentPreferences = Application.Context.GetSharedPreferences("NOTAM_OnPause", FileCreationMode.Private);
+            ISharedPreferences notamFragmentPreferences =
+                Application.Context.GetSharedPreferences("NOTAM_OnPause", FileCreationMode.Private);
 
             // Airport Text
             var airportEntryEditText = notamFragmentPreferences.GetString("_airportEntryEditText", String.Empty);
@@ -1746,18 +1818,26 @@ namespace Cavokator
             }
 
             // Make sure there are values != null, in order to avoid assigning null!
-            var deserializeNotamContainer = JsonConvert.DeserializeObject<List<NotamContainer>>(notamFragmentPreferences.GetString("notamContainer", string.Empty));
+            var deserializeNotamContainer =
+                JsonConvert.DeserializeObject<List<NotamContainer>>(
+                    notamFragmentPreferences.GetString("notamContainer", string.Empty));
             if (deserializeNotamContainer != null)
             {
                 _mNotamContainerList = deserializeNotamContainer;
 
-                var deserializeRequestedUtc = JsonConvert.DeserializeObject<DateTime>(notamFragmentPreferences.GetString("requestedUtc", string.Empty));
+                var deserializeRequestedUtc =
+                    JsonConvert.DeserializeObject<DateTime>(
+                        notamFragmentPreferences.GetString("requestedUtc", string.Empty));
                 _mUtcRequestTime = deserializeRequestedUtc;
 
-                var deserializeAirportsByIcao = JsonConvert.DeserializeObject<List<String>>(notamFragmentPreferences.GetString("airportsICAO", string.Empty));
+                var deserializeAirportsByIcao =
+                    JsonConvert.DeserializeObject<List<String>>(
+                        notamFragmentPreferences.GetString("airportsICAO", string.Empty));
                 _mRequestedAirportsByIcao = deserializeAirportsByIcao;
 
-                var deserializeAirportsRawString = JsonConvert.DeserializeObject<List<String>>(notamFragmentPreferences.GetString("airportsRaw", string.Empty));
+                var deserializeAirportsRawString =
+                    JsonConvert.DeserializeObject<List<String>>(
+                        notamFragmentPreferences.GetString("airportsRaw", string.Empty));
                 _mRequestedAirportsRawString = deserializeAirportsRawString;
 
                 if (_mNotamContainerList.Count > 0)
@@ -1909,7 +1989,7 @@ namespace Cavokator
                 myRecyclerNotamList.Clear();
                 mAdapter.NotifyDataSetChanged();
             }
-            
+
             ShowNotams();
         }
 
@@ -1919,211 +1999,211 @@ namespace Cavokator
             Dictionary<string, string> mainCategoriesDictionary = new Dictionary<string, string>
             {
                 // Lighting Facilities
-                { "LA", "APPR lighting system" },
-                { "LB", "Aerodrome beacon" },
-                { "LC", "RWY center line lights" },
-                { "LD", "Landing direction indicator lights" },
-                { "LE", "Runway edge lights" },
-                { "LF", "Sequenced flashing lights" },
-                { "LG", "Pilot-controlled lighting" },
-                { "LH", "High intensity RWY lights" },
-                { "LI", "RWY end identifier lights" },
-                { "LJ", "RWY alignment indicator lights" },
-                { "LK", "CAT II lighting components" },
-                { "LL", "Low intensity runway lights" },
-                { "LM", "Medium intensity runway lights" },
-                { "LP", "PAPI" },
-                { "LR", "All landing area lighting facilities" },
-                { "LS", "Stopway lights" },
-                { "LT", "Threshold lights" },
-                { "LU", "Helicopter approach path indicator" },
-                { "LV", "VASIS" },
-                { "LW", "Heliport lighting" },
-                { "LX", "Taxiway center line lights" },
-                { "LY", "Taxiway edge lights" },
-                { "LZ", "Runway touchdown zone lights" },
+                {"LA", "APPR lighting system"},
+                {"LB", "Aerodrome beacon"},
+                {"LC", "RWY center line lights"},
+                {"LD", "Landing direction indicator lights"},
+                {"LE", "Runway edge lights"},
+                {"LF", "Sequenced flashing lights"},
+                {"LG", "Pilot-controlled lighting"},
+                {"LH", "High intensity RWY lights"},
+                {"LI", "RWY end identifier lights"},
+                {"LJ", "RWY alignment indicator lights"},
+                {"LK", "CAT II lighting components"},
+                {"LL", "Low intensity runway lights"},
+                {"LM", "Medium intensity runway lights"},
+                {"LP", "PAPI"},
+                {"LR", "All landing area lighting facilities"},
+                {"LS", "Stopway lights"},
+                {"LT", "Threshold lights"},
+                {"LU", "Helicopter approach path indicator"},
+                {"LV", "VASIS"},
+                {"LW", "Heliport lighting"},
+                {"LX", "Taxiway center line lights"},
+                {"LY", "Taxiway edge lights"},
+                {"LZ", "Runway touchdown zone lights"},
 
                 // Movement and landing area
-                { "MA", "Movement area" },
-                { "MB", "Bearing strength" },
-                { "MC", "Clearway" },
-                { "MD", "Declared distances" },
-                { "MG", "Taxiing guidance system" },
-                { "MH", "Runway arresting gear" },
-                { "MK", "Parking area" },
-                { "MM", "Daylight markings" },
-                { "MN", "Apron" },
-                { "MO", "Stop bar" },
-                { "MP", "Aircraft stands" },
-                { "MR", "Runway" },
-                { "MS", "Stopway" },
-                { "MT", "Threshold" },
-                { "MU", "Runway turning bay" },
-                { "MW", "Strip" },
-                { "MX", "Taxiway" },
-                { "MY", "Rapid exit taxiway" },
+                {"MA", "Movement area"},
+                {"MB", "Bearing strength"},
+                {"MC", "Clearway"},
+                {"MD", "Declared distances"},
+                {"MG", "Taxiing guidance system"},
+                {"MH", "Runway arresting gear"},
+                {"MK", "Parking area"},
+                {"MM", "Daylight markings"},
+                {"MN", "Apron"},
+                {"MO", "Stop bar"},
+                {"MP", "Aircraft stands"},
+                {"MR", "Runway"},
+                {"MS", "Stopway"},
+                {"MT", "Threshold"},
+                {"MU", "Runway turning bay"},
+                {"MW", "Strip"},
+                {"MX", "Taxiway"},
+                {"MY", "Rapid exit taxiway"},
 
                 // Facilities and services
-                { "FA", "Aerodrome" },
-                { "FB", "Friction measuring devide" },
-                { "FC", "Ceiling measurement equipment" },
-                { "FD", "Docking system" },
-                { "FE", "Oxygen" },
-                { "FF", "Firefighting and rescue" },
-                { "FG", "Ground movement control" },
-                { "FH", "Helicopter alighting area/platform" },
-                { "FI", "Aircraft de-icing" },
-                { "FJ", "Oils" },
-                { "FL", "Landing direction indicator" },
-                { "FM", "Meteorological service" },
-                { "FO", "Fog dispersal system" },
-                { "FP", "Heliport" },
-                { "FS", "Snow removal equipment" },
-                { "FT", "Transmissometer" },
-                { "FU", "Fuel availability" },
-                { "FW", "Wind direction indicator" },
-                { "FZ", "Customs" },
+                {"FA", "Aerodrome"},
+                {"FB", "Friction measuring devide"},
+                {"FC", "Ceiling measurement equipment"},
+                {"FD", "Docking system"},
+                {"FE", "Oxygen"},
+                {"FF", "Firefighting and rescue"},
+                {"FG", "Ground movement control"},
+                {"FH", "Helicopter alighting area/platform"},
+                {"FI", "Aircraft de-icing"},
+                {"FJ", "Oils"},
+                {"FL", "Landing direction indicator"},
+                {"FM", "Meteorological service"},
+                {"FO", "Fog dispersal system"},
+                {"FP", "Heliport"},
+                {"FS", "Snow removal equipment"},
+                {"FT", "Transmissometer"},
+                {"FU", "Fuel availability"},
+                {"FW", "Wind direction indicator"},
+                {"FZ", "Customs"},
 
                 // Airspace organization
-                { "AA", "Minimum altitude" },
-                { "AC", "Control zone" },
-                { "AD", "Air defense identification zone" },
-                { "AE", "Control area" },
-                { "AF", "Flight information region" },
-                { "AG", "General facility" },
-                { "AH", "Upper control area" },
-                { "AL", "Minimum usable flight level" },
-                { "AN", "Area navigation route" },
-                { "AO", "Oceanic control area" },
-                { "AP", "Reporting point" },
-                { "AR", "ATS route" },
-                { "AT", "Terminal control area" },
-                { "AU", "Upper flight information region" },
-                { "AV", "Upper advisory area" },
-                { "AX", "Intersection" },
-                { "AZ", "Aerodrome traffic zone" },
+                {"AA", "Minimum altitude"},
+                {"AC", "Control zone"},
+                {"AD", "Air defense identification zone"},
+                {"AE", "Control area"},
+                {"AF", "Flight information region"},
+                {"AG", "General facility"},
+                {"AH", "Upper control area"},
+                {"AL", "Minimum usable flight level"},
+                {"AN", "Area navigation route"},
+                {"AO", "Oceanic control area"},
+                {"AP", "Reporting point"},
+                {"AR", "ATS route"},
+                {"AT", "Terminal control area"},
+                {"AU", "Upper flight information region"},
+                {"AV", "Upper advisory area"},
+                {"AX", "Intersection"},
+                {"AZ", "Aerodrome traffic zone"},
 
                 // Air traffic and VOLMET
-                { "SA", "ATIS" },
-                { "SB", "ATS reporting office" },
-                { "SC", "Area control center" },
-                { "SE", "Flight information service" },
-                { "SF", "Airport flight information service" },
-                { "SL", "Flow control centre" },
-                { "SO", "Oceanic area control centre" },
-                { "SP", "Approach control service" },
-                { "SS", "Flight service station" },
-                { "ST", "Aerodrome control tower" },
-                { "SU", "Upper area control centre" },
-                { "SV", "VOLMET broadcast" },
-                { "SY", "Upper advisory service" },
+                {"SA", "ATIS"},
+                {"SB", "ATS reporting office"},
+                {"SC", "Area control center"},
+                {"SE", "Flight information service"},
+                {"SF", "Airport flight information service"},
+                {"SL", "Flow control centre"},
+                {"SO", "Oceanic area control centre"},
+                {"SP", "Approach control service"},
+                {"SS", "Flight service station"},
+                {"ST", "Aerodrome control tower"},
+                {"SU", "Upper area control centre"},
+                {"SV", "VOLMET broadcast"},
+                {"SY", "Upper advisory service"},
 
                 // Air traffic procedures
-                { "PA", "Standard instrument arrival" },
-                { "PB", "Standard VFR arrival" },
-                { "PC", "Contingency procedures" },
-                { "PD", "Standard instrument departure" },
-                { "PE", "Stardard VFR departure" },
-                { "PF", "Flow control procedure" },
-                { "PH", "Holding procedure" },
-                { "PI", "Instrument approach procedure" },
-                { "PK", "VFR approach procedure" },
-                { "PL", "Obstacle clearance limit'" },
-                { "PM", "Aerodrome operating minima'" },
-                { "PN", "Noise operating restrictions'" },
-                { "PO", "Obstacle clearance altitude" },
-                { "PP", "Obstacle clearance height" },
-                { "PR", "Radio failure procedure" },
-                { "PT", "Transition altitude" },
-                { "PU", "Missed approach procedure" },
-                { "PX", "Minimum holding altitude" },
-                { "PZ", "ADIZ procedure" },
+                {"PA", "Standard instrument arrival"},
+                {"PB", "Standard VFR arrival"},
+                {"PC", "Contingency procedures"},
+                {"PD", "Standard instrument departure"},
+                {"PE", "Stardard VFR departure"},
+                {"PF", "Flow control procedure"},
+                {"PH", "Holding procedure"},
+                {"PI", "Instrument approach procedure"},
+                {"PK", "VFR approach procedure"},
+                {"PL", "Obstacle clearance limit'"},
+                {"PM", "Aerodrome operating minima'"},
+                {"PN", "Noise operating restrictions'"},
+                {"PO", "Obstacle clearance altitude"},
+                {"PP", "Obstacle clearance height"},
+                {"PR", "Radio failure procedure"},
+                {"PT", "Transition altitude"},
+                {"PU", "Missed approach procedure"},
+                {"PX", "Minimum holding altitude"},
+                {"PZ", "ADIZ procedure"},
 
                 // Communications and surveillance facilities
-                { "CA", "Air/ground facility" },
-                { "CB", "Automatic dependent surv. broadcast" },
-                { "CC", "automatic dependent surv. contract" },
-                { "CD", "CPDLC" },
-                { "CE", "En-route surveillance radar" },
-                { "CG", "Ground controlled approach system" },
-                { "CL", "SELCAL" },
-                { "CM", "Surface movement radar" },
-                { "CP", "Precision approach radar (PAR)" },
-                { "CR", "Surveillance radar element of PAR" },
-                { "CS", "Secondary surveillance radar" },
-                { "CT", "Terminal area surveillance radar" },
+                {"CA", "Air/ground facility"},
+                {"CB", "Automatic dependent surv. broadcast"},
+                {"CC", "automatic dependent surv. contract"},
+                {"CD", "CPDLC"},
+                {"CE", "En-route surveillance radar"},
+                {"CG", "Ground controlled approach system"},
+                {"CL", "SELCAL"},
+                {"CM", "Surface movement radar"},
+                {"CP", "Precision approach radar (PAR)"},
+                {"CR", "Surveillance radar element of PAR"},
+                {"CS", "Secondary surveillance radar"},
+                {"CT", "Terminal area surveillance radar"},
 
                 // Instrument and microwave landing system
-                { "IC", "ILS" },
-                { "ID", "DME associated with ILS" },
-                { "IG", "Glide path (ILS)" },
-                { "II", "Inner marker (ILS)" },
-                { "IL", "Localizer (ILS)" },
-                { "IM", "Middle marker (ILS)" },
-                { "IN", "Localizer (non-ILS)" },
-                { "IO", "Outer marker (ILS)" },
-                { "IS", "ILS CAT I" },
-                { "IT", "ILS CAT II" },
-                { "IU", "ILS CAT III" },
-                { "IW", "Microwave landing system" },
-                { "IX", "Locator, outer (ILS)" },
-                { "IY", "Locator, middle (ILS)" },
+                {"IC", "ILS"},
+                {"ID", "DME associated with ILS"},
+                {"IG", "Glide path (ILS)"},
+                {"II", "Inner marker (ILS)"},
+                {"IL", "Localizer (ILS)"},
+                {"IM", "Middle marker (ILS)"},
+                {"IN", "Localizer (non-ILS)"},
+                {"IO", "Outer marker (ILS)"},
+                {"IS", "ILS CAT I"},
+                {"IT", "ILS CAT II"},
+                {"IU", "ILS CAT III"},
+                {"IW", "Microwave landing system"},
+                {"IX", "Locator, outer (ILS)"},
+                {"IY", "Locator, middle (ILS)"},
 
                 // GNSS services
-                { "GA", "GNSS airfield-specidic operations" },
-                { "GW", "GNSS area-wide operations" },
+                {"GA", "GNSS airfield-specidic operations"},
+                {"GW", "GNSS area-wide operations"},
 
                 // Terminal and en-route navigation facilities
-                { "NA", "All radio navigation facilities" },
-                { "NB", "NDB" },
-                { "NC", "DECCA" },
-                { "ND", "DME" },
-                { "NF", "Fan marker" },
-                { "NL", "Locator" },
-                { "NM", "VOR/DME" },
-                { "NN", "TACAN" },
-                { "NO", "OMEGA" },
-                { "NT", "VORTAC" },
-                { "NV", "VOR" },
-                { "NX", "Direction finding station" },
+                {"NA", "All radio navigation facilities"},
+                {"NB", "NDB"},
+                {"NC", "DECCA"},
+                {"ND", "DME"},
+                {"NF", "Fan marker"},
+                {"NL", "Locator"},
+                {"NM", "VOR/DME"},
+                {"NN", "TACAN"},
+                {"NO", "OMEGA"},
+                {"NT", "VORTAC"},
+                {"NV", "VOR"},
+                {"NX", "Direction finding station"},
 
                 // Airspace restrictions
-                { "RA", "Airspace reservation" },
-                { "RD", "Danger area" },
-                { "RM", "Military operating area" },
-                { "RO", "Overflying" },
-                { "RP", "Prohibited area" },
-                { "RR", "Restricted area" },
-                { "RT", "Temporary restricted area" },
+                {"RA", "Airspace reservation"},
+                {"RD", "Danger area"},
+                {"RM", "Military operating area"},
+                {"RO", "Overflying"},
+                {"RP", "Prohibited area"},
+                {"RR", "Restricted area"},
+                {"RT", "Temporary restricted area"},
 
                 // Warnings
-                { "WA", "Air display" },
-                { "WB", "Aerobatics" },
-                { "WC", "Captive balloon or kite" },
-                { "WD", "Demolition of explosives" },
-                { "WE", "Exercises" },
-                { "WF", "Air refueling" },
-                { "WG", "Glider flying" },
-                { "WH", "Blasting" },
-                { "WJ", "Banner/target towing" },
-                { "WL", "Ascent of free balloon" },
-                { "WM", "Missile, gun or rocket firing" },
-                { "WP", "Parachute jumping exercise" },
-                { "WR", "Radioactive/toxic materials" },
-                { "WS", "Burning or blowing gas" },
-                { "WT", "Mass movement of aircraft" },
-                { "WU", "Unmanned aircraft" },
-                { "WV", "Formation flight" },
-                { "WW", "Significant volcanic activity" },
-                { "WY", "Aerial survey" },
-                { "WZ", "Model flying" },
+                {"WA", "Air display"},
+                {"WB", "Aerobatics"},
+                {"WC", "Captive balloon or kite"},
+                {"WD", "Demolition of explosives"},
+                {"WE", "Exercises"},
+                {"WF", "Air refueling"},
+                {"WG", "Glider flying"},
+                {"WH", "Blasting"},
+                {"WJ", "Banner/target towing"},
+                {"WL", "Ascent of free balloon"},
+                {"WM", "Missile, gun or rocket firing"},
+                {"WP", "Parachute jumping exercise"},
+                {"WR", "Radioactive/toxic materials"},
+                {"WS", "Burning or blowing gas"},
+                {"WT", "Mass movement of aircraft"},
+                {"WU", "Unmanned aircraft"},
+                {"WV", "Formation flight"},
+                {"WW", "Significant volcanic activity"},
+                {"WY", "Aerial survey"},
+                {"WZ", "Model flying"},
 
                 // Other information
-                { "OA", "Aeronautical information service" },
-                { "OB", "Obstacle" },
-                { "OE", "Aircraft entry requirements" },
-                { "OL", "Obstacle lights on" },
-                { "OR", "Rescue coordination centre" },
+                {"OA", "Aeronautical information service"},
+                {"OB", "Obstacle"},
+                {"OE", "Aircraft entry requirements"},
+                {"OL", "Obstacle lights on"},
+                {"OR", "Rescue coordination centre"},
             };
 
             foreach (KeyValuePair<string, string> entry in mainCategoriesDictionary)
@@ -2144,89 +2224,89 @@ namespace Cavokator
             {
 
                 // Availability
-                { "AC", "Withdrawn from maintenance" },
-                { "AD", "Available for daylight operations" },
-                { "AF", "Flight checked and found reliable" },
-                { "AG", "Operating but awaiting flight check" },
-                { "AH", "Hours service change" },
-                { "AK", "Resumed normal operation" },
-                { "AL", "Operative subject to previous limitations" },
-                { "AM", "Military operations only" },
-                { "AN", "Available for night operations" },
-                { "AO", "Operational" },
-                { "AP", "Available, prior permission required" },
-                { "AR", "Available on request" },
-                { "AS", "Unserviceable" },
-                { "AU", "Not available" },
-                { "AW", "Completely withdrawn" },
-                { "AX", "Previous shutdown cancelled" },
+                {"AC", "Withdrawn from maintenance"},
+                {"AD", "Available for daylight operations"},
+                {"AF", "Flight checked and found reliable"},
+                {"AG", "Operating but awaiting flight check"},
+                {"AH", "Hours service change"},
+                {"AK", "Resumed normal operation"},
+                {"AL", "Operative subject to previous limitations"},
+                {"AM", "Military operations only"},
+                {"AN", "Available for night operations"},
+                {"AO", "Operational"},
+                {"AP", "Available, prior permission required"},
+                {"AR", "Available on request"},
+                {"AS", "Unserviceable"},
+                {"AU", "Not available"},
+                {"AW", "Completely withdrawn"},
+                {"AX", "Previous shutdown cancelled"},
 
                 // Availability
-                { "CA", "Activated" },
-                { "CC", "Completed" },
-                { "CD", "Deactivated" },
-                { "CE", "Erected" },
-                { "CF", "Operating frequency changed" },
-                { "CG", "Downgraded" },
-                { "CH", "Changed" },
-                { "CI", "Ident/callsign changed" },
-                { "CL", "Realigned" },
-                { "CM", "Displaced" },
-                { "CN", "Cancelled" },
-                { "CO", "Operating" },
-                { "CP", "Operating on reduced power" },
-                { "CR", "Temporarily replaced" },
-                { "CS", "Installed" },
-                { "CT", "On test, do not use" },
+                {"CA", "Activated"},
+                {"CC", "Completed"},
+                {"CD", "Deactivated"},
+                {"CE", "Erected"},
+                {"CF", "Operating frequency changed"},
+                {"CG", "Downgraded"},
+                {"CH", "Changed"},
+                {"CI", "Ident/callsign changed"},
+                {"CL", "Realigned"},
+                {"CM", "Displaced"},
+                {"CN", "Cancelled"},
+                {"CO", "Operating"},
+                {"CP", "Operating on reduced power"},
+                {"CR", "Temporarily replaced"},
+                {"CS", "Installed"},
+                {"CT", "On test, do not use"},
 
                 // Hazard conditions
-                { "HA", "Braking action" },
-                { "HB", "Friction coefficient" },
-                { "HC", "Covered by compacted snow" },
-                { "HD", "Covered by dry snow" },
-                { "HE", "Covered by water" },
-                { "HF", "Totally free of snow and ice" },
-                { "HG", "Grass cutting in progrss" },
-                { "HH", "Hazard" },
-                { "HI", "Covered by ice" },
-                { "HJ", "Launch planned" },
-                { "HK", "Bird migration" },
-                { "HL", "Snow clearance completed" },
-                { "HM", "Marked" },
-                { "HN", "Covered by wet snow/slush" },
-                { "HO", "Obscured by snow" },
-                { "HP", "Snow clearance in progress" },
-                { "HQ", "Operation cancelled" },
-                { "HR", "Standing water" },
-                { "HS", "Sanding in progress" },
-                { "HT", "Approach according to signal area" },
-                { "HU", "Launch in progress" },
-                { "HV", "Work completed" },
-                { "HW", "Work in progress" },
-                { "HX", "Concentration of birds" },
-                { "HY", "Snow banks exist" },
-                { "HZ", "Covered by frozen ruts/ridges" },
+                {"HA", "Braking action"},
+                {"HB", "Friction coefficient"},
+                {"HC", "Covered by compacted snow"},
+                {"HD", "Covered by dry snow"},
+                {"HE", "Covered by water"},
+                {"HF", "Totally free of snow and ice"},
+                {"HG", "Grass cutting in progrss"},
+                {"HH", "Hazard"},
+                {"HI", "Covered by ice"},
+                {"HJ", "Launch planned"},
+                {"HK", "Bird migration"},
+                {"HL", "Snow clearance completed"},
+                {"HM", "Marked"},
+                {"HN", "Covered by wet snow/slush"},
+                {"HO", "Obscured by snow"},
+                {"HP", "Snow clearance in progress"},
+                {"HQ", "Operation cancelled"},
+                {"HR", "Standing water"},
+                {"HS", "Sanding in progress"},
+                {"HT", "Approach according to signal area"},
+                {"HU", "Launch in progress"},
+                {"HV", "Work completed"},
+                {"HW", "Work in progress"},
+                {"HX", "Concentration of birds"},
+                {"HY", "Snow banks exist"},
+                {"HZ", "Covered by frozen ruts/ridges"},
 
                 // Limitations
-                { "LA", "Operating on auxiliary power" },
-                { "LB", "Reserved for aircraft based therein" },
-                { "LC", "Closed" },
-                { "LD", "Unsafe" },
-                { "LE", "Operating without auxiliary power" },
-                { "LF", "Interference" },
-                { "LG", "Opeating without identification" },
-                { "LH", "Unserviceable for heavy aircraft" },
-                { "LI", "Closed to IFR operations" },
-                { "LK", "Operating as a fixed light" },
-                { "LL", "Unsafe for certain length/width" },
-                { "LN", "Closed to night operations" },
-                { "LP", "Prohibited" },
-                { "LR", "Aircraft restricted to runways/taxiways" },
-                { "LS", "Subject to interruption" },
-                { "LT", "Limited" },
-                { "LV", "Closed to VFR operations" },
-                { "LW", "Will take place" },
-                { "LX", "Operating but caution advised" },
+                {"LA", "Operating on auxiliary power"},
+                {"LB", "Reserved for aircraft based therein"},
+                {"LC", "Closed"},
+                {"LD", "Unsafe"},
+                {"LE", "Operating without auxiliary power"},
+                {"LF", "Interference"},
+                {"LG", "Opeating without identification"},
+                {"LH", "Unserviceable for heavy aircraft"},
+                {"LI", "Closed to IFR operations"},
+                {"LK", "Operating as a fixed light"},
+                {"LL", "Unsafe for certain length/width"},
+                {"LN", "Closed to night operations"},
+                {"LP", "Prohibited"},
+                {"LR", "Aircraft restricted to runways/taxiways"},
+                {"LS", "Subject to interruption"},
+                {"LT", "Limited"},
+                {"LV", "Closed to VFR operations"},
+                {"LW", "Will take place"},
+                {"LX", "Operating but caution advised"},
 
             };
 
@@ -2240,6 +2320,5 @@ namespace Cavokator
 
             return string.Empty;
         }
-
     }
 }
