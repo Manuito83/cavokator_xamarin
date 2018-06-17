@@ -43,6 +43,16 @@ namespace Cavokator
     class NotamFragment : Android.Support.V4.App.Fragment, ActivityCompat.IOnRequestPermissionsResultCallback
     {
 
+        void OnMapClicked(object sender, MapEventArgs e)
+        {
+            Activity.RunOnUiThread(() =>
+            {
+                var transaction = FragmentManager.BeginTransaction();
+                var notamRawMap = new NotamDialogMap(e.Id, e.Latitude, e.Longitude, e.Radius);
+                notamRawMap.Show(transaction, "notamMapDialog");
+            });
+        }
+
         // Options from options menu
         private string mSortByCategory;
         private string mSourceSelection;
@@ -458,6 +468,8 @@ namespace Cavokator
         {
             // Plug in my adapter
             mAdapter = new NotamFieldsAdapter(myRecyclerNotamList);
+            mAdapter.MapClicked += OnMapClicked;
+
             Activity.RunOnUiThread(() => { mRecyclerView.SetAdapter(mAdapter); });
 
             mRecyclerView.NestedScrollingEnabled = false;
@@ -917,23 +929,13 @@ namespace Cavokator
                     myNotamCardRecycler.NotamId = idSpan;
 
                     // MAP
-                    ImageView myWorldMap = new ImageView(Activity);
-
                     var myLatitude = _mNotamContainerList[a].Latitude[b];
                     var myLongitude = _mNotamContainerList[a].Longitude[b];
                     var myRadius = _mNotamContainerList[a].Radius[b];
 
-                    myWorldMap.Click += delegate
-                    {
-                        Activity.RunOnUiThread(() =>
-                        {
-                            var transaction = FragmentManager.BeginTransaction();
-                            var notamRawMap = new NotamDialogMap(myId, myLatitude, myLongitude, myRadius);
-                            notamRawMap.Show(transaction, "notamMapDialog");
-                        });
-                    };
-
-                    myNotamCardRecycler.NotamMap = myWorldMap;
+                    myNotamCardRecycler.NotamMapLatitude = myLatitude;
+                    myNotamCardRecycler.NotamMapLongitude = myLongitude;
+                    myNotamCardRecycler.NotamMapRadius = myRadius;
 
 
                     // FILL FREE TEXT

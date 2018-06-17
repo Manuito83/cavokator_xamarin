@@ -12,13 +12,15 @@ using Android.Widget;
 
 namespace Cavokator
 {
-
+    
     internal class NotamFieldsAdapter : RecyclerView.Adapter
     {
+        public event EventHandler<MapEventArgs> MapClicked;
+
         private List<object> mRecyclerNotamList;
 
         public override int ItemCount => mRecyclerNotamList.Count;
-
+        
         public NotamFieldsAdapter(List<object> recyclerNotamList)
         {
             mRecyclerNotamList = recyclerNotamList;
@@ -63,7 +65,7 @@ namespace Cavokator
 
                 case 1:
                     View v2 = inflater.Inflate(Resource.Layout.notam_cards, parent, false);
-                    vh = new NotamViewHolder(v2);
+                    vh = new NotamViewHolder(v2, MapClick);
                     break;
 
                 case 2:
@@ -100,13 +102,24 @@ namespace Cavokator
                     MyNotamCardRecycler notamCard = (MyNotamCardRecycler)mRecyclerNotamList[position];
                     vh2.NotamIdTextView.TextFormatted = notamCard.NotamId;
                     vh2.NotamIdTextView.MovementMethod = new LinkMovementMethod();
+                    vh2.NotamMapLatitude = notamCard.NotamMapLatitude;
+                    vh2.NotamMapLongitude = notamCard.NotamMapLongitude;
+                    vh2.NotamMapRadius = notamCard.NotamMapRadius;
                     vh2.NotamFreeTextTextView.Text = notamCard.NotamFreeText;
+                    vh2.NotamFreeTextTextView.Text = notamCard.NotamFreeText;
+                    vh2.NotamMap.SetImageResource(Resource.Drawable.ic_world_map);
 
                     // Remove unnecessary layouts
                     if (notamCard.DisableTopLayout)
                     {
                         vh2.NotamCardMainLayout.RemoveView(vh2.NotamCardTopLayout);
                     }
+
+                    if (notamCard.NotamMapLatitude == 9999)
+                    {
+                        vh2.NotamCardTopLayout.RemoveView(vh2.NotamMap);
+                    }
+
                     
                     break;
 
@@ -124,6 +137,10 @@ namespace Cavokator
             }
         }
 
+        private void MapClick(string id, float latitude, float longitude, int radius)
+        {
+            MapClicked?.Invoke(this, new MapEventArgs(id, latitude, longitude, radius));
+        }
     }
 
     internal class AirportViewHolder : RecyclerView.ViewHolder
@@ -138,16 +155,20 @@ namespace Cavokator
         }
     }
 
-    internal class NotamViewHolder : RecyclerView.ViewHolder, View.IOnClickListener
+    internal class NotamViewHolder : RecyclerView.ViewHolder
     {
         public CardView NotamMainCardView { get; }
         public LinearLayout NotamCardMainLayout { get; }
         public RelativeLayout NotamCardTopLayout { get; }
         public TextView NotamIdTextView { get; }
         public ImageView NotamMap { get; }
+        public float NotamMapLatitude { get; set; }
+        public float NotamMapLongitude { get; set; }
+        public int NotamMapRadius { get; set; }
         public TextView NotamFreeTextTextView { get; }
 
-        public NotamViewHolder(View itemView) : base(itemView)
+
+        public NotamViewHolder(View itemView, Action<string, float, float, int> listener) : base(itemView)
         {
             // Locate and cache view references:
             NotamMainCardView = itemView.FindViewById<CardView>(Resource.Id.notamCard_MainCard);
@@ -161,7 +182,7 @@ namespace Cavokator
             NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);
             NotamIdTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             NotamMap = itemView.FindViewById<ImageView>(Resource.Id.notamCard_Map);
-            NotamMap.SetOnClickListener(this);
+            NotamMap.Click += (sender, e) => listener(NotamIdTextView.Text, NotamMapLatitude, NotamMapLongitude, NotamMapRadius);
 
             // Free Notam Text
             NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
@@ -169,15 +190,6 @@ namespace Cavokator
             NotamFreeTextTextView.SetTextSize(ComplexUnitType.Dip, 12);
         }
 
-        public void OnClick(View v)
-        {
-            if (v == NotamMap)
-            {
-                // TODO: ????
-                NotamMap.SetOnClickListener(this);
-                Console.WriteLine("***CUAC***");
-            }
-        }
     }
 
     internal class ErrorViewHolder : RecyclerView.ViewHolder
@@ -215,26 +227,52 @@ namespace Cavokator
         }
     }
 
+
     internal class MyAirportRecycler
     {
         public string Name;
     }
 
+
     internal class MyNotamCardRecycler
     {
         public bool DisableTopLayout;
+
         public SpannableString NotamId;
-        public ImageView NotamMap;
+
+        public float NotamMapLatitude;
+        public float NotamMapLongitude;
+        public int NotamMapRadius;
+
         public string NotamFreeText;
     }
+
 
     internal class MyErrorRecycler
     {
         public string ErrorString;
     }
 
+
     internal class MyCategoryRecycler
     {
         public string CategoryString;
+    }
+
+
+    internal class MapEventArgs
+    {
+        public string Id { get; }
+        public float Latitude { get; }
+        public float Longitude { get; }
+        public int Radius { get; }
+
+        public MapEventArgs(string id, float latitude, float longitude, int radius)
+        {
+            Id = id;
+            Latitude = latitude;
+            Longitude = longitude;
+            Radius = radius;
+        }
     }
 }
