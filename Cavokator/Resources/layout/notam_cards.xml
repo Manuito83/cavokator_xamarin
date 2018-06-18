@@ -42,6 +42,11 @@
           android:layout_width="35dp"
           android:layout_height="35dp"
           android:layout_alignParentRight="true"/>
+        <ImageView
+          android:id="@+id/notamCard_Share"
+          android:layout_width="35dp"
+          android:layout_height="35dp"
+          android:layout_toLeftOf="@id/notamCard_Map"/>
       </RelativeLayout>
 
       <!--FREE NOTAM TEXT--> 

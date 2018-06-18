@@ -43,15 +43,7 @@ namespace Cavokator
     class NotamFragment : Android.Support.V4.App.Fragment, ActivityCompat.IOnRequestPermissionsResultCallback
     {
 
-        void OnMapClicked(object sender, MapEventArgs e)
-        {
-            Activity.RunOnUiThread(() =>
-            {
-                var transaction = FragmentManager.BeginTransaction();
-                var notamRawMap = new NotamDialogMap(e.Id, e.Latitude, e.Longitude, e.Radius);
-                notamRawMap.Show(transaction, "notamMapDialog");
-            });
-        }
+
 
         // Options from options menu
         private string mSortByCategory;
@@ -469,6 +461,7 @@ namespace Cavokator
             // Plug in my adapter
             mAdapter = new NotamFieldsAdapter(myRecyclerNotamList);
             mAdapter.MapClicked += OnMapClicked;
+            mAdapter.ShareClicked += OnShareClicked;
 
             Activity.RunOnUiThread(() => { mRecyclerView.SetAdapter(mAdapter); });
 
@@ -929,14 +922,13 @@ namespace Cavokator
                     myNotamCardRecycler.NotamId = idSpan;
 
                     // MAP
-                    var myLatitude = _mNotamContainerList[a].Latitude[b];
-                    var myLongitude = _mNotamContainerList[a].Longitude[b];
-                    var myRadius = _mNotamContainerList[a].Radius[b];
+                    myNotamCardRecycler.NotamMapLatitude = _mNotamContainerList[a].Latitude[b];
+                    myNotamCardRecycler.NotamMapLongitude = _mNotamContainerList[a].Longitude[b];
+                    myNotamCardRecycler.NotamMapRadius = _mNotamContainerList[a].Radius[b];
 
-                    myNotamCardRecycler.NotamMapLatitude = myLatitude;
-                    myNotamCardRecycler.NotamMapLongitude = myLongitude;
-                    myNotamCardRecycler.NotamMapRadius = myRadius;
-
+                    // SHARE
+                    myNotamCardRecycler.NotamShareString = _mNotamContainerList[a].NotamRaw[b];
+                    myNotamCardRecycler.NotamSharedAirportIcao = _mRequestedAirportsByIcao[a];
 
                     // FILL FREE TEXT
                     myNotamCardRecycler.NotamFreeText = _mNotamContainerList[a].NotamFreeText[b];
@@ -1993,6 +1985,29 @@ namespace Cavokator
             }
 
             ShowNotams();
+        }
+
+        void OnMapClicked(object sender, MapEventArgs e)
+        {
+            Activity.RunOnUiThread(() =>
+            {
+                var transaction = FragmentManager.BeginTransaction();
+                var notamRawMap = new NotamDialogMap(e.Id, e.Latitude, e.Longitude, e.Radius);
+                notamRawMap.Show(transaction, "notamMapDialog");
+            });
+        }
+
+        void OnShareClicked(object sender, ShareEventArgs e)
+        {
+            Intent intent = new Intent(Intent.ActionSend);
+
+            intent.SetType("*/*");
+
+            intent.PutExtra(Intent.ExtraText,
+                "CAVOKATOR APP, NOTAM from airport " + e.Id + ", requested @ " +
+                _mUtcRequestTime.ToString("dd-MMM-yyyy HH:mm") + "UTC" + "\n\n" + e.RawNotam);
+
+            StartActivity(Intent.CreateChooser(intent, "NOTAM"));
         }
 
         private string ReturnMainCategory(string secondAndThirdLetters)

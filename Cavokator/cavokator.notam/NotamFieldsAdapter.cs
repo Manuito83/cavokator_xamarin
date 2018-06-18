@@ -16,6 +16,7 @@ namespace Cavokator
     internal class NotamFieldsAdapter : RecyclerView.Adapter
     {
         public event EventHandler<MapEventArgs> MapClicked;
+        public event EventHandler<ShareEventArgs> ShareClicked;
 
         private List<object> mRecyclerNotamList;
 
@@ -65,7 +66,7 @@ namespace Cavokator
 
                 case 1:
                     View v2 = inflater.Inflate(Resource.Layout.notam_cards, parent, false);
-                    vh = new NotamViewHolder(v2, MapClick);
+                    vh = new NotamViewHolder(v2, MapClick, ShareClick);
                     break;
 
                 case 2:
@@ -100,14 +101,22 @@ namespace Cavokator
                 case 1:
                     NotamViewHolder vh2 = (NotamViewHolder)holder;
                     MyNotamCardRecycler notamCard = (MyNotamCardRecycler)mRecyclerNotamList[position];
+
                     vh2.NotamIdTextView.TextFormatted = notamCard.NotamId;
                     vh2.NotamIdTextView.MovementMethod = new LinkMovementMethod();
+
+                    vh2.NotamMap.SetImageResource(Resource.Drawable.ic_world_map);
                     vh2.NotamMapLatitude = notamCard.NotamMapLatitude;
                     vh2.NotamMapLongitude = notamCard.NotamMapLongitude;
                     vh2.NotamMapRadius = notamCard.NotamMapRadius;
+
+                    vh2.NotamShareImage.SetImageResource(Resource.Drawable.ic_share_variant_black_48dp);
+                    vh2.NotamShareString = notamCard.NotamShareString;
+                    vh2.NotamSharedAirportIcao = notamCard.NotamSharedAirportIcao;
+
                     vh2.NotamFreeTextTextView.Text = notamCard.NotamFreeText;
-                    vh2.NotamFreeTextTextView.Text = notamCard.NotamFreeText;
-                    vh2.NotamMap.SetImageResource(Resource.Drawable.ic_world_map);
+                    
+                    
 
                     // Remove unnecessary layouts
                     if (notamCard.DisableTopLayout)
@@ -141,6 +150,11 @@ namespace Cavokator
         {
             MapClicked?.Invoke(this, new MapEventArgs(id, latitude, longitude, radius));
         }
+
+        private void ShareClick(string id, string raw)
+        {
+            ShareClicked?.Invoke(this, new ShareEventArgs(id, raw));
+        }
     }
 
     internal class AirportViewHolder : RecyclerView.ViewHolder
@@ -160,15 +174,23 @@ namespace Cavokator
         public CardView NotamMainCardView { get; }
         public LinearLayout NotamCardMainLayout { get; }
         public RelativeLayout NotamCardTopLayout { get; }
+
         public TextView NotamIdTextView { get; }
+
         public ImageView NotamMap { get; }
         public float NotamMapLatitude { get; set; }
         public float NotamMapLongitude { get; set; }
         public int NotamMapRadius { get; set; }
+
+        public ImageView NotamShareImage { get; }
+        public string NotamShareString { get; set; }
+        public string NotamSharedAirportIcao { get; set; }
+
         public TextView NotamFreeTextTextView { get; }
 
 
-        public NotamViewHolder(View itemView, Action<string, float, float, int> listener) : base(itemView)
+        public NotamViewHolder(View itemView, Action<string, float, float, int> mapListener,
+            Action<string, string> shareListener) : base(itemView)
         {
             // Locate and cache view references:
             NotamMainCardView = itemView.FindViewById<CardView>(Resource.Id.notamCard_MainCard);
@@ -181,8 +203,12 @@ namespace Cavokator
             // Childs in TopLayout
             NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);
             NotamIdTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+
             NotamMap = itemView.FindViewById<ImageView>(Resource.Id.notamCard_Map);
-            NotamMap.Click += (sender, e) => listener(NotamIdTextView.Text, NotamMapLatitude, NotamMapLongitude, NotamMapRadius);
+            NotamMap.Click += (sender, e) => mapListener(NotamIdTextView.Text, NotamMapLatitude, NotamMapLongitude, NotamMapRadius);
+
+            NotamShareImage = itemView.FindViewById<ImageView>(Resource.Id.notamCard_Share);
+            NotamShareImage.Click += (sender, e) => shareListener(NotamSharedAirportIcao, NotamShareString);
 
             // Free Notam Text
             NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
@@ -244,6 +270,9 @@ namespace Cavokator
         public float NotamMapLongitude;
         public int NotamMapRadius;
 
+        public string NotamShareString;
+        public string NotamSharedAirportIcao;
+
         public string NotamFreeText;
     }
 
@@ -273,6 +302,18 @@ namespace Cavokator
             Latitude = latitude;
             Longitude = longitude;
             Radius = radius;
+        }
+    }
+
+    internal class ShareEventArgs
+    {
+        public string Id { get; }
+        public string RawNotam { get; }
+
+        public ShareEventArgs(string id, string rawNotam)
+        {
+            Id = id;
+            RawNotam = rawNotam;
         }
     }
 }
