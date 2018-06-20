@@ -10,4 +10,7 @@
   <string name="NOTAM_categorySort">category </string>
   <string name="NOTAM_dateSort">date </string>
   <string name="NOTAM_source">Source</string>
+  <string name="NOTAM_share">Share</string>
+  <string name="NOTAM_shareImage">image </string>
+  <string name="NOTAM_shareRaw">text </string>
 </resources>

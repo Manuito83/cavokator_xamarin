@@ -151,9 +151,9 @@ namespace Cavokator
             MapClicked?.Invoke(this, new MapEventArgs(id, latitude, longitude, radius));
         }
 
-        private void ShareClick(string id, string raw)
+        private void ShareClick(string id, string raw, View view)
         {
-            ShareClicked?.Invoke(this, new ShareEventArgs(id, raw));
+            ShareClicked?.Invoke(this, new ShareEventArgs(id, raw, view));
         }
     }
 
@@ -190,7 +190,7 @@ namespace Cavokator
 
 
         public NotamViewHolder(View itemView, Action<string, float, float, int> mapListener,
-            Action<string, string> shareListener) : base(itemView)
+            Action<string, string, View> shareListener) : base(itemView)
         {
             // Locate and cache view references:
             NotamMainCardView = itemView.FindViewById<CardView>(Resource.Id.notamCard_MainCard);
@@ -208,7 +208,7 @@ namespace Cavokator
             NotamMap.Click += (sender, e) => mapListener(NotamIdTextView.Text, NotamMapLatitude, NotamMapLongitude, NotamMapRadius);
 
             NotamShareImage = itemView.FindViewById<ImageView>(Resource.Id.notamCard_Share);
-            NotamShareImage.Click += (sender, e) => shareListener(NotamSharedAirportIcao, NotamShareString);
+            NotamShareImage.Click += (sender, e) => shareListener(NotamSharedAirportIcao, NotamShareString, itemView);
 
             // Free Notam Text
             NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
@@ -309,11 +309,13 @@ namespace Cavokator
     {
         public string Id { get; }
         public string RawNotam { get; }
+        public View MyViewToShare { get; }
 
-        public ShareEventArgs(string id, string rawNotam)
+        public ShareEventArgs(string id, string rawNotam, View myView)
         {
             Id = id;
             RawNotam = rawNotam;
+            MyViewToShare = myView;
         }
     }
 }

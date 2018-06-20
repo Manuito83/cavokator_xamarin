@@ -34,10 +34,15 @@ namespace Cavokator
         private MaterialSpinner _sourceSpinner;
         private readonly int _sourceSelection;
 
+        // Share image or row selection
+        private TextView _shareTextView;
+        private MaterialSpinner _shareSpinner;
+        private readonly int _shareSelection;
+
         // Dismiss button
         private Button _dismissDialogButton;
 
-        public NotamOptionsDialog(string sortByCategory, string source)
+        public NotamOptionsDialog(string sortByCategory, string source, string share)
         {
             switch (sortByCategory)
             {
@@ -56,6 +61,16 @@ namespace Cavokator
                     break;
                 case "faa":
                     _sourceSelection = 1;
+                    break;
+            }
+
+            switch (share)
+            {
+                case "image":
+                    _shareSelection = 0;
+                    break;
+                case "raw":
+                    _shareSelection = 1;
                     break;
             }
         }
@@ -82,7 +97,7 @@ namespace Cavokator
             _sortBySpinner.ItemSelected += delegate
             {
                 // Call event raiser
-                OnSpinnerChanged(_sortBySpinner.SelectedItemPosition, _sourceSpinner.SelectedItemPosition);
+                OnSpinnerChanged(_sortBySpinner.SelectedItemPosition, _sourceSpinner.SelectedItemPosition, _shareSpinner.SelectedItemPosition);
 
                 // Save ISharedPreference
                 SetSortByPreferences(_sortBySpinner.SelectedItemPosition);
@@ -97,10 +112,25 @@ namespace Cavokator
             _sourceSpinner.ItemSelected += delegate
             {
                 // Call event raiser
-                OnSpinnerChanged(_sortBySpinner.SelectedItemPosition, _sourceSpinner.SelectedItemPosition);
+                OnSpinnerChanged(_sortBySpinner.SelectedItemPosition, _sourceSpinner.SelectedItemPosition, _shareSpinner.SelectedItemPosition);
 
                 // Save ISharedPreference
                 SetSourcePreferences(_sourceSpinner.SelectedItemPosition);
+            };
+
+            // SHARE SPINNER ADAPTER CONFIG
+            string[] itemsShare = { Resources.GetString(Resource.String.NOTAM_shareImage) + "  ", Resources.GetString(Resource.String.NOTAM_shareRaw) + "  " };
+            var adapterShare = new ArrayAdapter<String>(Activity, Resource.Layout.notam_dialog_optionsSpinner, itemsShare);
+            adapterShare.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            _shareSpinner.Adapter = adapterShare;
+            _shareSpinner.SetSelection(_shareSelection);
+            _shareSpinner.ItemSelected += delegate
+            {
+                // Call event raiser
+                OnSpinnerChanged(_sortBySpinner.SelectedItemPosition, _sourceSpinner.SelectedItemPosition, _shareSpinner.SelectedItemPosition);
+
+                // Save ISharedPreference
+                SetSourcePreferences(_shareSpinner.SelectedItemPosition);
             };
 
             return thisView;
@@ -131,6 +161,8 @@ namespace Cavokator
             _sortBySpinner = view.FindViewById<MaterialSpinner>(Resource.Id.notam_options_sortBy_spinner);
             _sourceTextView = view.FindViewById<TextView>(Resource.Id.notam_options_source_textView);
             _sourceSpinner = view.FindViewById<MaterialSpinner>(Resource.Id.notam_options_source_spinner);
+            _shareTextView = view.FindViewById<TextView>(Resource.Id.notam_options_share_textView);
+            _shareSpinner = view.FindViewById<MaterialSpinner>(Resource.Id.notam_options_share_spinner);
             _dismissDialogButton = view.FindViewById<Button>(Resource.Id.notam_option_closeButton);
 
             // Coloring
@@ -138,11 +170,13 @@ namespace Cavokator
             _configurationText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
             _sortByTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _sourceTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _shareTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
 
             // Assign text fields
             _configurationText.Text = Resources.GetString(Resource.String.NOTAM_configuration);
             _sortByTextView.Text = Resources.GetString(Resource.String.NOTAM_sortBy);
             _sourceTextView.Text = Resources.GetString(Resource.String.NOTAM_source);
+            _shareTextView.Text = Resources.GetString(Resource.String.NOTAM_share);
         }
 
         private void SetSortByPreferences(int position)
@@ -181,10 +215,28 @@ namespace Cavokator
             notamPreferencesprefs.Edit().PutString("sourcePREF", preference).Apply();
         }
 
-        // Event raiser
-        protected virtual void OnSpinnerChanged(int categoryPosition, int sourcePosition)
+        private void SetSharePreferences(int position)
         {
-            SortBySpinnerChanged?.Invoke(this, new NotamOptionsDialogEventArgs(categoryPosition, sourcePosition));
+            string preference = String.Empty;
+
+            switch (position)
+            {
+                case 0:
+                    preference = "image";
+                    break;
+                case 1:
+                    preference = "raw";
+                    break;
+            }
+
+            ISharedPreferences notamPreferencesprefs = Application.Context.GetSharedPreferences("NOTAM_Options", FileCreationMode.Private);
+            notamPreferencesprefs.Edit().PutString("sharePREF", preference).Apply();
+        }
+
+        // Event raiser
+        protected virtual void OnSpinnerChanged(int categoryPosition, int sourcePosition, int sharePosition)
+        {
+            SortBySpinnerChanged?.Invoke(this, new NotamOptionsDialogEventArgs(categoryPosition, sourcePosition, sharePosition));
         }
 
     }
@@ -194,8 +246,9 @@ namespace Cavokator
     {
         public string SortBy { get; }
         public string Source { get; }
+        public string Share { get; }
 
-        public NotamOptionsDialogEventArgs(int categoryPosition, int sourcePosition)
+        public NotamOptionsDialogEventArgs(int categoryPosition, int sourcePosition, int sharePosition)
         {
             switch (categoryPosition)
             {
@@ -214,6 +267,16 @@ namespace Cavokator
                     break;
                 case 1:
                     Source = "faa";
+                    break;
+            }
+
+            switch (sharePosition)
+            {
+                case 0:
+                    Share = "image";
+                    break;
+                case 1:
+                    Share = "raw";
                     break;
             }
         }

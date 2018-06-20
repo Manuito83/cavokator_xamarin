@@ -42,13 +42,11 @@ namespace Cavokator
 {
     class NotamFragment : Android.Support.V4.App.Fragment, ActivityCompat.IOnRequestPermissionsResultCallback
     {
-
-
-
         // Options from options menu
         private string mSortByCategory;
         private string mSourceSelection;
-        private bool showSubcategories = true;
+        private bool showSubcategories = true;  // TODO: add in menu!
+        private string mShareImageOption;
 
         // Floating action button
         private CoordinatorLayout _coordinatorLayout;
@@ -304,7 +302,7 @@ namespace Cavokator
         {
             // Pull up dialog
             var transaction = FragmentManager.BeginTransaction();
-            var notamOptionsDialog = new NotamOptionsDialog(mSortByCategory, mSourceSelection);
+            var notamOptionsDialog = new NotamOptionsDialog(mSortByCategory, mSourceSelection, mShareImageOption);
             notamOptionsDialog.Show(transaction, "options_dialog");
 
             notamOptionsDialog.SortBySpinnerChanged += OnSortSpinnedChanged;
@@ -1204,7 +1202,7 @@ namespace Cavokator
                     myNotamIdToShare = _mRequestedAirportsByIcao[i].ToUpper();
                     myNotamRawToShare = _mNotamContainerList[i].NotamRaw[j];
 
-                    ShareSpecificNotam(false);
+                    ShareSpecificNotam("image");
                 };
 
                 // Coordinates
@@ -1596,11 +1594,11 @@ namespace Cavokator
             });
         }
 
-        private void ShareSpecificNotam(bool shareRaw)
+        private void ShareSpecificNotam(string typeOfShare)
         {
-            View myNotamView = _myViewToShare;
-            string airportId = myNotamIdToShare;
-            string notamRaw = myNotamRawToShare;
+            View sharedNotamView = _myViewToShare;
+            string sharedAirportId = myNotamIdToShare;
+            string sharedNotamRaw = myNotamRawToShare;
 
 
             string[] permissionsStorage =
@@ -1609,7 +1607,7 @@ namespace Cavokator
                 Manifest.Permission.ReadExternalStorage
             };
 
-            if (!shareRaw)
+            if (typeOfShare == "image")
             {
                 try
                 {
@@ -1621,9 +1619,6 @@ namespace Cavokator
                     }
                     else
                     {
-                        // Save the view 
-                        _myViewToShare = myNotamView;
-
                         // Request permissions
                         RequestPermissions(permissionsStorage, 0);
                     }
@@ -1633,14 +1628,22 @@ namespace Cavokator
                     LocalShareRawNotam();
                 }
             }
-            else
+            else if (typeOfShare == "raw")
             {
                 LocalShareRawNotam();
             }
 
             void LocalShareRawNotam()
             {
-                // TODO: Implement
+                Intent intent = new Intent(Intent.ActionSend);
+
+                intent.SetType("*/*");
+
+                intent.PutExtra(Intent.ExtraText,
+                    "CAVOKATOR APP, NOTAM from airport " + sharedAirportId + ", requested @ " +
+                    _mUtcRequestTime.ToString("dd-MMM-yyyy HH:mm") + "UTC" + "\n\n" + sharedNotamRaw);
+
+                StartActivity(Intent.CreateChooser(intent, "NOTAM"));
             }
 
             Boolean LocalGetWritePermission()
@@ -1661,9 +1664,9 @@ namespace Cavokator
                 intent.SetType("*/*");
 
                 intent.PutExtra(Intent.ExtraText,
-                    "CAVOKATOR APP, NOTAM from airport " + airportId + ", requested @ " +
+                    "CAVOKATOR APP, NOTAM from airport " + sharedAirportId + ", requested @ " +
                     _mUtcRequestTime.ToString("dd-MMM-yyyy HH:mm") + "UTC");
-                intent.PutExtra(Intent.ExtraStream, LocalGetImageUri(Activity, LocalGetBitmapFromView(myNotamView)));
+                intent.PutExtra(Intent.ExtraStream, LocalGetImageUri(Activity, LocalGetBitmapFromView(sharedNotamView)));
 
                 StartActivity(Intent.CreateChooser(intent, "NOTAM"));
             }
@@ -1704,7 +1707,7 @@ namespace Cavokator
                     if (grantResults[0] == Permission.Granted)
                     {
                         // Call again function to share
-                        ShareSpecificNotam(false);
+                        ShareSpecificNotam("image");
                     }
                     else
                     {
@@ -1713,7 +1716,7 @@ namespace Cavokator
                             Snackbar.LengthShort).Show();
 
                         // Call again function to share
-                        ShareSpecificNotam(true);
+                        ShareSpecificNotam("raw");
                     }
 
                     break;
@@ -1794,6 +1797,17 @@ namespace Cavokator
             else
             {
                 mSourceSelection = notamOptionsPreferences.GetString("sourcePREF", String.Empty);
+            }
+
+            mShareImageOption = notamOptionsPreferences.GetString("sharePREF", String.Empty);
+            if (mShareImageOption == String.Empty)
+            {
+                notamOptionsPreferences.Edit().PutString("sharePREF", "image").Apply();
+                mShareImageOption = "image";
+            }
+            else
+            {
+                mShareImageOption = notamOptionsPreferences.GetString("sharePREF", String.Empty);
             }
 
 
@@ -1975,6 +1989,8 @@ namespace Cavokator
 
             mSourceSelection = e.Source == "aidap" ? "aidap" : "faa";
 
+            mShareImageOption = e.Share == "image" ? "image" : "raw";
+
             // Remove all views and show again with new methodology
             _linearLayoutNotamRequestedTime.RemoveAllViews();
 
@@ -1999,15 +2015,18 @@ namespace Cavokator
 
         void OnShareClicked(object sender, ShareEventArgs e)
         {
-            Intent intent = new Intent(Intent.ActionSend);
+                myNotamIdToShare = e.Id;
+                myNotamRawToShare = e.RawNotam;
 
-            intent.SetType("*/*");
-
-            intent.PutExtra(Intent.ExtraText,
-                "CAVOKATOR APP, NOTAM from airport " + e.Id + ", requested @ " +
-                _mUtcRequestTime.ToString("dd-MMM-yyyy HH:mm") + "UTC" + "\n\n" + e.RawNotam);
-
-            StartActivity(Intent.CreateChooser(intent, "NOTAM"));
+            if (mShareImageOption == "image")
+            {
+                _myViewToShare = e.MyViewToShare;
+                ShareSpecificNotam("image");
+            }
+            else
+            {
+                ShareSpecificNotam("raw");
+            }
         }
 
         private string ReturnMainCategory(string secondAndThirdLetters)

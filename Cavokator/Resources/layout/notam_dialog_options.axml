@@ -65,6 +65,27 @@
             app:ms_multiline="true"
             android:layout_alignLeft="@id/notam_options_sortBy_spinner"
             android:layout_alignBaseline="@id/notam_options_source_textView" />
+        <TextView
+            android:id="@+id/notam_options_share_textView"
+            android:text="Share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:textSize="13dp"
+            android:layout_below="@id/notam_options_source_textView" />
+        <fr.ganfra.materialspinner.MaterialSpinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/notam_options_share_spinner"
+            app:ms_arrowColor="#bc477b"
+            app:ms_baseColor="@color/spinnerBaseColor"
+            app:ms_highlightColor="@color/spinnerBaseColor"
+            app:ms_hintColor="@color/spinnerBaseColor"
+            app:ms_arrowSize="16dp"
+            app:ms_multiline="true"
+            android:layout_alignLeft="@id/notam_options_source_spinner"
+            android:layout_alignBaseline="@id/notam_options_share_textView" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/notam_options_closeRelativeLayout"
