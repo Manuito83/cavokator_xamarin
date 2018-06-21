@@ -1637,7 +1637,7 @@ namespace Cavokator
             {
                 Intent intent = new Intent(Intent.ActionSend);
 
-                intent.SetType("*/*");
+                intent.SetType("text/html");
 
                 intent.PutExtra(Intent.ExtraText,
                     "CAVOKATOR APP, NOTAM from airport " + sharedAirportId + ", requested @ " +

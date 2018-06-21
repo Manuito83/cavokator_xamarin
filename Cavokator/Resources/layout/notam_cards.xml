@@ -37,16 +37,23 @@
           android:layout_marginTop="5dp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
-        <ImageView
-          android:id="@+id/notamCard_Map"
-          android:layout_width="35dp"
-          android:layout_height="35dp"
-          android:layout_alignParentRight="true"/>
-        <ImageView
-          android:id="@+id/notamCard_Share"
-          android:layout_width="35dp"
-          android:layout_height="35dp"
-          android:layout_toLeftOf="@id/notamCard_Map"/>
+        <LinearLayout
+          android:id="@+id/notamCard_MapShareLayout"
+          android:orientation="horizontal"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:layout_alignParentRight="true">
+          <ImageView
+            android:id="@+id/notamCard_Share"
+            android:layout_width="22dp"
+            android:layout_height="22dp"/>
+          <ImageView
+            android:id="@+id/notamCard_Map"
+            android:layout_width="35dp"
+            android:layout_height="35dp"/>
+        </LinearLayout>
+
       </RelativeLayout>
 
       <!--FREE NOTAM TEXT--> 

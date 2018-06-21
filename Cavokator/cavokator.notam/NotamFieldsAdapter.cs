@@ -126,7 +126,7 @@ namespace Cavokator
 
                     if (notamCard.NotamMapLatitude == 9999)
                     {
-                        vh2.NotamCardTopLayout.RemoveView(vh2.NotamMap);
+                        vh2.NotamCardMapShareLayout.RemoveView(vh2.NotamMap);
                     }
 
                     
@@ -174,6 +174,7 @@ namespace Cavokator
         public CardView NotamMainCardView { get; }
         public LinearLayout NotamCardMainLayout { get; }
         public RelativeLayout NotamCardTopLayout { get; }
+        public LinearLayout NotamCardMapShareLayout { get; }
 
         public TextView NotamIdTextView { get; }
 
@@ -199,6 +200,7 @@ namespace Cavokator
             // Main layouts
             NotamCardMainLayout = itemView.FindViewById<LinearLayout>(Resource.Id.notamCard_MainLayout);
             NotamCardTopLayout = itemView.FindViewById<RelativeLayout>(Resource.Id.notamCard_TopLayout);
+            NotamCardMapShareLayout = itemView.FindViewById<LinearLayout>(Resource.Id.notamCard_MapShareLayout);
 
             // Childs in TopLayout
             NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);

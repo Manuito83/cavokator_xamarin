@@ -130,7 +130,7 @@ namespace Cavokator
                 OnSpinnerChanged(_sortBySpinner.SelectedItemPosition, _sourceSpinner.SelectedItemPosition, _shareSpinner.SelectedItemPosition);
 
                 // Save ISharedPreference
-                SetSourcePreferences(_shareSpinner.SelectedItemPosition);
+                SetSharePreferences(_shareSpinner.SelectedItemPosition);
             };
 
             return thisView;
