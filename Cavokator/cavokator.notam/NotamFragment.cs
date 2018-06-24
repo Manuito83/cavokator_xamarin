@@ -106,8 +106,6 @@ namespace Cavokator
         // List of <object> to be used in RecyclerView
         private List<object> myRecyclerNotamList = new List<object>();
 
-        // TODO:??
-        MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -896,8 +894,7 @@ namespace Cavokator
                     int a = i;
                     int b = j;
 
-                    // TODO:??
-                    //MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
+                    MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
 
                     // FILL ID
                     var myId = _mNotamContainerList[a].NotamId[b];
@@ -955,6 +952,7 @@ namespace Cavokator
 
 
                     // TIME FROM TO
+                    // TODO: remove in raw data, and cheack appearing/dissapearing in Source 2!!
                     DateTime timeNow = DateTime.UtcNow;
 
                     if (timeNow > _mNotamContainerList[a].StartTime[b] 
@@ -966,7 +964,8 @@ namespace Cavokator
                     {
                         myNotamCardRecycler.NotamTimeIsActive = false;
                     }
-                    
+
+
                     myNotamCardRecycler.NotamTimeFrom =
                         _mNotamContainerList[a].StartTime[b].ToString("dd") + "-" +
                         _mNotamContainerList[a].StartTime[b].ToString("MMM") + "-" +
@@ -1014,6 +1013,7 @@ namespace Cavokator
                     // Disable layouts to get rid of margins
                     myNotamCardRecycler.DisableTopLayout = true;
                     myNotamCardRecycler.DisableCategories = true;
+                    // TODO: Disable bottom!!
 
                     // ADD NOTAMRECYCLER TO RECYCLER LIST
                     myRecyclerNotamList.Add(myNotamCardRecycler);
@@ -1930,58 +1930,43 @@ namespace Cavokator
             var utcUpdateTimer = new Timer(timerDelegate, null, 0, 30000);
 
             var timerDelegateCalendar = new TimerCallback(UpdateCalendarColorsOnTick);
-            var utcUpdateTimerCalendar = new Timer(timerDelegateCalendar, null, 0, 60000);
+            var utcUpdateTimerCalendar = new Timer(timerDelegateCalendar, null, 0, 8000);
         }
 
         private void UpdateCalendarColorsOnTick(object state)
         {
-            // TODO: ???
-            DateTime timeNow = DateTime.UtcNow;
+            //// TODO: ???
+            //List<int> cuac = new List<int>();
 
-            for (int i = 0; i >= myRecyclerNotamList.Count; i++)
-            {
-                if (myRecyclerNotamList[i] == myNotamCardRecycler)
-                {
-                    myNotamCardRecycler.NotamTimeFrom = timeNow.ToString("ss");
-                    i++;
-                }
-            }
-
-            try
-            {
-                mAdapter.NotifyDataSetChanged();
-            }
-            catch
-            {
-
-            }
-            
-
-
-            //if (_thisView.IsAttachedToWindow && _mCalendarViews.Count > 0)
+            //try
             //{
-            //    try
+            //    DateTime timeNow = DateTime.UtcNow;
+
+            //    for (int i = 0; i < myRecyclerNotamList.Count; i++)
             //    {
-            //        Activity.RunOnUiThread(() =>
+            //        if (myRecyclerNotamList[i] is MyNotamCardRecycler)
             //        {
-            //            DateTime timeNow = DateTime.UtcNow;
-            //            for (int i = 0; i < _mCalendarViews.Count; i++)
-            //            {
-            //                if (timeNow > mStartDateTimes[i] && timeNow < mEnDateTimes[i])
-            //                {
-            //                    _mCalendarViews[i].SetImageResource(Resource.Drawable.ic_calendar_multiple_red_48dp);
-            //                }
-            //                else
-            //                {
-            //                    _mCalendarViews[i].SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
-            //                }
-            //            }
-            //        });
+                        
+            //            MyNotamCardRecycler titi = (MyNotamCardRecycler)myRecyclerNotamList[i];
+
+            //            titi.NotamTimeFrom = timeNow.ToString("ss");
+            //            Console.WriteLine(timeNow.ToString("ss"));
+
+            //            cuac.Add(i);
+            //        }
             //    }
-            //    catch
+
+            //    Activity.RunOnUiThread(() =>
             //    {
-            //        // Calendar colors won't update 
-            //    }
+            //        foreach (var j in cuac)
+            //        {
+            //            mAdapter.NotifyItemChanged(j);
+            //        }
+            //    });
+            //}
+            //catch (Exception e)
+            //{
+
             //}
         }
 
