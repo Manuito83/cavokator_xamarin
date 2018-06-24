@@ -53,8 +53,41 @@
             android:layout_width="35dp"
             android:layout_height="35dp"/>
         </LinearLayout>
-
       </RelativeLayout>
+
+      <!--SUBCATEGORIES LAYOUT-->
+      <LinearLayout
+        android:id="@+id/notamCard_SubcategoriesLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <TextView
+          android:text="Main subcategory"
+          android:id="@+id/notamCard_MainSubcategory"
+          android:layout_marginTop="10dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+        <RelativeLayout
+          android:id="@+id/notamCard_SecondarySubcategoryLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+        <ImageView
+          android:id="@+id/notamCard_subcategoryArrow"
+          android:layout_marginTop="2dp"
+          android:layout_width="15dp"
+          android:layout_height="15dp" 
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="Secondary subcategory"
+          android:id="@+id/notamCard_SecondarySubcategory"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@id/notamCard_subcategoryArrow"
+          android:layout_centerVertical="true"/>
+        </RelativeLayout>
+      </LinearLayout>
 
       <!--FREE NOTAM TEXT--> 
       <TextView
@@ -63,9 +96,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"/>
+      
+      <!--TIME FROM TO LAYOUT-->
+      <LinearLayout
+        android:id="@+id/notamCard_TimeFromToLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp">
+        <ImageView
+          android:id="@+id/notamCard_TimeFromToCalendar"
+          android:layout_width="15dp"
+          android:layout_height="15dp" 
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="FROM"
+          android:id="@+id/notamCard_TimeFromText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:layout_centerVertical="true"/>
+        <ImageView
+          android:id="@+id/notamCard_TimeFromToArrow"
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:layout_marginLeft="6dp"
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="TO"
+          android:id="@+id/notamCard_TimeToText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="6dp"
+          android:layout_centerVertical="true"/>
+      </LinearLayout>
       
     </LinearLayout>
 

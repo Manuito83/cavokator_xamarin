@@ -45,7 +45,6 @@ namespace Cavokator
         // Options from options menu
         private string mSortByCategory;
         private string mSourceSelection;
-        private bool showSubcategories = true;  // TODO: add in menu!
         private string mShareImageOption;
 
         // Floating action button
@@ -106,6 +105,9 @@ namespace Cavokator
 
         // List of <object> to be used in RecyclerView
         private List<object> myRecyclerNotamList = new List<object>();
+
+        // TODO:??
+        MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -894,7 +896,8 @@ namespace Cavokator
                     int a = i;
                     int b = j;
 
-                    MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
+                    // TODO:??
+                    //MyNotamCardRecycler myNotamCardRecycler = new MyNotamCardRecycler();
 
                     // FILL ID
                     var myId = _mNotamContainerList[a].NotamId[b];
@@ -928,8 +931,74 @@ namespace Cavokator
                     myNotamCardRecycler.NotamShareString = _mNotamContainerList[a].NotamRaw[b];
                     myNotamCardRecycler.NotamSharedAirportIcao = _mRequestedAirportsByIcao[a];
 
+                    // SUBCATEGORIES
+                    string myMainCategoryString = ReturnMainCategory(_mNotamContainerList[a].CodeSecondThird[b]);
+                    string mySecondaryCategoryString = ReturnSecondaryCategory(_mNotamContainerList[a].CodeFourthFifth[b]);
+
+                    if (myMainCategoryString != String.Empty)
+                    {
+                        myNotamCardRecycler.NotamMainSubcategory = myMainCategoryString;
+
+                        if (mySecondaryCategoryString != String.Empty)
+                        {
+                            myNotamCardRecycler.NotamSecondarySubcategory = mySecondaryCategoryString;
+                        }
+                        else
+                            myNotamCardRecycler.DisableSecondarySubcategory = true;
+                    }
+                    else
+                        myNotamCardRecycler.DisableCategories = true;
+
+                    
                     // FILL FREE TEXT
                     myNotamCardRecycler.NotamFreeText = _mNotamContainerList[a].NotamFreeText[b];
+
+
+                    // TIME FROM TO
+                    DateTime timeNow = DateTime.UtcNow;
+
+                    if (timeNow > _mNotamContainerList[a].StartTime[b] 
+                        && timeNow < _mNotamContainerList[a].EndTime[b])
+                    {
+                        myNotamCardRecycler.NotamTimeIsActive = true;
+                    }
+                    else
+                    {
+                        myNotamCardRecycler.NotamTimeIsActive = false;
+                    }
+                    
+                    myNotamCardRecycler.NotamTimeFrom =
+                        _mNotamContainerList[a].StartTime[b].ToString("dd") + "-" +
+                        _mNotamContainerList[a].StartTime[b].ToString("MMM") + "-" +
+                        _mNotamContainerList[a].StartTime[b].ToString("yy") + " " +
+                        _mNotamContainerList[a].StartTime[b].ToString("HH") + ":" +
+                        _mNotamContainerList[a].StartTime[b].ToString("mm");
+
+
+                    string myEndTimeString = String.Empty;
+                    if (!_mNotamContainerList[a].CEstimated[b] && !_mNotamContainerList[a].CPermanent[b])
+                    {
+                        myEndTimeString = _mNotamContainerList[a].EndTime[b].ToString("dd") + "-" +
+                                          _mNotamContainerList[a].EndTime[b].ToString("MMM") + "-" +
+                                          _mNotamContainerList[a].EndTime[b].ToString("yy") + " " +
+                                          _mNotamContainerList[a].EndTime[b].ToString("HH") + ":" +
+                                          _mNotamContainerList[a].EndTime[b].ToString("mm");
+                    }
+                    else if (_mNotamContainerList[a].CEstimated[b])
+                    {
+                        myEndTimeString = _mNotamContainerList[a].EndTime[b].ToString("dd") + "-" +
+                                          _mNotamContainerList[a].EndTime[b].ToString("MMM") + "-" +
+                                          _mNotamContainerList[a].EndTime[b].ToString("yy") + " " +
+                                          _mNotamContainerList[a].EndTime[b].ToString("HH") + ":" +
+                                          _mNotamContainerList[a].EndTime[b].ToString("mm") + " (ESTIMATED)";
+                    }
+                    else if (_mNotamContainerList[i].CPermanent[j])
+                    {
+                        myEndTimeString = "PERMANENT";
+                    }
+                    
+                    myNotamCardRecycler.NotamTimeTo = myEndTimeString;
+
 
                     // ADD NOTAMRECYCLER TO RECYCLER LIST
                     myRecyclerNotamList.Add(myNotamCardRecycler);
@@ -944,6 +1013,7 @@ namespace Cavokator
 
                     // Disable layouts to get rid of margins
                     myNotamCardRecycler.DisableTopLayout = true;
+                    myNotamCardRecycler.DisableCategories = true;
 
                     // ADD NOTAMRECYCLER TO RECYCLER LIST
                     myRecyclerNotamList.Add(myNotamCardRecycler);
@@ -1242,7 +1312,7 @@ namespace Cavokator
             {
                 RelativeLayout mySubcaterogiesLayout = new RelativeLayout(Activity);
 
-                if (showSubcategories)
+                if (true)  // subcategories
                 {
                     string myMainCategoryString = ReturnMainCategory(_mNotamContainerList[i].CodeSecondThird[j]);
                     string mySecondaryCategoryString =
@@ -1865,31 +1935,54 @@ namespace Cavokator
 
         private void UpdateCalendarColorsOnTick(object state)
         {
-            if (_thisView.IsAttachedToWindow && _mCalendarViews.Count > 0)
+            // TODO: ???
+            DateTime timeNow = DateTime.UtcNow;
+
+            for (int i = 0; i >= myRecyclerNotamList.Count; i++)
             {
-                try
+                if (myRecyclerNotamList[i] == myNotamCardRecycler)
                 {
-                    Activity.RunOnUiThread(() =>
-                    {
-                        DateTime timeNow = DateTime.UtcNow;
-                        for (int i = 0; i < _mCalendarViews.Count; i++)
-                        {
-                            if (timeNow > mStartDateTimes[i] && timeNow < mEnDateTimes[i])
-                            {
-                                _mCalendarViews[i].SetImageResource(Resource.Drawable.ic_calendar_multiple_red_48dp);
-                            }
-                            else
-                            {
-                                _mCalendarViews[i].SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
-                            }
-                        }
-                    });
-                }
-                catch
-                {
-                    // Calendar colors won't update 
+                    myNotamCardRecycler.NotamTimeFrom = timeNow.ToString("ss");
+                    i++;
                 }
             }
+
+            try
+            {
+                mAdapter.NotifyDataSetChanged();
+            }
+            catch
+            {
+
+            }
+            
+
+
+            //if (_thisView.IsAttachedToWindow && _mCalendarViews.Count > 0)
+            //{
+            //    try
+            //    {
+            //        Activity.RunOnUiThread(() =>
+            //        {
+            //            DateTime timeNow = DateTime.UtcNow;
+            //            for (int i = 0; i < _mCalendarViews.Count; i++)
+            //            {
+            //                if (timeNow > mStartDateTimes[i] && timeNow < mEnDateTimes[i])
+            //                {
+            //                    _mCalendarViews[i].SetImageResource(Resource.Drawable.ic_calendar_multiple_red_48dp);
+            //                }
+            //                else
+            //                {
+            //                    _mCalendarViews[i].SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
+            //                }
+            //            }
+            //        });
+            //    }
+            //    catch
+            //    {
+            //        // Calendar colors won't update 
+            //    }
+            //}
         }
 
         private void UpdateRequestedTimeOnTick(object state)
@@ -2343,6 +2436,9 @@ namespace Cavokator
                 {"LV", "Closed to VFR operations"},
                 {"LW", "Will take place"},
                 {"LX", "Operating but caution advised"},
+
+                // Other
+                {"TT", "Hazard"},
 
             };
 

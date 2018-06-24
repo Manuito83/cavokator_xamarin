@@ -102,34 +102,76 @@ namespace Cavokator
                     NotamViewHolder vh2 = (NotamViewHolder)holder;
                     MyNotamCardRecycler notamCard = (MyNotamCardRecycler)mRecyclerNotamList[position];
 
-                    vh2.NotamIdTextView.TextFormatted = notamCard.NotamId;
-                    vh2.NotamIdTextView.MovementMethod = new LinkMovementMethod();
-
-                    vh2.NotamMap.SetImageResource(Resource.Drawable.ic_world_map);
-                    vh2.NotamMapLatitude = notamCard.NotamMapLatitude;
-                    vh2.NotamMapLongitude = notamCard.NotamMapLongitude;
-                    vh2.NotamMapRadius = notamCard.NotamMapRadius;
-
-                    vh2.NotamShareImage.SetImageResource(Resource.Drawable.ic_share_variant_black_48dp);
-                    vh2.NotamShareString = notamCard.NotamShareString;
-                    vh2.NotamSharedAirportIcao = notamCard.NotamSharedAirportIcao;
-
-                    vh2.NotamFreeTextTextView.Text = notamCard.NotamFreeText;
-                    
-                    
-
-                    // Remove unnecessary layouts
+                    // TOPLAYOUT: ID, MAP, SHARE
                     if (notamCard.DisableTopLayout)
                     {
                         vh2.NotamCardMainLayout.RemoveView(vh2.NotamCardTopLayout);
                     }
-
-                    if (notamCard.NotamMapLatitude == 9999)
+                    else
                     {
-                        vh2.NotamCardMapShareLayout.RemoveView(vh2.NotamMap);
+                        vh2.NotamIdTextView.TextFormatted = notamCard.NotamId;
+                        vh2.NotamIdTextView.MovementMethod = new LinkMovementMethod();
+
+                        vh2.NotamShareImage.SetImageResource(Resource.Drawable.ic_share_variant_black_48dp);
+                        vh2.NotamShareString = notamCard.NotamShareString;
+                        vh2.NotamSharedAirportIcao = notamCard.NotamSharedAirportIcao;
+
+                        if (notamCard.NotamMapLatitude == 9999)
+                        {
+                            vh2.NotamCardMapShareLayout.RemoveView(vh2.NotamMapImageView);
+                        }
+                        else
+                        {
+                            vh2.NotamMapImageView.SetImageResource(Resource.Drawable.ic_world_map);
+                            vh2.NotamMapLatitude = notamCard.NotamMapLatitude;
+                            vh2.NotamMapLongitude = notamCard.NotamMapLongitude;
+                            vh2.NotamMapRadius = notamCard.NotamMapRadius;
+                        }
+
                     }
 
+                    // SUBCATEGORIES
+                    if (!notamCard.DisableCategories)
+                    {
+                        vh2.NotamMainSubcategoryTextView.Text = notamCard.NotamMainSubcategory;
+
+                        if (!notamCard.DisableSecondarySubcategory)
+                        {
+                            vh2.NotamSecondarySubcategoryArrowImageView.SetImageResource(Resource.Drawable.ic_menu_right_black_48dp);
+                            vh2.NotamSecondarySubcategoryTextView.Text = notamCard.NotamSecondarySubcategory;
+                        }
+                        else
+                        {
+                            vh2.NotamSecondarySubcategoryLayout.RemoveView(vh2.NotamSecondarySubcategoryTextView);
+                            vh2.NotamSecondarySubcategoryLayout.RemoveView(vh2.NotamSecondarySubcategoryArrowImageView);
+                            vh2.NotamSubcategoriesLayout.RemoveView(vh2.NotamSecondarySubcategoryLayout);
+                        }
+                    }
+                    else
+                    {
+                        vh2.NotamCardMainLayout.RemoveView(vh2.NotamSubcategoriesLayout);
+                    }
+
+                    // MAIN NOTAM TEXT
+                    vh2.NotamFreeTextTextView.Text = notamCard.NotamFreeText;
+
+                    // TIME FROM TO
+                    if (notamCard.NotamTimeIsActive)
+                    {
+                        vh2.NotamTimeFromToCalendarImageView.SetImageResource(Resource.Drawable.ic_calendar_multiple_red_48dp);
+                    }
+                    else
+                    {
+                        vh2.NotamTimeFromToCalendarImageView.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
+                    }
+                        
+                    vh2.NotamTimeFromTextView.Text = notamCard.NotamTimeFrom;
+
+                    vh2.NotamTimeFromToArrowImageView.SetImageResource(Resource.Drawable.ic_menu_right_black_48dp);
+
+                    vh2.NotamTimeToTextView.Text = notamCard.NotamTimeTo;
                     
+
                     break;
 
                 case 2:
@@ -178,7 +220,7 @@ namespace Cavokator
 
         public TextView NotamIdTextView { get; }
 
-        public ImageView NotamMap { get; }
+        public ImageView NotamMapImageView { get; }
         public float NotamMapLatitude { get; set; }
         public float NotamMapLongitude { get; set; }
         public int NotamMapRadius { get; set; }
@@ -187,8 +229,18 @@ namespace Cavokator
         public string NotamShareString { get; set; }
         public string NotamSharedAirportIcao { get; set; }
 
+        public LinearLayout NotamSubcategoriesLayout { get; }
+        public TextView NotamMainSubcategoryTextView { get; }
+        public RelativeLayout NotamSecondarySubcategoryLayout { get; }
+        public TextView NotamSecondarySubcategoryTextView { get; }
+        public ImageView NotamSecondarySubcategoryArrowImageView { get; }
+
         public TextView NotamFreeTextTextView { get; }
 
+        public ImageView NotamTimeFromToCalendarImageView { get; }
+        public TextView NotamTimeFromTextView { get; }
+        public ImageView NotamTimeFromToArrowImageView { get; }
+        public TextView NotamTimeToTextView { get; }
 
         public NotamViewHolder(View itemView, Action<string, float, float, int> mapListener,
             Action<string, string, View> shareListener) : base(itemView)
@@ -206,16 +258,45 @@ namespace Cavokator
             NotamIdTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_Id);
             NotamIdTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
 
-            NotamMap = itemView.FindViewById<ImageView>(Resource.Id.notamCard_Map);
-            NotamMap.Click += (sender, e) => mapListener(NotamIdTextView.Text, NotamMapLatitude, NotamMapLongitude, NotamMapRadius);
+            NotamMapImageView = itemView.FindViewById<ImageView>(Resource.Id.notamCard_Map);
+            NotamMapImageView.Click += (sender, e) => mapListener(NotamIdTextView.Text, NotamMapLatitude, NotamMapLongitude, NotamMapRadius);
 
             NotamShareImage = itemView.FindViewById<ImageView>(Resource.Id.notamCard_Share);
             NotamShareImage.Click += (sender, e) => shareListener(NotamSharedAirportIcao, NotamShareString, itemView);
+
+            // Subcategories
+            NotamSubcategoriesLayout = itemView.FindViewById<LinearLayout>(Resource.Id.notamCard_SubcategoriesLayout);
+
+            NotamMainSubcategoryTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_MainSubcategory);
+            NotamMainSubcategoryTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            NotamMainSubcategoryTextView.SetTextSize(ComplexUnitType.Dip, 10);
+
+            NotamSecondarySubcategoryLayout = itemView.FindViewById<RelativeLayout>(Resource.Id.notamCard_SecondarySubcategoryLayout);
+
+            NotamSecondarySubcategoryArrowImageView = itemView.FindViewById<ImageView>(Resource.Id.notamCard_subcategoryArrow);
+            
+            NotamSecondarySubcategoryTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_SecondarySubcategory);
+            NotamSecondarySubcategoryTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.CyanText));
+            NotamSecondarySubcategoryTextView.SetTextSize(ComplexUnitType.Dip, 10);
 
             // Free Notam Text
             NotamFreeTextTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_FreeText);
             NotamFreeTextTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             NotamFreeTextTextView.SetTextSize(ComplexUnitType.Dip, 12);
+
+            // From To Times
+            NotamTimeFromToCalendarImageView = itemView.FindViewById<ImageView>(Resource.Id.notamCard_TimeFromToCalendar);
+
+            NotamTimeFromTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_TimeFromText);
+            NotamTimeFromTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            NotamTimeFromTextView.SetTextSize(ComplexUnitType.Dip, 11);
+
+            NotamTimeFromToArrowImageView = itemView.FindViewById<ImageView>(Resource.Id.notamCard_TimeFromToArrow);
+
+            NotamTimeToTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_TimeToText);
+            NotamTimeToTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            NotamTimeToTextView.SetTextSize(ComplexUnitType.Dip, 11);
+
         }
 
     }
@@ -275,7 +356,16 @@ namespace Cavokator
         public string NotamShareString;
         public string NotamSharedAirportIcao;
 
+        public bool DisableCategories;
+        public bool DisableSecondarySubcategory;
+        public string NotamMainSubcategory;
+        public string NotamSecondarySubcategory;
+
         public string NotamFreeText;
+
+        public string NotamTimeFrom;
+        public string NotamTimeTo;
+        public bool NotamTimeIsActive;
     }
 
 
