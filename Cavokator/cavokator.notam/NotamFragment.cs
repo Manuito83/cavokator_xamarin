@@ -371,11 +371,13 @@ namespace Cavokator
                     Activity.RunOnUiThread(() =>
                     {
                         _notamRequestButton.Enabled = true;
-
-                        // Update the adapter, otherwise data could not refresh on screen
-                        mAdapter.NotifyDataSetChanged();
                     });
+
                 });
+                        
+                // Update the adapter, otherwise data could not refresh on screen
+                mAdapter.NotifyDataSetChanged();
+
             }
             else if (!CrossConnectivity.Current.IsConnected)
             {
@@ -952,7 +954,6 @@ namespace Cavokator
 
 
                     // TIME FROM TO
-                    // TODO: remove in raw data, and cheack appearing/dissapearing in Source 2!!
                     DateTime timeNow = DateTime.UtcNow;
 
                     if (timeNow > _mNotamContainerList[a].StartTime[b] 
@@ -1013,7 +1014,7 @@ namespace Cavokator
                     // Disable layouts to get rid of margins
                     myNotamCardRecycler.DisableTopLayout = true;
                     myNotamCardRecycler.DisableCategories = true;
-                    // TODO: Disable bottom!!
+                    myNotamCardRecycler.DisableFromToLayout = true;
 
                     // ADD NOTAMRECYCLER TO RECYCLER LIST
                     myRecyclerNotamList.Add(myNotamCardRecycler);

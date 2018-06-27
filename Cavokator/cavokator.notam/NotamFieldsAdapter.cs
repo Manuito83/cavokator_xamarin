@@ -156,20 +156,28 @@ namespace Cavokator
                     vh2.NotamFreeTextTextView.Text = notamCard.NotamFreeText;
 
                     // TIME FROM TO
-                    if (notamCard.NotamTimeIsActive)
+                    if (!notamCard.DisableFromToLayout)
                     {
-                        vh2.NotamTimeFromToCalendarImageView.SetImageResource(Resource.Drawable.ic_calendar_multiple_red_48dp);
+                        if (notamCard.NotamTimeIsActive)
+                        {
+                            vh2.NotamTimeFromToCalendarImageView.SetImageResource(Resource.Drawable.ic_calendar_multiple_red_48dp);
+                        }
+                        else
+                        {
+                            vh2.NotamTimeFromToCalendarImageView.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
+                        }
+                        
+                        vh2.NotamTimeFromTextView.Text = notamCard.NotamTimeFrom;
+
+                        vh2.NotamTimeFromToArrowImageView.SetImageResource(Resource.Drawable.ic_menu_right_black_48dp);
+
+                        vh2.NotamTimeToTextView.Text = notamCard.NotamTimeTo;
                     }
                     else
                     {
-                        vh2.NotamTimeFromToCalendarImageView.SetImageResource(Resource.Drawable.ic_calendar_multiple_black_48dp);
+                        vh2.NotamCardMainLayout.RemoveView(vh2.NotamFromToLayout);
                     }
-                        
-                    vh2.NotamTimeFromTextView.Text = notamCard.NotamTimeFrom;
 
-                    vh2.NotamTimeFromToArrowImageView.SetImageResource(Resource.Drawable.ic_menu_right_black_48dp);
-
-                    vh2.NotamTimeToTextView.Text = notamCard.NotamTimeTo;
                     
 
                     break;
@@ -237,6 +245,7 @@ namespace Cavokator
 
         public TextView NotamFreeTextTextView { get; }
 
+        public LinearLayout NotamFromToLayout { get; }
         public ImageView NotamTimeFromToCalendarImageView { get; }
         public TextView NotamTimeFromTextView { get; }
         public ImageView NotamTimeFromToArrowImageView { get; }
@@ -285,6 +294,8 @@ namespace Cavokator
             NotamFreeTextTextView.SetTextSize(ComplexUnitType.Dip, 12);
 
             // From To Times
+            NotamFromToLayout = itemView.FindViewById<LinearLayout>(Resource.Id.notamCard_TimeFromToLayout);
+
             NotamTimeFromToCalendarImageView = itemView.FindViewById<ImageView>(Resource.Id.notamCard_TimeFromToCalendar);
 
             NotamTimeFromTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_TimeFromText);
@@ -363,6 +374,7 @@ namespace Cavokator
 
         public string NotamFreeText;
 
+        public bool DisableFromToLayout;
         public string NotamTimeFrom;
         public string NotamTimeTo;
         public bool NotamTimeIsActive;

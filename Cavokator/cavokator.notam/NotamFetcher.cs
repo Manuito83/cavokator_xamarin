@@ -23,9 +23,6 @@ namespace Cavokator
     {
         public NotamContainer DecodedNotam = new NotamContainer();
 
-        // TODO: implement
-        private string source = "AIDAP";
-
         public NotamFetcher(string icao, string sourceSelected)
         {
             List<string> notamList = new List<string>();
@@ -353,7 +350,19 @@ namespace Cavokator
                         myNotams.Add(node.InnerText);
                     }
                 }
-            
+
+
+                // DEBUG
+                //myNotams.Clear();
+                //myNotams.Add("TEST RAW NOTAM 1");
+                //myNotams.Add("TEST RAW NOTAM 2");
+                //myNotams.Add("A3838/18 NOTAMN Q) KZNY / QSVAS//////" + 
+                //             " A) KJFK B) 1806042124 C) 1812042000 " +
+                //             "E) TEST Q NOTAM");
+                //myNotams.Add("TEST RAW NOTAM 3");
+                //myNotams.Add("TEST RAW NOTAM 4");
+
+
                 return myNotams; 
             }
             catch
