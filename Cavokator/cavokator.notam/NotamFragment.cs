@@ -966,6 +966,8 @@ namespace Cavokator
                         myNotamCardRecycler.NotamTimeIsActive = false;
                     }
 
+                    myNotamCardRecycler.NotamTimeFromDateTime = _mNotamContainerList[a].StartTime[b];
+                    myNotamCardRecycler.NotamTimeToDateTime = _mNotamContainerList[a].EndTime[b];
 
                     myNotamCardRecycler.NotamTimeFrom =
                         _mNotamContainerList[a].StartTime[b].ToString("dd") + "-" +
@@ -1931,44 +1933,62 @@ namespace Cavokator
             var utcUpdateTimer = new Timer(timerDelegate, null, 0, 30000);
 
             var timerDelegateCalendar = new TimerCallback(UpdateCalendarColorsOnTick);
-            var utcUpdateTimerCalendar = new Timer(timerDelegateCalendar, null, 0, 8000);
+            var utcUpdateTimerCalendar = new Timer(timerDelegateCalendar, null, 0, 60000);
         }
 
         private void UpdateCalendarColorsOnTick(object state)
         {
-            //// TODO: ???
-            //List<int> cuac = new List<int>();
 
-            //try
-            //{
-            //    DateTime timeNow = DateTime.UtcNow;
+            List<int> notamCardRecyclerToBeChanged = new List<int>();
 
-            //    for (int i = 0; i < myRecyclerNotamList.Count; i++)
-            //    {
-            //        if (myRecyclerNotamList[i] is MyNotamCardRecycler)
-            //        {
-                        
-            //            MyNotamCardRecycler titi = (MyNotamCardRecycler)myRecyclerNotamList[i];
+            try
+            {
+                DateTime timeNow = DateTime.UtcNow;
 
-            //            titi.NotamTimeFrom = timeNow.ToString("ss");
-            //            Console.WriteLine(timeNow.ToString("ss"));
+                for (int i = 0; i < myRecyclerNotamList.Count; i++)
+                {
+                    if (myRecyclerNotamList[i] is MyNotamCardRecycler)
+                    {
 
-            //            cuac.Add(i);
-            //        }
-            //    }
+                        MyNotamCardRecycler myNotam = (MyNotamCardRecycler)myRecyclerNotamList[i];
 
-            //    Activity.RunOnUiThread(() =>
-            //    {
-            //        foreach (var j in cuac)
-            //        {
-            //            mAdapter.NotifyItemChanged(j);
-            //        }
-            //    });
-            //}
-            //catch (Exception e)
-            //{
+                        if (!myNotam.DisableFromToLayout)
+                        {
+                            
+                            if (timeNow > myNotam.NotamTimeFromDateTime
+                                && timeNow < myNotam.NotamTimeToDateTime)
+                            {
+                                if (!myNotam.NotamTimeIsActive)
+                                {
+                                    myNotam.NotamTimeIsActive = true;
+                                    notamCardRecyclerToBeChanged.Add(i);
+                                }
+                            }
+                            else
+                            {
+                                if (myNotam.NotamTimeIsActive)
+                                {
+                                    myNotam.NotamTimeIsActive = false;
+                                    notamCardRecyclerToBeChanged.Add(i);
+                                }
+                            }
+                            
+                        }
+                    }
+                }
 
-            //}
+                Activity.RunOnUiThread(() =>
+                {
+                    foreach (var j in notamCardRecyclerToBeChanged)
+                    {
+                        mAdapter.NotifyItemChanged(j);
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                // Pass
+            }
         }
 
         private void UpdateRequestedTimeOnTick(object state)
@@ -2079,7 +2099,10 @@ namespace Cavokator
                 mAdapter.NotifyDataSetChanged();
             }
 
-            ShowNotams();
+            if (_mNotamContainerList.Count > 0)
+            {
+                ShowNotams();
+            }
         }
 
         void OnMapClicked(object sender, MapEventArgs e)

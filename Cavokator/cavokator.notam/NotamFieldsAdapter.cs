@@ -376,8 +376,11 @@ namespace Cavokator
 
         public bool DisableFromToLayout;
         public string NotamTimeFrom;
+        
         public string NotamTimeTo;
         public bool NotamTimeIsActive;
+        public DateTime NotamTimeFromDateTime;
+        public DateTime NotamTimeToDateTime;
     }
 
 
