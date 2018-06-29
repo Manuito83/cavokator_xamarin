@@ -308,7 +308,7 @@ namespace Cavokator
             notamOptionsDialog.SortBySpinnerChanged += OnSortSpinnedChanged;
         }
 
-        private void OnRequestButtonClicked(object sender, EventArgs e)
+        private async void OnRequestButtonClicked(object sender, EventArgs e)
         {
             // Close keyboard when button pressed
             var im = (InputMethodManager) Activity.GetSystemService(Context.InputMethodService);
@@ -349,34 +349,34 @@ namespace Cavokator
                 _notamFetchingAlertDialog.Show();
 
                 // Start thread outside UI
-                Task.Factory.StartNew(() =>
+                await Task.Run(() =>
                 {
                     // Populate "requestedAirports" lists
                     SanitizeRequestedNotams(_airportEntryEditText.Text);
 
                     // Populate list with notams for every airport requested
                     GetNotams();
-
-                    // Did we connect succesfully? Then show Notams!
-                    if (_connectionError == false)
-                    {
-                        ShowNotams();
-                    }
-                    else
-                    {
-                        _mNotamContainerList.Clear();
-                        ShowConnectionError();
-                    }
-
-                    Activity.RunOnUiThread(() =>
-                    {
-                        _notamRequestButton.Enabled = true;
-                    });
-
                 });
-                        
+                
+                // Did we connect succesfully? Then show Notams!
+                if (_connectionError == false)
+                {
+                    ShowNotams();
+                }
+                else
+                {
+                    _mNotamContainerList.Clear();
+                    ShowConnectionError();
+                }
+
+                Activity.RunOnUiThread(() =>
+                {
+                    _notamRequestButton.Enabled = true;                    
+                });          
+
+                
                 // Update the adapter, otherwise data could not refresh on screen
-                mAdapter.NotifyDataSetChanged();
+                mAdapter.NotifyDataSetChanged();   
 
             }
             else if (!CrossConnectivity.Current.IsConnected)
