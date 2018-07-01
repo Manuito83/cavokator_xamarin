@@ -178,7 +178,32 @@ namespace Cavokator
                         vh2.NotamCardMainLayout.RemoveView(vh2.NotamFromToLayout);
                     }
 
-                    
+                    // SPAN
+                    if (!notamCard.DisableSpanLayout)
+                    {
+                        vh2.NotamSpanImageView.SetImageResource(Resource.Drawable.ic_clock_black_48dp);
+
+                        vh2.NotamSpanTextView.Text = notamCard.NotamSpan;
+                    }
+                    else
+                    {
+                        vh2.NotamCardMainLayout.RemoveView(vh2.NotamSpanLayout);
+                    }
+
+                    // BOTTOM TOP
+                    if (!notamCard.DisableBottomTopLayout)
+                    {
+                        vh2.NotamBottomImageView.SetImageResource(Resource.Drawable.ic_format_vertical_align_bottom_black_48dp);
+                        vh2.NotamBottomTextView.Text = notamCard.NotamBottom;
+
+                        vh2.NotamTopImageView.SetImageResource(Resource.Drawable.ic_format_vertical_align_top_black_48dp);
+                        vh2.NotamTopTextView.Text = notamCard.NotamTop;
+                    }
+                    else
+                    {
+                        vh2.NotamCardMainLayout.RemoveView(vh2.NotamBottomTopLayout);
+                    }
+
 
                     break;
 
@@ -251,6 +276,17 @@ namespace Cavokator
         public ImageView NotamTimeFromToArrowImageView { get; }
         public TextView NotamTimeToTextView { get; }
 
+        public LinearLayout NotamSpanLayout { get; }
+        public ImageView NotamSpanImageView { get; }
+        public TextView NotamSpanTextView { get; }
+
+        public LinearLayout NotamBottomTopLayout { get; }
+        public ImageView NotamTopImageView { get; }
+        public TextView NotamTopTextView { get; }
+        public ImageView NotamBottomImageView { get; }
+        public TextView NotamBottomTextView { get; }
+
+
         public NotamViewHolder(View itemView, Action<string, float, float, int> mapListener,
             Action<string, string, View> shareListener) : base(itemView)
         {
@@ -308,6 +344,30 @@ namespace Cavokator
             NotamTimeToTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             NotamTimeToTextView.SetTextSize(ComplexUnitType.Dip, 11);
 
+            // Span
+            NotamSpanLayout = itemView.FindViewById<LinearLayout>(Resource.Id.notamCard_SpanLayout);
+
+            NotamSpanImageView = itemView.FindViewById<ImageView>(Resource.Id.notamCard_SpanIcon);
+
+            NotamSpanTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_SpanText);
+            NotamSpanTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            NotamSpanTextView.SetTextSize(ComplexUnitType.Dip, 11);
+
+            // Top Bottom
+            NotamBottomTopLayout = itemView.FindViewById<LinearLayout>(Resource.Id.notamCard_BottomTopLayout);
+
+            NotamBottomImageView = itemView.FindViewById<ImageView>(Resource.Id.notamCard_BottomIcon);
+
+            NotamBottomTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_BottomText);
+            NotamBottomTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            NotamBottomTextView.SetTextSize(ComplexUnitType.Dip, 11);
+
+            NotamTopImageView = itemView.FindViewById<ImageView>(Resource.Id.notamCard_TopIcon);
+
+            NotamTopTextView = itemView.FindViewById<TextView>(Resource.Id.notamCard_TopText);
+            NotamTopTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            NotamTopTextView.SetTextSize(ComplexUnitType.Dip, 11);
+            
         }
 
     }
@@ -381,6 +441,14 @@ namespace Cavokator
         public bool NotamTimeIsActive;
         public DateTime NotamTimeFromDateTime;
         public DateTime NotamTimeToDateTime;
+
+        public bool DisableSpanLayout;
+        public string NotamSpan;
+
+        public bool DisableBottomTopLayout;
+        public string NotamBottom;
+        public string NotamTop;
+        
     }
 
 
