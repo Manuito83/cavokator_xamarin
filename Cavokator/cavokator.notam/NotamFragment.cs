@@ -361,7 +361,10 @@ namespace Cavokator
                 // Did we connect succesfully? Then show Notams!
                 if (_connectionError == false)
                 {
-                    ShowNotams();
+                    ShowNotams();                
+                    
+                    // Update the adapter, otherwise data could not refresh on screen
+                    mAdapter.NotifyDataSetChanged(); 
                 }
                 else
                 {
@@ -373,11 +376,7 @@ namespace Cavokator
                 {
                     _notamRequestButton.Enabled = true;                    
                 });          
-
                 
-                // Update the adapter, otherwise data could not refresh on screen
-                mAdapter.NotifyDataSetChanged();   
-
             }
             else if (!CrossConnectivity.Current.IsConnected)
             {

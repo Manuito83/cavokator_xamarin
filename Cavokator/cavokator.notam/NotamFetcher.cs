@@ -385,6 +385,8 @@ namespace Cavokator
 
                 using (var client = new HttpClient())
                 {
+                    client.Timeout = TimeSpan.FromSeconds(30);
+                    
                     // Create a new post
                     var keyValList = new List<KeyValueModel>();
                     keyValList.Add(new KeyValueModel { Key = "uid", Value = "uid" });
@@ -401,7 +403,7 @@ namespace Cavokator
                     // Send a POST request
                     // Local address: var uri = http://10.0.2.2:80
                     var uri = "http://10.0.2.2:80/CavokatorAPI/Notam/FetchAidap";      // TODO: change API location!
-                    // TODO: what if no response? ((Try mobile with 10.0.2.2))
+                    // TODO: what is response is error???
 
                     var result = client.PostAsync(uri, content).Result;
 
