@@ -14,6 +14,7 @@ using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Views;
+using System;
 using System.Collections.Generic;
 using SupportFragment = Android.Support.V4.App.Fragment;
 
@@ -23,7 +24,7 @@ namespace Cavokator
     [Activity(Label = "Cavokator", MainLauncher = true, Icon = "@drawable/ic_appicon",
      ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
 
-    public class ActivityWxMain : AppCompatActivity
+    public class ActivityWxMain : AppCompatActivity, DrawerLayout.IDrawerListener
     {
         #warning Did we create a changelog for this version?
         public static bool versionWithChangelog = true;
@@ -32,6 +33,8 @@ namespace Cavokator
         bool overrideShowChangelog = false; 
 
         DrawerLayout drawerLayout;
+
+        private SupportFragment fragmentToShowWhenDrawerClosed;
 
         private SupportFragment mCurrentFragment;
         private WxMetarFragment mWxMetarFragment;
@@ -48,6 +51,7 @@ namespace Cavokator
             SetContentView(Resource.Layout.drawer_layout);
 
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            drawerLayout.AddDrawerListener(this);
 
             mWxMetarFragment = new WxMetarFragment();
             mNotamFragment = new NotamFragment();
@@ -138,30 +142,36 @@ namespace Cavokator
 
         void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
         {
+            // Close drawer
+            drawerLayout.CloseDrawers();
+
             switch (e.MenuItem.ItemId)
             {
                 case Resource.Id.action_fragment_metar:
-                    ReplaceFragment(mWxMetarFragment);
+                    fragmentToShowWhenDrawerClosed = mWxMetarFragment;
+                    //ReplaceFragment(mWxMetarFragment);
                     break;
                 case Resource.Id.action_fragment_notam:
-                    ReplaceFragment(mNotamFragment);
+                    fragmentToShowWhenDrawerClosed = mNotamFragment;
+                    //ReplaceFragment(mNotamFragment);
                     break;
                 case Resource.Id.action_fragment_condition:
-                    ReplaceFragment(mConditionFragment);
+                    fragmentToShowWhenDrawerClosed = mConditionFragment;
+                    //ReplaceFragment(mConditionFragment);
                     break;
                 case Resource.Id.action_fragment_settings:
-                    ReplaceFragment(mSettingsFragment);
+                    fragmentToShowWhenDrawerClosed = mSettingsFragment;
+                    //ReplaceFragment(mSettingsFragment);
                     break;
                 case Resource.Id.action_fragment_about:
-                    ReplaceFragment(mAboutFragment);
+                    fragmentToShowWhenDrawerClosed = mAboutFragment;
+                    //ReplaceFragment(mAboutFragment);
                     break;
             }
-            
-            // Close drawer
-            drawerLayout.CloseDrawers();
+
         }
-        
-        public void ReplaceFragment (SupportFragment fragment)
+
+        private void ReplaceFragment (SupportFragment fragment)
         {
             if (fragment.IsVisible)
             {
@@ -170,6 +180,7 @@ namespace Cavokator
 
             var ft = SupportFragmentManager.BeginTransaction();
 
+            ft.SetCustomAnimations(Resource.Animation.fragment_in, Resource.Animation.slide_right);
             ft.Replace(Resource.Id.flContent, fragment);
             ft.Commit();
             //ft.AddToBackStack(null);
@@ -189,6 +200,25 @@ namespace Cavokator
             }
         }
 
+        public void OnDrawerClosed(View drawerView)
+        {
+            ReplaceFragment(fragmentToShowWhenDrawerClosed);
+        }
+
+        public void OnDrawerOpened(View drawerView)
+        {
+            // Do nothing
+        }
+
+        public void OnDrawerSlide(View drawerView, float slideOffset)
+        {
+            // Do nothing
+        }
+
+        public void OnDrawerStateChanged(int newState)
+        {
+            // Do nothing
+        }
     }
 
 }

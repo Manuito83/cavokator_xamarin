@@ -74,16 +74,19 @@ namespace Cavokator
 			public const int design_snackbar_out = 2130968589;
 			
 			// aapt resource value: 0x7f04000e
-			public const int slide_right = 2130968590;
+			public const int fragment_in = 2130968590;
 			
 			// aapt resource value: 0x7f04000f
-			public const int slide_up = 2130968591;
+			public const int slide_right = 2130968591;
 			
 			// aapt resource value: 0x7f040010
-			public const int tooltip_enter = 2130968592;
+			public const int slide_up = 2130968592;
 			
 			// aapt resource value: 0x7f040011
-			public const int tooltip_exit = 2130968593;
+			public const int tooltip_enter = 2130968593;
+			
+			// aapt resource value: 0x7f040012
+			public const int tooltip_exit = 2130968594;
 			
 			static Animation()
 			{
