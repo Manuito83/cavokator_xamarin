@@ -1248,7 +1248,7 @@ namespace Cavokator
             _notamOptionsButton = _thisView.FindViewById<ImageButton>(Resource.Id.notam_options_button);
             _linearLayoutNotamRequestedTime = _thisView.FindViewById<LinearLayout>(Resource.Id.notam_RequestedTime);
 
-            _notamRequestButton.Text = Resources.GetString(Resource.String.Send_button);
+            _notamRequestButton.Text = "NOTAM!";
             _notamClearButton.Text = Resources.GetString(Resource.String.Clear_button);
             _chooseIDtextview.Text = Resources.GetString(Resource.String.NOTAM_ID_TextView);
             _airportEntryEditText.Hint = Resources.GetString(Resource.String.Icao_Or_Iata);

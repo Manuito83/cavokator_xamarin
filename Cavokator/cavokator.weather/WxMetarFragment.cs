@@ -241,7 +241,7 @@ namespace Cavokator
             _wxClearButton = thisView.FindViewById<Button>(Resource.Id.wx_clear_button);
             _wxOptionsButton = thisView.FindViewById<ImageButton>(Resource.Id.wx_options_button);
 
-            _wxRequestButton.Text = Resources.GetString(Resource.String.Send_button);
+            _wxRequestButton.Text = "WX!";
             _wxClearButton.Text = Resources.GetString(Resource.String.Clear_button);
             _chooseIDtextview.Text = Resources.GetString(Resource.String.Airport_ID_TextView);
             _airportEntryEditText.Hint = Resources.GetString(Resource.String.Icao_Or_Iata);
