@@ -61,10 +61,13 @@ namespace Cavokator
         private TextView _chooseIDtextview;
         private LinearLayout _linearLayoutNotamRequestedTime;
 
-        // Notam view to share
+        // Notam view to share specific NOTAM
         private View _myViewToShare;
         private string myNotamIdToShare;
         private string myNotamRawToShare;
+
+        // String we build and prepare for sharing ALL NOTAMS
+        private string shareAllNotamString = String.Empty;
 
         // ProgressDialog to show while we fetch the wx information
         private AlertDialog.Builder _notamFetchingAlertDialogBuilder;
@@ -107,6 +110,7 @@ namespace Cavokator
         private List<object> myRecyclerNotamList = new List<object>();
 
 
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -139,8 +143,6 @@ namespace Cavokator
             mLayoutManager = new LinearLayoutManager(Activity);
             mRecyclerView.SetLayoutManager(mLayoutManager);
 
-
-
             try
             {
                 RecallSavedData();
@@ -150,8 +152,7 @@ namespace Cavokator
                 // Encountered new null fields
                 _notamClearButton.CallOnClick();
             }
-
-
+            
             // Add ScrollChangeListener to our NestedScrollView and subscribe to scroll event
             var mNestedScrollViewListener = new NestedScrollViewListener();
             _scrollViewContainer.SetOnScrollChangeListener(mNestedScrollViewListener);
@@ -165,6 +166,38 @@ namespace Cavokator
             TimeTick();
 
             return _thisView;
+        }
+
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            // Create menu icon for sharing
+            inflater.Inflate(Resource.Menu.menu_share, menu);
+            base.OnCreateOptionsMenu(menu, inflater);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                // Sharing icon was selected
+                case Resource.Id.menu_share_icon:
+                    ShareNotamString();
+                    break;
+            }
+
+            return true;
+        }
+
+        private void ShareNotamString()
+        {
+            if (shareAllNotamString != String.Empty)
+            {
+                var intent = new Intent(Intent.ActionSend);
+                intent.SetType("text/plain");
+                intent.PutExtra(Intent.ExtraText, shareAllNotamString);
+
+                StartActivity(Intent.CreateChooser(intent, "Cavokator"));
+            }
         }
 
         private void ScrollToTop(object sender, EventArgs e)
@@ -286,6 +319,8 @@ namespace Cavokator
             _mNotamContainerList.Clear();
             _mUtcTextView = null;
 
+            shareAllNotamString = String.Empty;
+
             _mCalendarViews.Clear();
             mStartDateTimes.Clear();
             mEnDateTimes.Clear();
@@ -320,6 +355,8 @@ namespace Cavokator
 
             _mNotamContainerList.Clear();
             _mUtcTextView = null;
+
+            shareAllNotamString = String.Empty;
 
             _mCalendarViews.Clear();
             mStartDateTimes.Clear();
@@ -1052,9 +1089,6 @@ namespace Cavokator
                 }
             }
         }
-
-
-
 
         private void AddRequestedTime()
         {
