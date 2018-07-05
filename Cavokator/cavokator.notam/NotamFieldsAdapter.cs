@@ -94,8 +94,15 @@ namespace Cavokator
             {
                 case 0:
                     AirportViewHolder vh1 = (AirportViewHolder)holder;
-                    MyAirportRecycler airport = (MyAirportRecycler)mRecyclerNotamList[position];
-                    vh1.AirportNameTextView.Text = airport.Name;
+                    MyAirportRecycler airportCard = (MyAirportRecycler)mRecyclerNotamList[position];
+
+                    if (!airportCard.ShowHorizontalBar)
+                    {
+                        vh1.AirportCardMainLayout.RemoveView(vh1.HorizontalBar);
+                    }
+
+                    vh1.AirportNameTextView.Text = airportCard.Name;
+
                     break;
 
                 case 1:
@@ -234,11 +241,17 @@ namespace Cavokator
 
     internal class AirportViewHolder : RecyclerView.ViewHolder
     {
+        public LinearLayout AirportCardMainLayout { get; }
+        public View HorizontalBar { get; }
         public TextView AirportNameTextView { get; }
 
         public AirportViewHolder(View itemView) : base(itemView)
         {
             // Locate and cache view references:
+            AirportCardMainLayout = itemView.FindViewById<LinearLayout>(Resource.Id.airportCard_MainLayout);
+
+            HorizontalBar = itemView.FindViewById<View>(Resource.Id.airportCard_horizontalBar);
+
             AirportNameTextView = itemView.FindViewById<TextView>(Resource.Id.airportCard_name);
             AirportNameTextView.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MagentaText));
         }
@@ -411,6 +424,7 @@ namespace Cavokator
     internal class MyAirportRecycler
     {
         public string Name;
+        public bool ShowHorizontalBar;
     }
 
 

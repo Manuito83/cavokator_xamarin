@@ -501,7 +501,11 @@ namespace Cavokator
 
                 // FILL AIRPORT RECYCLER LIST
                 MyAirportRecycler myAirportRecycler = new MyAirportRecycler();
+
+                myAirportRecycler.ShowHorizontalBar = i != 0;
+
                 myAirportRecycler.Name = myAirport;
+
                 myRecyclerNotamList.Add(myAirportRecycler);
 
 
