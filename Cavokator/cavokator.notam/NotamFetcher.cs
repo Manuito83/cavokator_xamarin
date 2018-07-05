@@ -403,7 +403,6 @@ namespace Cavokator
                     // Send a POST request
                     // Local address: var uri = http://10.0.2.2:80
                     var uri = "http://10.0.2.2:80/CavokatorAPI/Notam/FetchAidap";      // TODO: change API location!
-                    // TODO: what is response is error???
 
                     var result = client.PostAsync(uri, content).Result;
 
