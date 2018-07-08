@@ -46,7 +46,7 @@
                     android:text="▶"
                     android:layout_marginLeft="0.0dp" />
                 <TextView
-                    android:text="You can now click in the highlighted runway conditions strings to decode them automatically!"
+                    android:text="New NOTAM section!"
                     android:id="@+id/changelog_item1Text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -76,7 +76,7 @@
                     android:text="▶"
                     android:layout_marginLeft="0.0dp" />
                 <TextView
-                    android:text="New section for runway condition decoding!"
+                    android:text="NOTAM (ICAO format) are fully decoded, with MAP view and SHARE capabilities (share all of them or a single NOTAM with an image or text!)."
                     android:id="@+id/changelog_item2Text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -97,7 +97,7 @@
                     android:text="▶"
                     android:layout_marginLeft="0.0dp" />
                 <TextView
-                    android:text="You can now change between Light and Dark themes in the settings menu!"
+                    android:text="NOTAM validity period is updated continuously and shown in red if valid!"
                     android:id="@+id/changelog_item3Text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -118,7 +118,7 @@
                     android:text="▶"
                     android:layout_marginLeft="0.0dp" />
                 <TextView
-                    android:text="General bug fixes. Also added a new contact section, so that you can suggest new improvements!"
+                    android:text="General bug fixes!"
                     android:id="@+id/changelog_item4Text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -133,7 +133,7 @@
                 android:layout_marginTop="25.0dp"
                 android:layout_marginLeft="22.0dp" />
             <TextView
-                android:text="Cavokator was not certified for in-flight use, please do not use it for real flight operations or do so under your own responsability. There might be errors."
+                android:text="Cavokator was not certified for in-flight use, please do not use it for real flight operations or do so under your own responsability. There might be errors and the information shown might not be complete."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/changelog_warningLongText"

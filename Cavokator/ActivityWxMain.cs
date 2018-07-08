@@ -73,7 +73,7 @@ namespace Cavokator
             navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;
 
             // Change this depending on what the APP launches in
-            var fragmentToLaunch = mNotamFragment;
+            var fragmentToLaunch = mWxMetarFragment;
 
             // Add fragments to container (FrameLayout)
             var ft = SupportFragmentManager.BeginTransaction(); 
@@ -98,7 +98,7 @@ namespace Cavokator
                 PackageInfo pInfo = PackageManager.GetPackageInfo(PackageName, 0);
                 int currentVersionCode = pInfo.VersionCode;
 
-                System.Console.WriteLine("VERSION: " + currentVersionCode);
+                Console.WriteLine("VERSION: " + currentVersionCode);
 
                 // Get current preferences
                 ISharedPreferences mVersionCodePrefs = Application.Context.GetSharedPreferences("AppVersion_Preferences", FileCreationMode.Private);
