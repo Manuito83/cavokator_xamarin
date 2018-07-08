@@ -36,6 +36,7 @@ using Android.Support.V4.App;
 using Android.Support.V4.Content;
 using Android.Support.V4.Widget;
 using Java.Security;
+using RestSharp.Extensions;
 using Permission = Android.Content.PM.Permission;
 
 namespace Cavokator
@@ -192,11 +193,22 @@ namespace Cavokator
         {
             if (shareAllNotamString != String.Empty)
             {
+                // HEADER
+                DateTime utcNow = DateTime.UtcNow;
+                string utcString = utcNow.ToString("dd-MMM-yyyy, HH:mm");
+                string headerGlobalShare = "Cavokator NOTAM" + " @ " + utcString + " UTC" + "\n\n";
+                string finalGlobalShare = headerGlobalShare + shareAllNotamString;
+
                 var intent = new Intent(Intent.ActionSend);
                 intent.SetType("text/plain");
-                intent.PutExtra(Intent.ExtraText, shareAllNotamString);
+                intent.PutExtra(Intent.ExtraText, finalGlobalShare);
 
                 StartActivity(Intent.CreateChooser(intent, "Cavokator"));
+            }
+            else
+            {
+                Snackbar.Make(_scrollViewContainer, Resources.GetString(Resource.String.NOTAM_nothingToShare),
+                    Snackbar.LengthShort).Show();
             }
         }
 
@@ -532,8 +544,13 @@ namespace Cavokator
                 }
                 finally
                 {
-                    if (!foundAirportIcao) myAirport = _mRequestedAirportsRawString[i].ToUpper();
+                    if (!foundAirportIcao)
+                        myAirport = _mRequestedAirportsRawString[i].ToUpper();
                 }
+                
+                
+                // FILL SHARE STRING
+                LocalFillGloblalShareString(i, myAirport);
 
 
                 // FILL AIRPORT RECYCLER LIST
@@ -1086,6 +1103,24 @@ namespace Cavokator
 
                     // ADD NOTAMRECYCLER TO RECYCLER LIST
                     myRecyclerNotamList.Add(myNotamCardRecycler);
+                }
+                
+            }
+
+            void LocalFillGloblalShareString(int airportNumber, string myAirportName)
+            {
+                shareAllNotamString += "\n\n" + "********" + "\n" + myAirportName + "\n" + "********" + "\n\n";
+
+                if (_mNotamContainerList[airportNumber].NotamRaw.Count == 0)
+                {
+                    shareAllNotamString += Resources.GetString(Resource.String.Notam_not_found) + "\n\n";
+                }
+                else
+                {
+                    foreach (var rawToShare in _mNotamContainerList[airportNumber].NotamRaw)
+                    {
+                        shareAllNotamString += rawToShare + "\n\n";
+                    }
                 }
             }
         }

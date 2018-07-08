@@ -4,6 +4,7 @@
   <string name="Notam_not_found">No NOTAM found!</string>
   <string name="NOTAM_requested">NOTAM requested @</string>
   <string name="NOTAM_connectionError">* Server connection ERROR *</string>
+  <string name="NOTAM_nothingToShare">Nothing to Share!</string>
 
   <string name="NOTAM_configuration">NOTAM CONFIGURATION</string>
   <string name="NOTAM_sortBy">Sort by...</string>
