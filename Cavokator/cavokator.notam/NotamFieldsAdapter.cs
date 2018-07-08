@@ -118,6 +118,12 @@ namespace Cavokator
                         categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
                         categoryTitleBackground.SetStroke(3, Color.ParseColor("#d60000"));
                         vh2.NotamMainCardView.Background = categoryTitleBackground;
+
+                        // Add extra margin to avoid notamCards leaving no margin when frame is placed
+                        var cardWithFrameViewParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent,
+                                                                             ViewGroup.LayoutParams.WrapContent);
+                        cardWithFrameViewParams.SetMargins(0, 15, 5, 0);
+                        vh2.NotamMainCardView.LayoutParameters = cardWithFrameViewParams;
                     }
 
                     
