@@ -1005,6 +1005,15 @@ namespace Cavokator
                     else
                         myNotamCardRecycler.DisableCategories = true;
 
+
+                    // If the subcategories say "Runway + Cloased", paint card border in red
+                    if (_mNotamContainerList[a].CodeSecondThird[b] == "MR" &&
+                        _mNotamContainerList[a].CodeFourthFifth[b] == "LC")
+                    {
+                        myNotamCardRecycler.paintBorderRed = true;
+                    }
+
+
                     
                     // FILL FREE TEXT
                     myNotamCardRecycler.NotamFreeText = _mNotamContainerList[a].NotamFreeText[b];

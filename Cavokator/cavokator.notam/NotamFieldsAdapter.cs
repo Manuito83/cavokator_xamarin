@@ -109,6 +109,18 @@ namespace Cavokator
                     NotamViewHolder vh2 = (NotamViewHolder)holder;
                     MyNotamCardRecycler notamCard = (MyNotamCardRecycler)mRecyclerNotamList[position];
 
+
+                    // Red frame in case of certain parameters (e.g.: "Runway + Close" categories
+                    if (notamCard.paintBorderRed)
+                    {
+                        GradientDrawable categoryTitleBackground = new GradientDrawable();
+                        categoryTitleBackground.SetCornerRadius(8);
+                        categoryTitleBackground.SetColor(new ApplyTheme().GetColor(DesiredColor.CardViews));
+                        categoryTitleBackground.SetStroke(3, Color.ParseColor("#d60000"));
+                        vh2.NotamMainCardView.Background = categoryTitleBackground;
+                    }
+
+                    
                     // TOPLAYOUT: ID, MAP, SHARE
                     if (notamCard.DisableTopLayout)
                     {
@@ -259,7 +271,7 @@ namespace Cavokator
 
     internal class NotamViewHolder : RecyclerView.ViewHolder
     {
-        public CardView NotamMainCardView { get; }
+        public CardView NotamMainCardView { get; set; }
         public LinearLayout NotamCardMainLayout { get; }
         public RelativeLayout NotamCardTopLayout { get; }
         public LinearLayout NotamCardMapShareLayout { get; }
@@ -445,6 +457,8 @@ namespace Cavokator
         public bool DisableSecondarySubcategory;
         public string NotamMainSubcategory;
         public string NotamSecondarySubcategory;
+
+        public bool paintBorderRed;
 
         public string NotamFreeText;
 

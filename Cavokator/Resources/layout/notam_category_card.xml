@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center">
-<!-- IT'S NOT A CARDVIEW, AT LEAST YET (FILENAME SAYS IT IS)-->
+
     <TextView
         android:text="CATEGORY"
         android:id="@+id/notam_CategoryTextView"
@@ -17,4 +17,5 @@
         android:paddingRight="10dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp" />
+
 </LinearLayout>
