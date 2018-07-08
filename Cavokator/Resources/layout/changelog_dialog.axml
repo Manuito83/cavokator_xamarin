@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
-                android:text="CAVOKATOR version 1.3"
+                android:text="CAVOKATOR version 1.4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/changelog_titleText"
@@ -36,7 +36,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10.5dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="24dp"
                 android:layout_marginLeft="30dp">
                 <TextView
@@ -54,9 +54,9 @@
                     android:layout_marginRight="0.0dp" />
             </LinearLayout>
             <ImageView
-                android:src="@drawable/changelog_13img1"
-                android:layout_width="wrap_content"
-                android:layout_height="115.7dp"
+                android:src="@drawable/changelogImage1Version14"
+                android:layout_width="236.0dp"
+                android:layout_height="200dp"
                 android:id="@+id/changelog_image1"
                 android:layout_marginLeft="45.0dp"
                 android:layout_marginTop="15.0dp"
@@ -118,8 +118,29 @@
                     android:text="▶"
                     android:layout_marginLeft="0.0dp" />
                 <TextView
-                    android:text="General bug fixes!"
+                    android:text="Two independent NOTAM sources that allow Q notam decoding worldwide (source 1)."
                     android:id="@+id/changelog_item4Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5.0dp"
+                    android:layout_marginRight="0.0dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.5dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/changelog_bullet5"
+                    android:text="▶"
+                    android:layout_marginLeft="0.0dp" />
+                <TextView
+                    android:text="General bug fixes!"
+                    android:id="@+id/changelog_item5Text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5.0dp"

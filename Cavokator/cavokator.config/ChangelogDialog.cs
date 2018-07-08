@@ -24,10 +24,12 @@ namespace Cavokator
         private TextView _changelog_bullet2;
         private TextView _changelog_bullet3;
         private TextView _changelog_bullet4;
+        private TextView _changelog_bullet5;
         private TextView _changelog_item1Text;
         private TextView _changelog_item2Text;
         private TextView _changelog_item3Text;
         private TextView _changelog_item4Text;
+        private TextView _changelog_item5Text;
         private TextView _changelog_warningText;
         private TextView _changelog_warningLongText;
         private Button _changelog_closeButton;
@@ -79,10 +81,12 @@ namespace Cavokator
             _changelog_bullet2 = thisView.FindViewById<TextView>(Resource.Id.changelog_bullet2);
             _changelog_bullet3 = thisView.FindViewById<TextView>(Resource.Id.changelog_bullet3);
             _changelog_bullet4 = thisView.FindViewById<TextView>(Resource.Id.changelog_bullet4);
+            _changelog_bullet5 = thisView.FindViewById<TextView>(Resource.Id.changelog_bullet5);
             _changelog_item1Text = thisView.FindViewById<TextView>(Resource.Id.changelog_item1Text);
             _changelog_item2Text = thisView.FindViewById<TextView>(Resource.Id.changelog_item2Text);
             _changelog_item3Text = thisView.FindViewById<TextView>(Resource.Id.changelog_item3Text);
             _changelog_item4Text = thisView.FindViewById<TextView>(Resource.Id.changelog_item4Text);
+            _changelog_item5Text = thisView.FindViewById<TextView>(Resource.Id.changelog_item5Text);
             _changelog_warningText = thisView.FindViewById<TextView>(Resource.Id.changelog_warningText);
             _changelog_warningLongText = thisView.FindViewById<TextView>(Resource.Id.changelog_warningLongText);
             _changelog_closeButton = thisView.FindViewById<Button>(Resource.Id.changelog_closeButton);
@@ -99,6 +103,7 @@ namespace Cavokator
             _changelog_item2Text.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _changelog_item3Text.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _changelog_item4Text.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _changelog_item5Text.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _changelog_warningText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.RedTextWarning));
             _changelog_warningLongText.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
 
@@ -109,6 +114,7 @@ namespace Cavokator
             _changelog_item2Text.Text = Resources.GetString(Resource.String.changelog_item2Text);
             _changelog_item3Text.Text = Resources.GetString(Resource.String.changelog_item3Text);
             _changelog_item4Text.Text = Resources.GetString(Resource.String.changelog_item4Text);
+            _changelog_item5Text.Text = Resources.GetString(Resource.String.changelog_item5Text);
             _changelog_warningText.Text = Resources.GetString(Resource.String.changelog_warningText);
             _changelog_warningLongText.Text = Resources.GetString(Resource.String.changelog_warningLongText);
             _changelog_closeButton.Text = Resources.GetString(Resource.String.changelog_closeButton);
