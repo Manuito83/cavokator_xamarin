@@ -3,7 +3,7 @@
 <resources>
 
   <!-- CHANGELOG STRINGS FOR VERSION 1.3 -->
-  <string name="changelog_titleText">CAVOKATOR version 1.3</string>
+  <string name="changelog_titleText">CAVOKATOR version 1.4</string>
   <string name="changelog_whatIsNew">What\'s new...?</string>
   <string name="changelog_item1Text">New NOTAM section!</string>
   <string name="changelog_item2Text">NOTAM (ICAO format) are fully decoded, with MAP view and SHARE capabilities (share all of them or a single NOTAM with an image or text)!</string>

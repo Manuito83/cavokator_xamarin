@@ -99,6 +99,7 @@ namespace Cavokator
             _changelog_bullet2.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _changelog_bullet3.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _changelog_bullet4.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
+            _changelog_bullet5.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _changelog_item1Text.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _changelog_item2Text.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
             _changelog_item3Text.SetTextColor(new ApplyTheme().GetColor(DesiredColor.MainText));
