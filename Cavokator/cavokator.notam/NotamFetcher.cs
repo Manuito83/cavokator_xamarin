@@ -402,7 +402,7 @@ namespace Cavokator
 #warning Did we change API location?
                     // Send a POST request
                     // Local address: var uri = http://10.0.2.2:80
-                    var uri = "http://10.0.2.2:80/CavokatorAPI/Notam/FetchAidap";      // TODO: change API location!
+                    var uri = "http://10.0.2.2:80/CavokatorAPI/Notam/FetchAidap";      // TODO [RELEASE]: change API location!
 
                     var result = client.PostAsync(uri, content).Result;
 

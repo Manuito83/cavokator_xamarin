@@ -26,7 +26,7 @@ namespace Cavokator
 
     public class ActivityWxMain : AppCompatActivity, DrawerLayout.IDrawerListener
     {
-        #warning Did we create a changelog for this version?
+        //TODO [RELEASE]: Did we create a changelog for this version?
         public static bool versionWithChangelog = true;
         
         // Set "true" only for testing!
