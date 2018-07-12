@@ -8,6 +8,7 @@ Cavokator is a new android application made by pilots, for pilots, with the goal
 
 Main features (version 1.4):
 
+
 - Show weather information (METARS and TAFORS) efficiently:
   * Accept IATA or ICAO codes
   * Show information on the elapsed time from publication
@@ -16,6 +17,7 @@ Main features (version 1.4):
   * Expand TAFORS for better readability
   * Share weather information with other applications <b>(new)</b>
 
+
 - Decode NOTAMS
   * Accept IATA or ICAO CODES
   * Show the elapsed time from publication
@@ -23,10 +25,12 @@ Main features (version 1.4):
   * Validity periods are continuously compared to the actual time and the user can easily spot if the NOTAM is currently valid
   * Share individual NOTAMS with images or plain text
 
+
 - Decode runway condition (MOTNE)
   * Accept several decoding formats <b>(new)</b>
   * Click directly in METAR string to beging decoding <b>(new)</b>
   * Dedicated app section for runway condition decoding <b>(new)</b>
+  
   
 - App themes
   * Dark and light themes for better visualization <b>(new)</b>
@@ -47,7 +51,7 @@ Example of weather decoding and formatting:
 <br></br>
 Example of NOTAM section:
 
-![Imgur](https://i.imgur.com/MhKBbx0l.png)
+![Imgur](https://i.imgur.com/VbqqiCEl.png)
 
 
 <br></br>
