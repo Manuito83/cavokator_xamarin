@@ -45,7 +45,7 @@ Main features (version 1.4):
 <br></br>
 Example of weather decoding and formatting:
 
-![Imgur](https://i.imgur.com/JCQU0Nd.png)
+![Imgur](https://i.imgur.com/JCQU0Ndl.png)
 
 
 <br></br>
@@ -57,13 +57,13 @@ Example of NOTAM section:
 <br></br>
 Dark theme:
 
-![Imgur](https://i.imgur.com/3S7iRcg.png)
+![Imgur](https://i.imgur.com/3S7iRcgl.png)
 
 
 <br></br>
 Example of condition decoding directly from METAR (MOTNE):
 
-![Imgur](https://i.imgur.com/aWwaytU.png)
+![Imgur](https://i.imgur.com/aWwaytUl.png)
 
 
 
@@ -77,7 +77,7 @@ Map function in NOTAMS:
 <br></br>
 Condition decoding section:
 
-![Imgur](https://i.imgur.com/IfUpIfD.png)
+![Imgur](https://i.imgur.com/IfUpIfDl.png)
 
 
 
