@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="NOTAM_ID_TextView">CHOOSE AIRPORT / FIR</string>
+  <string name="Notam_not_found">No NOTAM found!</string>
+  <string name="NOTAM_requested">NOTAM requested @</string>
+  <string name="NOTAM_connectionError">* Server connection ERROR *</string>
+  <string name="NOTAM_nothingToShare">Nothing to Share!</string>
+
+  <string name="NOTAM_configuration">NOTAM CONFIGURATION</string>
+  <string name="NOTAM_sortBy">Sort by...</string>
+  <string name="NOTAM_categorySort">category </string>
+  <string name="NOTAM_dateSort">date </string>
+  <string name="NOTAM_source">Source</string>
+  <string name="NOTAM_share">Share</string>
+  <string name="NOTAM_shareImage">image </string>
+  <string name="NOTAM_shareRaw">text </string>
+</resources>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout 
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+  <!--MAIN CARDVIEW-->
+  <android.support.v7.widget.CardView
+    android:id="@+id/notam_ErrorMainCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardUseCompatPadding="true">
+
+    <!--MAIN LINEARLAYOUT--> 
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="5dp"
+      android:layout_marginRight="10dp"
+      android:layout_marginBottom="5dp">
+
+      <TextView
+        android:text="ERROR"
+        android:id="@+id/notam_ErrorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+      
+    </LinearLayout>
+
+  </android.support.v7.widget.CardView>
+  
+</FrameLayout>
+
+

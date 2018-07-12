@@ -7,6 +7,10 @@
         android:title="@string/drawer_weather" 
         android:icon="@drawable/ic_cloud_print_outline_black_48dp" />
     <item
+        android:id="@+id/action_fragment_notam"
+        android:title="@string/drawer_notam"
+        android:icon="@drawable/ic_book_open_variant_black_48dp" />
+    <item
         android:id="@+id/action_fragment_condition"
         android:title="@string/drawer_runway" 
         android:icon="@drawable/ic_snowflake_black_48dp" />
@@ -18,6 +22,7 @@
         android:id="@+id/action_fragment_about"
         android:title="@string/drawer_about"
         android:icon="@drawable/ic_help_circle_black_48dp" />
+
   </group>
 
 <!--  

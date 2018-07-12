@@ -1,4 +1,11 @@
-﻿using Android.App;
+﻿//
+// CAVOKATOR APP
+// Website: https://github.com/Manuito83/Cavokator
+// License GNU General Public License v3.0
+// Manuel Ortega, 2018
+//
+
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
@@ -7,6 +14,7 @@ using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Views;
+using System;
 using System.Collections.Generic;
 using SupportFragment = Android.Support.V4.App.Fragment;
 
@@ -16,10 +24,9 @@ namespace Cavokator
     [Activity(Label = "Cavokator", MainLauncher = true, Icon = "@drawable/ic_appicon",
      ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
 
-    public class ActivityWxMain : AppCompatActivity
+    public class ActivityWxMain : AppCompatActivity, DrawerLayout.IDrawerListener
     {
-
-        #warning Did we create a changelog for this version?
+        //TODO [RELEASE]: Did we create a changelog for this version?
         public static bool versionWithChangelog = true;
         
         // Set "true" only for testing!
@@ -27,13 +34,16 @@ namespace Cavokator
 
         DrawerLayout drawerLayout;
 
+        private SupportFragment fragmentToShowWhenDrawerClosed;
+
         private SupportFragment mCurrentFragment;
         private WxMetarFragment mWxMetarFragment;
+        private NotamFragment mNotamFragment;
         private ConditionFragment mConditionFragment;
         private SettingsFragment mSettingsFragment;
         private AboutFragment mAboutFragment;
         private Stack<SupportFragment> mStackFragment;
-
+        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -41,14 +51,15 @@ namespace Cavokator
             SetContentView(Resource.Layout.drawer_layout);
 
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            drawerLayout.AddDrawerListener(this);
 
             mWxMetarFragment = new WxMetarFragment();
+            mNotamFragment = new NotamFragment();
             mConditionFragment = new ConditionFragment();
             mSettingsFragment = new SettingsFragment();
             mAboutFragment = new AboutFragment();
 
             mStackFragment = new Stack<SupportFragment>();
-
 
             // Initialize Toolbar
             Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
@@ -61,12 +72,15 @@ namespace Cavokator
             var navigationView = FindViewById<NavigationView>(Resource.Id.my_navigation_view);
             navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;
 
+            // Change this depending on what the APP launches in
+            var fragmentToLaunch = mWxMetarFragment;
+
             // Add fragments to container (FrameLayout)
             var ft = SupportFragmentManager.BeginTransaction(); 
-            ft.Add(Resource.Id.flContent, mWxMetarFragment);
+            ft.Add(Resource.Id.flContent, fragmentToLaunch);
             ft.Commit();
 
-            mCurrentFragment = mWxMetarFragment;
+            mCurrentFragment = fragmentToLaunch;
 
 
             //Did we change version number and are showing changelog ?
@@ -76,7 +90,6 @@ namespace Cavokator
             }
         }
 
-
         private void ShowChangelog()
         {
             try
@@ -85,7 +98,7 @@ namespace Cavokator
                 PackageInfo pInfo = PackageManager.GetPackageInfo(PackageName, 0);
                 int currentVersionCode = pInfo.VersionCode;
 
-                System.Console.WriteLine("VERSION: " + currentVersionCode);
+                Console.WriteLine("VERSION: " + currentVersionCode);
 
                 // Get current preferences
                 ISharedPreferences mVersionCodePrefs = Application.Context.GetSharedPreferences("AppVersion_Preferences", FileCreationMode.Private);
@@ -127,31 +140,38 @@ namespace Cavokator
             return true;
         }
 
-
         void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
         {
+            // Close drawer
+            drawerLayout.CloseDrawers();
+
             switch (e.MenuItem.ItemId)
             {
                 case Resource.Id.action_fragment_metar:
-                    ReplaceFragment(mWxMetarFragment);
+                    fragmentToShowWhenDrawerClosed = mWxMetarFragment;
+                    //ReplaceFragment(mWxMetarFragment);
+                    break;
+                case Resource.Id.action_fragment_notam:
+                    fragmentToShowWhenDrawerClosed = mNotamFragment;
+                    //ReplaceFragment(mNotamFragment);
                     break;
                 case Resource.Id.action_fragment_condition:
-                    ReplaceFragment(mConditionFragment);
+                    fragmentToShowWhenDrawerClosed = mConditionFragment;
+                    //ReplaceFragment(mConditionFragment);
                     break;
                 case Resource.Id.action_fragment_settings:
-                    ReplaceFragment(mSettingsFragment);
+                    fragmentToShowWhenDrawerClosed = mSettingsFragment;
+                    //ReplaceFragment(mSettingsFragment);
                     break;
                 case Resource.Id.action_fragment_about:
-                    ReplaceFragment(mAboutFragment);
+                    fragmentToShowWhenDrawerClosed = mAboutFragment;
+                    //ReplaceFragment(mAboutFragment);
                     break;
             }
-            
-            // Close drawer
-            drawerLayout.CloseDrawers();
-        }
-        
 
-        public void ReplaceFragment (SupportFragment fragment)
+        }
+
+        private void ReplaceFragment (SupportFragment fragment)
         {
             if (fragment.IsVisible)
             {
@@ -160,13 +180,13 @@ namespace Cavokator
 
             var ft = SupportFragmentManager.BeginTransaction();
 
+            ft.SetCustomAnimations(Resource.Animation.fragment_in, Resource.Animation.slide_right);
             ft.Replace(Resource.Id.flContent, fragment);
             ft.Commit();
             //ft.AddToBackStack(null);
 
             mCurrentFragment = fragment;
         }
-
 
         public override void OnBackPressed()
         {
@@ -178,11 +198,27 @@ namespace Cavokator
             {
                 base.OnBackPressed();
             }
-
-            
-
         }
 
+        public void OnDrawerClosed(View drawerView)
+        {
+            ReplaceFragment(fragmentToShowWhenDrawerClosed);
+        }
+
+        public void OnDrawerOpened(View drawerView)
+        {
+            // Do nothing
+        }
+
+        public void OnDrawerSlide(View drawerView, float slideOffset)
+        {
+            // Do nothing
+        }
+
+        public void OnDrawerStateChanged(int newState)
+        {
+            // Do nothing
+        }
     }
 
 }

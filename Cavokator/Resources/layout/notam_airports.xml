@@ -1,0 +1,25 @@
+﻿<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/airportCard_MainLayout"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <View
+    android:id="@+id/airportCard_horizontalBar"
+    android:layout_width="fill_parent"
+    android:layout_height="2dp"
+    android:layout_marginTop="60dp"
+    android:background="#e040fb" />
+
+  <TextView
+    android:id="@+id/airportCard_name"
+    android:textSize="16dp"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_marginLeft="0dp"
+    android:layout_marginTop="30dp"
+    android:layout_marginRight="0dp"
+    android:layout_marginBottom="0dp"/>
+
+</LinearLayout>

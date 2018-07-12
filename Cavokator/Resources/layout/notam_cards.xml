@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout 
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+  <!--MAIN CARDVIEW-->
+  <android.support.v7.widget.CardView
+    android:id="@+id/notamCard_MainCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardUseCompatPadding="true">
+
+    <!--MAIN LINEARLAYOUT--> 
+    <LinearLayout
+      android:id="@+id/notamCard_MainLayout"
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <!--TOP LAYOUT (ID + SHARE + MAP)--> 
+      <RelativeLayout
+        android:id="@+id/notamCard_TopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="0dp">
+        <TextView
+          android:text="NOTAM ID"
+          android:id="@+id/notamCard_Id"
+          android:layout_marginTop="5dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+        <LinearLayout
+          android:id="@+id/notamCard_MapShareLayout"
+          android:orientation="horizontal"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:layout_alignParentRight="true">
+          <ImageView
+            android:id="@+id/notamCard_Share"
+            android:layout_width="22dp"
+            android:layout_height="22dp"/>
+          <ImageView
+            android:id="@+id/notamCard_Map"
+            android:layout_width="35dp"
+            android:layout_height="35dp"/>
+        </LinearLayout>
+      </RelativeLayout>
+
+      <!--SUBCATEGORIES LAYOUT-->
+      <LinearLayout
+        android:id="@+id/notamCard_SubcategoriesLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <TextView
+          android:text="Main subcategory"
+          android:id="@+id/notamCard_MainSubcategory"
+          android:layout_marginTop="10dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+        <RelativeLayout
+          android:id="@+id/notamCard_SecondarySubcategoryLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+        <ImageView
+          android:id="@+id/notamCard_subcategoryArrow"
+          android:layout_marginTop="2dp"
+          android:layout_width="15dp"
+          android:layout_height="15dp" 
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="Secondary subcategory"
+          android:id="@+id/notamCard_SecondarySubcategory"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@id/notamCard_subcategoryArrow"
+          android:layout_centerVertical="true"/>
+        </RelativeLayout>
+      </LinearLayout>
+
+      <!--FREE NOTAM TEXT--> 
+      <TextView
+        android:text="FREE TEXT"
+        android:id="@+id/notamCard_FreeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"/>
+      
+      <!--TIME FROM TO LAYOUT-->
+      <LinearLayout
+        android:id="@+id/notamCard_TimeFromToLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp">
+        <ImageView
+          android:id="@+id/notamCard_TimeFromToCalendar"
+          android:layout_width="15dp"
+          android:layout_height="15dp" 
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="FROM"
+          android:id="@+id/notamCard_TimeFromText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:layout_centerVertical="true"/>
+        <ImageView
+          android:id="@+id/notamCard_TimeFromToArrow"
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:layout_marginLeft="6dp"
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="TO"
+          android:id="@+id/notamCard_TimeToText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="6dp"
+          android:layout_centerVertical="true"/>
+      </LinearLayout>
+      
+      <!--SPAN LAYOUT-->
+      <LinearLayout
+        android:id="@+id/notamCard_SpanLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp">
+        <ImageView
+          android:id="@+id/notamCard_SpanIcon"
+          android:layout_width="15dp"
+          android:layout_height="15dp" 
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="SPAN"
+          android:id="@+id/notamCard_SpanText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:layout_centerVertical="true"/>
+      </LinearLayout>
+      
+      <!--BOTTOM TOP-->
+      <LinearLayout
+        android:id="@+id/notamCard_BottomTopLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp">
+        <ImageView
+          android:id="@+id/notamCard_BottomIcon"
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="BOTTOM"
+          android:id="@+id/notamCard_BottomText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="6dp"
+          android:layout_centerVertical="true"/>
+        <ImageView
+          android:id="@+id/notamCard_TopIcon"
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:layout_marginLeft="20dp"
+          android:layout_centerVertical="true"/>
+        <TextView
+          android:text="TOP"
+          android:id="@+id/notamCard_TopText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="6dp"
+          android:layout_centerVertical="true"/>
+      </LinearLayout>
+      
+    </LinearLayout>
+
+  </android.support.v7.widget.CardView>
+  
+</FrameLayout>
+
+
